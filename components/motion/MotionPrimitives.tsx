@@ -108,19 +108,68 @@ export function CurtainImage({
   children?: React.ReactNode;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, {
-    once: true,
-    amount: 0.01,
-    margin: "250px 0px",
-  });
 
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const [errorSrc, setErrorSrc] = useState<string | null>(null);
+  const [revealedForSrc, setRevealedForSrc] = useState<string | null>(
+    priority ? src : null
+  );
   const [secondaryError, setSecondaryError] = useState(false);
   const [animComplete, setAnimComplete] = useState(false);
 
   const isLoaded = loadedSrc === src;
   const hasError = errorSrc === src;
+  const isScrollRevealed = priority || revealedForSrc === src;
+
+  // Trigger the curtain reveal strictly as the user scrolls the clothing item into the viewport
+  useEffect(() => {
+    if (typeof window === "undefined" || priority) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    const initialScrollY = window.scrollY;
+    let userHasScrolled = false;
+
+    const checkViewportAndReveal = () => {
+      if (!userHasScrolled) return;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+      const visibleRatio = rect.height > 0 ? visibleHeight / rect.height : 0;
+
+      // Reveal when at least 25% of the item is visible inside the viewport
+      // and its top edge is at least 85px above the bottom of the screen
+      if (rect.top <= vh - 85 && rect.bottom >= 60 && visibleRatio >= 0.25) {
+        setRevealedForSrc(src);
+      } else if (rect.top > vh + 20) {
+        // Reset when scrolled back above the item so scrolling down again replays the transition
+        setRevealedForSrc((prev) => (prev === src ? null : prev));
+        setAnimComplete(false);
+      }
+    };
+
+    const handleScroll = () => {
+      if (Math.abs(window.scrollY - initialScrollY) >= 4) {
+        userHasScrolled = true;
+      }
+      checkViewportAndReveal();
+    };
+
+    const handleGesture = () => {
+      userHasScrolled = true;
+      window.requestAnimationFrame(checkViewportAndReveal);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", handleGesture, { passive: true });
+    window.addEventListener("touchmove", handleGesture, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleGesture);
+      window.removeEventListener("touchmove", handleGesture);
+    };
+  }, [src, priority]);
 
   // Actively preload the image off-DOM so browser clip-path optimizations never delay image fetching
   useEffect(() => {
@@ -154,9 +203,8 @@ export function CurtainImage({
   const hasDistinctSecondary =
     Boolean(secondarySrc) && secondarySrc !== src && !secondaryError;
 
-  // Wait until the image is BOTH in viewport AND loaded so the exact Hero curtain reveal
-  // plays visibly after the picture finishes loading (and suspense disappears immediately on load).
-  const shouldReveal = isInView && (isLoaded || hasError);
+  // Reveal only when the image has loaded AND the user has scrolled the item into the active viewport
+  const shouldReveal = isScrollRevealed && (isLoaded || hasError);
 
   return (
     <div
@@ -275,8 +323,54 @@ export function CurtainReveal({
   className?: string;
 }) {
   const outerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(outerRef, { once: true, margin: "-10%" });
+  const [isRevealed, setIsRevealed] = useState(false);
   const [animComplete, setAnimComplete] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const el = outerRef.current;
+    if (!el) return;
+
+    const initialScrollY = window.scrollY;
+    let userHasScrolled = false;
+
+    const checkViewportAndReveal = () => {
+      if (!userHasScrolled) return;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+      const visibleRatio = rect.height > 0 ? visibleHeight / rect.height : 0;
+
+      if (rect.top <= vh - 85 && rect.bottom >= 60 && visibleRatio >= 0.25) {
+        setIsRevealed(true);
+      } else if (rect.top > vh + 20) {
+        setIsRevealed(false);
+        setAnimComplete(false);
+      }
+    };
+
+    const handleScroll = () => {
+      if (Math.abs(window.scrollY - initialScrollY) >= 4) {
+        userHasScrolled = true;
+      }
+      checkViewportAndReveal();
+    };
+
+    const handleGesture = () => {
+      userHasScrolled = true;
+      window.requestAnimationFrame(checkViewportAndReveal);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", handleGesture, { passive: true });
+    window.addEventListener("touchmove", handleGesture, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleGesture);
+      window.removeEventListener("touchmove", handleGesture);
+    };
+  }, []);
 
   const initialClip =
     direction === "bottom-up"
@@ -293,7 +387,7 @@ export function CurtainReveal({
       <motion.div
         initial={{ clipPath: initialClip, scale: 1.06 }}
         animate={
-          isInView
+          isRevealed
             ? { clipPath: targetClip, scale: 1 }
             : { clipPath: initialClip, scale: 1.06 }
         }
@@ -303,7 +397,7 @@ export function CurtainReveal({
           ease: EDITORIAL_EASE,
         }}
         onAnimationComplete={() => {
-          if (isInView) setAnimComplete(true);
+          if (isRevealed) setAnimComplete(true);
         }}
         className={`w-full h-full transform-gpu ${
           animComplete ? "" : "will-change-[clip-path,transform]"

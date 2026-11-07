@@ -19,49 +19,49 @@ const DESTINATION_COUNTRIES: {
   defaultCity: string;
   suggestedCurrency: CurrencyCode;
 }[] = [
-  {
-    iso: "NG",
-    name: "Nigeria (West Africa · Hub A Direct)",
-    defaultCity: "Victoria Island, Lagos",
-    suggestedCurrency: "NGN",
-  },
-  {
-    iso: "KE",
-    name: "Kenya (East Africa · Nairobi 254 Node)",
-    defaultCity: "Westlands, Nairobi",
-    suggestedCurrency: "KES",
-  },
-  {
-    iso: "GH",
-    name: "Ghana (West Africa · ECOWAS Corridor)",
-    defaultCity: "Osu, Accra",
-    suggestedCurrency: "GHS",
-  },
-  {
-    iso: "CA",
-    name: "Canada (North America · Hub B Direct)",
-    defaultCity: "Toronto, ON",
-    suggestedCurrency: "CAD",
-  },
-  {
-    iso: "US",
-    name: "United States (North America)",
-    defaultCity: "SoHo, New York",
-    suggestedCurrency: "USD",
-  },
-  {
-    iso: "GB",
-    name: "United Kingdom (Europe / UK)",
-    defaultCity: "Mayfair, London",
-    suggestedCurrency: "GBP",
-  },
-  {
-    iso: "FR",
-    name: "European Union (Milan / Paris)",
-    defaultCity: "Milan / Paris",
-    suggestedCurrency: "EUR",
-  },
-];
+    {
+      iso: "NG",
+      name: "Nigeria (West Africa · Hub A Direct)",
+      defaultCity: "Victoria Island, Lagos",
+      suggestedCurrency: "NGN",
+    },
+    {
+      iso: "KE",
+      name: "Kenya (East Africa · Nairobi 254 Node)",
+      defaultCity: "Westlands, Nairobi",
+      suggestedCurrency: "KES",
+    },
+    {
+      iso: "GH",
+      name: "Ghana (West Africa · ECOWAS Corridor)",
+      defaultCity: "Osu, Accra",
+      suggestedCurrency: "GHS",
+    },
+    {
+      iso: "CA",
+      name: "Canada (North America · Hub B Direct)",
+      defaultCity: "Toronto, ON",
+      suggestedCurrency: "CAD",
+    },
+    {
+      iso: "US",
+      name: "United States (North America)",
+      defaultCity: "SoHo, New York",
+      suggestedCurrency: "USD",
+    },
+    {
+      iso: "GB",
+      name: "United Kingdom (Europe / UK)",
+      defaultCity: "Mayfair, London",
+      suggestedCurrency: "GBP",
+    },
+    {
+      iso: "FR",
+      name: "European Union (Milan / Paris)",
+      defaultCity: "Milan / Paris",
+      suggestedCurrency: "EUR",
+    },
+  ];
 
 export default function CheckoutPage() {
   const { cart, currency, setCurrency, createOrder, clearCart } = usePlatform();
@@ -169,8 +169,8 @@ export default function CheckoutPage() {
           selectedGateway === "MPESA_DARAJA"
             ? `ws_CO_06112026${Math.floor(10000 + Math.random() * 89999)}`
             : selectedGateway === "PAYSTACK"
-            ? `PSK_${Math.floor(10000000 + Math.random() * 90000000)}`
-            : `pi_3Q8Mkm${Math.floor(100000 + Math.random() * 900000)}`,
+              ? `PSK_${Math.floor(10000000 + Math.random() * 90000000)}`
+              : `pi_3Q8Mkm${Math.floor(100000 + Math.random() * 900000)}`,
         mpesaReceiptNumber:
           selectedGateway === "MPESA_DARAJA"
             ? `SJK${Math.floor(10 + Math.random() * 89)}M89Q2`
@@ -457,11 +457,10 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedGateway("STRIPE")}
-                  className={`p-4 text-left transition-colors cursor-pointer ${
-                    selectedGateway === "STRIPE"
-                      ? "bg-[#111111] text-white"
-                      : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
-                  }`}
+                  className={`p-4 text-left transition-colors cursor-pointer ${selectedGateway === "STRIPE"
+                    ? "bg-[#111111] text-white"
+                    : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
+                    }`}
                 >
                   <div className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-80">
                     GLOBAL / NORTH AMERICA / EU
@@ -477,11 +476,10 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedGateway("PAYSTACK")}
-                  className={`p-4 text-left transition-colors cursor-pointer ${
-                    selectedGateway === "PAYSTACK"
-                      ? "bg-[#111111] text-white"
-                      : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
-                  }`}
+                  className={`p-4 text-left transition-colors cursor-pointer ${selectedGateway === "PAYSTACK"
+                    ? "bg-[#111111] text-white"
+                    : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
+                    }`}
                 >
                   <div className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-80">
                     WEST AFRICA // NIGERIA &amp; GHANA
@@ -497,11 +495,10 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedGateway("MPESA_DARAJA")}
-                  className={`p-4 text-left transition-colors cursor-pointer ${
-                    selectedGateway === "MPESA_DARAJA"
-                      ? "bg-[#111111] text-white"
-                      : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
-                  }`}
+                  className={`p-4 text-left transition-colors cursor-pointer ${selectedGateway === "MPESA_DARAJA"
+                    ? "bg-[#111111] text-white"
+                    : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
+                    }`}
                 >
                   <div className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-80">
                     EAST AFRICA // KENYA (254)
@@ -567,11 +564,10 @@ export default function CheckoutPage() {
                         key={ch}
                         type="button"
                         onClick={() => setPaystackChannel(ch)}
-                        className={`border px-4 py-2 font-mono text-[10px] tracking-[0.18em] uppercase cursor-pointer ${
-                          paystackChannel === ch
-                            ? "border-[#111111] bg-[#111111] text-white font-bold"
-                            : "border-[#E5E0D8] bg-white text-[#4A4742]"
-                        }`}
+                        className={`border px-4 py-2 font-mono text-[10px] tracking-[0.18em] uppercase cursor-pointer ${paystackChannel === ch
+                          ? "border-[#111111] bg-[#111111] text-white font-bold"
+                          : "border-[#E5E0D8] bg-white text-[#4A4742]"
+                          }`}
                       >
                         {ch.replace("_", " ")}
                       </button>
@@ -620,9 +616,9 @@ export default function CheckoutPage() {
                 {isProcessing
                   ? "PROCESSING PAYMENT & HUB ALLOCATION..."
                   : `COMPLETE ORDER via ${selectedGateway} · ${formatCurrencyValue(
-                      totalAmount,
-                      currency
-                    )}`}
+                    totalAmount,
+                    currency
+                  )}`}
               </button>
             </div>
           </form>
