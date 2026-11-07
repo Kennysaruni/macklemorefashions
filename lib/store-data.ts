@@ -389,7 +389,7 @@ export const INITIAL_COLLECTIONS: CollectionRecord[] = [
     title: "Kids Wears · Traditional Aso-Oke Sets",
     seasonCode: "Children Wears · Cultural Heritage",
     manifesto:
-      "Handcrafted Yoruba, Hausa, and ceremonial Aso-Oke complete outfits for baby boys and baby girls—celebrating cultural pride across generations.",
+      "Handcrafted Yoruba, Hausa, and ceremonial Aso-Oke complete outfits for baby boys and baby girls, celebrating cultural pride across generations.",
     heroImageUrl:
       "https://macklemorefashions.com/wp-content/uploads/2025/04/16.jpg",
     releaseDate: "2026-04-10T00:00:00Z",
@@ -1276,11 +1276,11 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
     heroImageUrl:
       "https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg",
     excerpt:
-      "At Macklemore Fashions, we believe fashion is a bridge—between generations, cultures, and stories. From the runway of Toronto Fashion Week 2024 to the Africa International Film Festival (AFRIFF) in Lagos, every piece is tailored to make a lasting statement.",
+      "At Macklemore Fashions, we believe fashion is a bridge between generations, cultures, and stories. From the runway of Toronto Fashion Week 2024 to the Africa International Film Festival (AFRIFF) in Lagos, every piece is tailored to make a lasting statement.",
     bodyParagraphs: [
       "Founded by creative entrepreneur Micah Elechi, Macklemore Fashions is rooted in a clear vision: to make luxury African-inspired clothing accessible, empowering, and unforgettable across Canada, Nigeria, and international markets.",
       "At Toronto Fashion Week 2024 and RAW Toronto 2024, Macklemore Fashions joined professional models on the runway, earning acclaim for bold prints, intricate Aso-Oke weaving, and modern tailoring. Simultaneously, on the red carpet at the Africa International Film Festival (AFRIFF) and the Excellence Awards, actors and public figures such as Kosa Akaraiwe and Emmkab wore custom Macklemore ensembles that celebrated heritage and sophistication.",
-      "As we expand our operational footprint in Lagos alongside our Canadian base in Toronto, Macklemore Fashion is proud to represent partner houses like Deji & Kola and LUCA—connecting global and African fashion labels with customers across West Africa, East Africa, and beyond.",
+      "As we expand our operational footprint in Lagos alongside our Canadian base in Toronto, Macklemore Fashion is proud to represent partner houses like Deji & Kola and LUCA, connecting global and African fashion labels with customers across West Africa, East Africa, and beyond.",
     ],
   },
   {
@@ -1290,7 +1290,7 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
     title:
       "The Soul of Every Creation: Curating Aso-Oke, Ankara, Kente & Ceremonial Lace",
     subtitle:
-      "Inside our textile sourcing across Nigeria and West Africa—for bespoke tailoring, designers, and cultural celebrations.",
+      "Inside our textile sourcing across Nigeria and West Africa for bespoke tailoring, designers, and cultural celebrations.",
     corridor: "Iseyin · Lagos · Toronto",
     author: "Micah Elechi",
     readTime: "5 Min Read",
@@ -1298,7 +1298,7 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
     heroImageUrl:
       "https://macklemorefashions.com/wp-content/uploads/2025/04/25.jpg",
     excerpt:
-      "At Macklemore Fashions, the fabric is the soul of every creation. We source and curate high-quality African fabrics—including Aso-Oke, Ankara, Kente, Adire, and Lace—that reflect rich heritage and lasting elegance.",
+      "At Macklemore Fashions, the fabric is the soul of every creation. We source and curate high-quality African fabrics (including Aso-Oke, Ankara, Kente, Adire, and Lace) that reflect rich heritage and lasting elegance.",
     bodyParagraphs: [
       "Whether crafting a three-piece white pagoda-embroidered Agbada, a champagne gold Aso-Oke Dashiki with coral beads, or an emerald green Aso-Ebi gown, the integrity of the textile defines the silhouette.",
       "In addition to designing custom and ready-to-wear clothing, Macklemore Fashions supplies authentic 3-yard and 6-yard fabric bundles to fashion enthusiasts, independent designers, and tailoring students across Canada, Nigeria, and international markets.",

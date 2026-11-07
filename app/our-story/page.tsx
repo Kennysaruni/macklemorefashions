@@ -90,7 +90,7 @@ export default function OurStoryPage() {
                 From the Atelier to Toronto Fashion Week &amp; Continental Distribution.
               </h2>
               <p className="text-sm sm:text-base text-[#5C5147] leading-relaxed">
-                Founded by creative entrepreneur <strong>Micah Elechi</strong>, Macklemore Fashion bridges traditional Nigerian textile artistry—Aso-Oke, Agbada embroidery, and bridal couture—with contemporary international silhouettes showcased at <strong>Toronto Fashion Week 2024</strong>, <strong>RAW Toronto 2024</strong>, and the <strong>Kay Foundation Charity Showcase</strong>.
+                Founded by creative entrepreneur <strong>Micah Elechi</strong>, Macklemore Fashion bridges traditional Nigerian textile artistry (Aso-Oke, Agbada embroidery, and bridal couture) with contemporary international silhouettes showcased at <strong>Toronto Fashion Week 2024</strong>, <strong>RAW Toronto 2024</strong>, and the <strong>Kay Foundation Charity Showcase</strong>.
               </p>
               <p className="text-sm sm:text-base text-[#5C5147] leading-relaxed">
                 By combining Canadian corporate standards with deep operational roots in Lagos, Accra, and Nairobi, we serve as both a flagship fashion house and a trusted distribution bridge for partner labels like <strong>Deji &amp; Kola</strong> and <strong>LUCA</strong>.
@@ -138,7 +138,7 @@ export default function OurStoryPage() {
               Uncompromising Quality
             </h3>
             <p className="text-sm text-[#5C5147] leading-relaxed">
-              Every garment we carry—from structured outerwear to relaxed cotton sets and artisan-woven pieces—is selected for exceptional fabric quality, fit, and longevity.
+              Every garment we carry, from structured outerwear to relaxed cotton sets and artisan-woven pieces, is selected for exceptional fabric quality, fit, and longevity.
             </p>
           </div>
 

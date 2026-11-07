@@ -21,10 +21,10 @@ import { ContinentalMapBanner } from "@/components/vectors/ContinentalMapBanner"
 const HERO_SLIDES = [
   {
     id: "slide-01",
-    eyebrow: "Macklemore Fashion · Canada & Nigeria",
-    headline: "Celebrate Your Style With Authentic African Luxury.",
+    eyebrow: "Canada · Nigeria",
+    headline: "Authentic African Luxury.",
     subcopy:
-      "A Canadian-based fashion company with operational presence in Lagos, Nigeria—offering custom and ready-to-wear African fashion, partner brand collections, and international distribution.",
+      "Bespoke and ready-to-wear African fashion crafted between Toronto and Lagos for global markets.",
     image:
       "https://macklemorefashions.com/wp-content/uploads/2025/04/168465240_271856821065695_3354743809372838221_n.jpg",
     secondaryImage:
@@ -32,14 +32,14 @@ const HERO_SLIDES = [
     ctaHref: "/shop?category=Men+Wears",
     ctaLabel: "Shop Men Wears",
     captionTitle: "Champagne Gold Aso-Oke Dashiki Set ($300)",
-    captionSub: "Hand-Woven Yoruba Hat & Coral Beads Included",
+    captionSub: "Hand-Woven Yoruba Hat & Coral Beads",
   },
   {
     id: "slide-02",
-    eyebrow: "Women Wears · Aso-Ebi & Boubou Couture",
-    headline: "Regal Gowns, Ankara Lace & Royal Gele Headties.",
+    eyebrow: "Women Wears · Couture",
+    headline: "Regal Gowns & Royal Gele.",
     subcopy:
-      "Discover bespoke Green Aso-Ebi gowns, flowing Aso-Oke Boubou silhouettes, and handcrafted bridal coral bead sets tailored for unforgettable occasions.",
+      "Handcrafted Aso-Ebi gowns, flowing Boubou silhouettes, and bridal coral sets for unforgettable occasions.",
     image:
       "https://macklemorefashions.com/wp-content/uploads/2025/04/7.jpg",
     secondaryImage:
@@ -47,14 +47,14 @@ const HERO_SLIDES = [
     ctaHref: "/shop?category=Women+Wears",
     ctaLabel: "Shop Women Wears",
     captionTitle: "Green Aso-Ebi Gown ($250) & Aso-Oke Boubou ($150)",
-    captionSub: "Available in Custom & Ready-to-Wear Sizes",
+    captionSub: "Custom & Ready-to-Wear Sizes",
   },
   {
     id: "slide-03",
-    eyebrow: "Runway & Partner Brand Representation",
-    headline: "Connecting Global & African Fashion Across Markets.",
+    eyebrow: "Partner Brands",
+    headline: "Global & African Fashion.",
     subcopy:
-      "From Toronto Fashion Week to Lagos, Accra, and Nairobi—we showcase signature collections alongside partner brands like Deji & Kola and LUCA.",
+      "Showcasing signature collections and representing premier houses like Deji & Kola and LUCA across Africa.",
     image:
       "https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg",
     secondaryImage:
@@ -62,7 +62,7 @@ const HERO_SLIDES = [
     ctaHref: "/brands",
     ctaLabel: "Explore Our Brands",
     captionTitle: "Toronto Fashion Week & Partner Showcase",
-    captionSub: "Founded by Creative Entrepreneur Micah Elechi",
+    captionSub: "Founded by Micah Elechi",
   },
 ];
 
@@ -557,14 +557,14 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="p-6 rounded-lg border border-[#EADFD0] bg-white flex flex-col justify-between gap-4 shadow-2xs">
                 <p className="text-sm text-[#5C5147] leading-relaxed italic">
-                  &ldquo;Wearing Macklemore Fashions on the red carpet was the perfect way to mark a milestone moment in my career. The outfit made a statement before I even spoke — regal, powerful, and full of cultural pride.&rdquo;
+                  &ldquo;Wearing Macklemore Fashions on the red carpet was the perfect way to mark a milestone moment in my career. The outfit made a statement before I even spoke: regal, powerful, and full of cultural pride.&rdquo;
                 </p>
                 <div className="pt-3 border-t border-[#F2EAE0]">
                   <div className="font-display text-sm font-semibold text-[#1F1A17]">
                     Kosa Akaraiwe
                   </div>
                   <div className="text-xs text-[#7A491D]">
-                    Lead Actor – &ldquo;Live Coach&rdquo; by Patricia · Award Ceremony Guest
+                    Lead Actor · &ldquo;Live Coach&rdquo; by Patricia · Award Ceremony Guest
                   </div>
                 </div>
               </div>
@@ -585,7 +585,7 @@ export default function HomePage() {
 
               <div className="p-6 rounded-lg border border-[#EADFD0] bg-white flex flex-col justify-between gap-4 shadow-2xs">
                 <p className="text-sm text-[#5C5147] leading-relaxed italic">
-                  &ldquo;Wearing this piece by Macklemore Fashions made me feel powerful, elegant, and unforgettable. Every detail was flawless — the fit, the fabric, the finish. It was a true statement of luxury.&rdquo;
+                  &ldquo;Wearing this piece by Macklemore Fashions made me feel powerful, elegant, and unforgettable. Every detail was flawless: the fit, the fabric, the finish. It was a true statement of luxury.&rdquo;
                 </p>
                 <div className="pt-3 border-t border-[#F2EAE0]">
                   <div className="font-display text-sm font-semibold text-[#1F1A17]">

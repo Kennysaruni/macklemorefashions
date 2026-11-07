@@ -35,7 +35,7 @@ const PARTNERSHIP_PILLARS = [
     badge: "03 · Market Growth",
     title: "West & East African Market Access",
     description:
-      "We help partner brands expand into high-growth African fashion capitals—supporting launch activations, local pricing, and long-term brand equity.",
+      "We help partner brands expand into high-growth African fashion capitals, supporting launch activations, local pricing, and long-term brand equity.",
     highlights: [
       "West Africa reach: Lagos, Abuja & Accra",
       "East Africa reach: Nairobi & regional hubs",
@@ -115,7 +115,7 @@ export default function PartnershipsB2BPage() {
               className="font-display text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.08] text-[#1F1A17]"
             />
             <p className="text-sm sm:text-base text-[#5C5147] max-w-2xl leading-relaxed">
-              Macklemore Fashion partners with international and African fashion brands—such as LUCA—to support representation, retail distribution, and market growth across West Africa, East Africa, and international markets.
+              Macklemore Fashion partners with international and African fashion brands, such as LUCA, to support representation, retail distribution, and market growth across West Africa, East Africa, and international markets.
             </p>
           </div>
 

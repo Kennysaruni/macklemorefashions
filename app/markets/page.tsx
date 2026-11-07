@@ -39,7 +39,7 @@ const MARKET_REGIONS = [
     badge: "International Partner Network",
     cities: "London · Milan · Paris",
     summary:
-      "Collaborating with European and British fashion labels—such as LUCA—to bridge international design houses with African markets.",
+      "Collaborating with European and British fashion labels, such as LUCA, to bridge international design houses with African markets.",
     accent: "#1A7A6E",
   },
 ];

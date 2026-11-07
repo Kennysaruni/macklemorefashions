@@ -80,7 +80,7 @@ const HUB_NODES: HubNode[] = [
     svgY: 132,
     coverage: "United Kingdom, Italy, France & EU",
     deliverySummary: "2–4 business days express international delivery",
-    showroomAddress: "Partner Showroom Network — London & Milan",
+    showroomAddress: "Partner Showroom Network · London & Milan",
     accentColor: "#1A7A6E",
   },
 ];

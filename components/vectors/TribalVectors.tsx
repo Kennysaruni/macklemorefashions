@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { DrawDivider } from "@/components/motion/MotionPrimitives";
 
 /**
@@ -202,6 +203,109 @@ export function TribalCornerWatermark({
         d="M106 155L133 114L150 138L167 114L194 155"
         stroke="#1A7A6E"
         strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Morphing Luxury Hamburger <-> Close (X) Icon in Macklemore Fashion Logo Colors
+ * Smoothly transitions the 3 bars (Crimson #E31E24, Gold #D4860B, Bronze #7A491D) and
+ * diamond accents into an X close icon and back.
+ */
+export function MacklemoreMenuToggleIcon({
+  isOpen,
+  className = "w-6 h-6",
+}: {
+  isOpen: boolean;
+  className?: string;
+}) {
+  const easeCurve: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      {/* Top Crimson Bar -> Morphs to Top-Left to Bottom-Right Diagonal */}
+      <motion.line
+        initial={false}
+        animate={{
+          x1: isOpen ? 5 : 3,
+          y1: isOpen ? 5 : 6.5,
+          x2: isOpen ? 19 : 17.5,
+          y2: isOpen ? 19 : 6.5,
+        }}
+        transition={{ duration: 0.45, ease: easeCurve }}
+        stroke="#E31E24"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+      <motion.polygon
+        points="20,4.5 22,6.5 20,8.5 18,6.5"
+        initial={false}
+        animate={{
+          opacity: isOpen ? 0 : 1,
+          scale: isOpen ? 0 : 1,
+        }}
+        transition={{ duration: 0.3, ease: easeCurve }}
+        fill="#D4860B"
+      />
+
+      {/* Middle Royal Gold Bar -> Collapses to Center while Diamond Glides to X Intersection */}
+      <motion.line
+        initial={false}
+        animate={{
+          x1: isOpen ? 12 : 5.5,
+          y1: 12,
+          x2: isOpen ? 12 : 21,
+          y2: 12,
+          opacity: isOpen ? 0 : 1,
+        }}
+        transition={{ duration: 0.35, ease: easeCurve }}
+        stroke="#D4860B"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+
+      {/* Bottom Savannah Bronze Bar -> Morphs to Bottom-Left to Top-Right Diagonal */}
+      <motion.line
+        initial={false}
+        animate={{
+          x1: isOpen ? 5 : 3,
+          y1: isOpen ? 19 : 17.5,
+          x2: isOpen ? 19 : 16.5,
+          y2: isOpen ? 5 : 17.5,
+          stroke: isOpen ? "#1F1A17" : "#7A491D",
+        }}
+        transition={{ duration: 0.45, ease: easeCurve }}
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+      <motion.polygon
+        points="19.5,15.5 21.5,17.5 19.5,19.5 17.5,17.5"
+        initial={false}
+        animate={{
+          opacity: isOpen ? 0 : 1,
+          scale: isOpen ? 0 : 1,
+        }}
+        transition={{ duration: 0.3, ease: easeCurve }}
+        fill="#1A7A6E"
+      />
+
+      {/* Center Diamond Jewel -> Glides from left bar node into the center of the X */}
+      <motion.polygon
+        points="12,9.5 14.5,12 12,14.5 9.5,12"
+        initial={false}
+        animate={{
+          x: isOpen ? 0 : -8.5,
+          scale: isOpen ? 1 : 0.65,
+          fill: isOpen ? "#D4860B" : "#E31E24",
+        }}
+        transition={{ duration: 0.45, ease: easeCurve }}
       />
     </svg>
   );

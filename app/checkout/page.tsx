@@ -21,25 +21,25 @@ const DESTINATION_COUNTRIES: {
 }[] = [
   {
     iso: "NG",
-    name: "Nigeria (West Africa — Hub A Direct)",
+    name: "Nigeria (West Africa · Hub A Direct)",
     defaultCity: "Victoria Island, Lagos",
     suggestedCurrency: "NGN",
   },
   {
     iso: "KE",
-    name: "Kenya (East Africa — Nairobi 254 Node)",
+    name: "Kenya (East Africa · Nairobi 254 Node)",
     defaultCity: "Westlands, Nairobi",
     suggestedCurrency: "KES",
   },
   {
     iso: "GH",
-    name: "Ghana (West Africa — ECOWAS Corridor)",
+    name: "Ghana (West Africa · ECOWAS Corridor)",
     defaultCity: "Osu, Accra",
     suggestedCurrency: "GHS",
   },
   {
     iso: "CA",
-    name: "Canada (North America — Hub B Direct)",
+    name: "Canada (North America · Hub B Direct)",
     defaultCity: "Toronto, ON",
     suggestedCurrency: "CAD",
   },
@@ -330,7 +330,7 @@ export default function CheckoutPage() {
           <div className="font-mono text-xs text-[#4A4742] uppercase">
             ACTIVE CURRENCY:{" "}
             <span className="text-[#7A491D] font-bold">
-              {currency} — {CURRENCIES[currency].label}
+              {currency} · {CURRENCIES[currency].label}
             </span>
           </div>
         </div>
@@ -366,7 +366,7 @@ export default function CheckoutPage() {
                   >
                     {DESTINATION_COUNTRIES.map((c) => (
                       <option key={c.iso} value={c.iso}>
-                        {c.name} — Currency: {c.suggestedCurrency}
+                        {c.name} · Currency: {c.suggestedCurrency}
                       </option>
                     ))}
                   </select>
@@ -619,7 +619,7 @@ export default function CheckoutPage() {
               >
                 {isProcessing
                   ? "PROCESSING PAYMENT & HUB ALLOCATION..."
-                  : `COMPLETE ORDER via ${selectedGateway} — ${formatCurrencyValue(
+                  : `COMPLETE ORDER via ${selectedGateway} · ${formatCurrencyValue(
                       totalAmount,
                       currency
                     )}`}

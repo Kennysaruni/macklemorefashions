@@ -15,8 +15,7 @@ import {
 import {
   MacklemoreLogo,
   TribalPatternRibbon,
-  MacklemoreHamburgerIcon,
-  MacklemoreCloseIcon,
+  MacklemoreMenuToggleIcon,
   MacklemoreBagIcon,
   MacklemoreCurrencyIcon,
 } from "@/components/vectors/TribalVectors";
@@ -32,6 +31,43 @@ const PRIMARY_NAV_LINKS = [
   { href: "/markets", label: "Our Markets" },
   { href: "/journal", label: "Journal" },
   { href: "/contact", label: "Contact" },
+];
+
+const MOBILE_ACCORDION_GROUPS = [
+  {
+    id: "shop",
+    label: "Shop",
+    items: [
+      { href: "/shop", label: "All Shop Catalog" },
+      { href: "/collections", label: "Featured Collections" },
+      { href: "/shop?category=Men+Wears", label: "Men Wears" },
+      { href: "/shop?category=Male+Accessories", label: "Male Accessories" },
+      { href: "/shop?category=Women+Wears", label: "Women Wears" },
+      { href: "/shop?category=Female+Accessories", label: "Female Accessories" },
+      { href: "/shop?category=Kids+Wears", label: "Kids Wears" },
+      { href: "/shop?category=Fabrics", label: "Prints & Fabrics" },
+    ],
+  },
+  {
+    id: "company",
+    label: "Company",
+    items: [
+      { href: "/brands", label: "Our Brands" },
+      { href: "/brands/luca", label: "Partner Brand: LUCA" },
+      { href: "/brands/deji-and-kola", label: "Partner Brand: Deji & Kola" },
+      { href: "/our-story", label: "Our Story" },
+      { href: "/partnerships", label: "Brand Partnerships" },
+      { href: "/markets", label: "Our Markets" },
+    ],
+  },
+  {
+    id: "resources",
+    label: "Resources",
+    items: [
+      { href: "/journal", label: "Journal & Stories" },
+      { href: "/contact", label: "Contact & Showrooms" },
+    ],
+  },
 ];
 
 export function EditorialShell({ children }: { children: React.ReactNode }) {
@@ -50,21 +86,52 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
 
   const [isCurrencyMenuOpen, setIsCurrencyMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openMobileGroup, setOpenMobileGroup] = useState<string | null>("shop");
   const [reservationSent, setReservationSent] = useState(false);
   const [guestEmail, setGuestEmail] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const currencyMenuRef = useRef<HTMLDivElement>(null);
 
+  // Track scroll position & calculate 0..1 scroll progress for circular progress ring
   useEffect(() => {
     const onScroll = () => {
-      const shouldShow = window.scrollY > 320;
+      const y = window.scrollY;
+      const shouldShow = y > 240;
       setShowBackToTop((prev) => (prev !== shouldShow ? shouldShow : prev));
+
+      const maxScroll = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+      const ratio = Math.min(1, Math.max(0, y / maxScroll));
+      setScrollProgress(ratio);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
+  // Lock main page scrolling while mobile menu or shopping bag drawer is open
+  useEffect(() => {
+    if (isMobileMenuOpen || isCartOpen) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [isMobileMenuOpen, isCartOpen]);
+
+  // Close currency menu on outside click
   useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
       if (
@@ -105,20 +172,23 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
     }, 400);
   };
 
+  const circleCircumference = 2 * Math.PI * 25.5; // r = 25.5 inside 60x60 viewBox
+  const strokeDashoffset = circleCircumference * (1 - scrollProgress);
+
   return (
     <div className="min-h-screen w-full max-w-[100vw] overflow-x-clip flex flex-col bg-[#FFFDF9] text-[#1F1A17]">
       {/* Multi-color Tribal Ribbon Accent (Infinite Left-to-Right Motion) */}
       <TribalPatternRibbon />
 
       {/* 1. Compact Welcome Ribbon */}
-      <div className="w-full bg-[#FAF5EE] text-[#5C5147] border-b border-[#EADFD0] px-4 sm:px-8 py-1.5 text-[11px] sm:text-xs flex items-center justify-between gap-2 z-40">
+      <div className="w-full bg-[#FAF5EE] text-[#5C5147] border-b border-[#EADFD0] px-4 sm:px-8 py-1.5 text-[11px] sm:text-xs flex items-center justify-between gap-2 z-50">
         <div className="flex items-center gap-2 min-w-0">
           <span className="inline-block w-1.5 h-1.5 rotate-45 bg-[#E31E24] shrink-0" />
           <span className="font-medium text-[#1F1A17] truncate">
             Canadian-Based · Lagos Operations
           </span>
           <span className="hidden md:inline text-[#7D7065] truncate">
-            — Connecting international luxury &amp; African fashion across West Africa, East Africa &amp; global markets
+            · Connecting international luxury &amp; African fashion across global markets
           </span>
         </div>
 
@@ -130,12 +200,13 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
         </Link>
       </div>
 
-      {/* 2. Warm Minimalist Header with Iconic Controls */}
-      <header className="sticky top-0 z-30 bg-[#FFFDF9]/95 backdrop-blur-md border-b border-[#EADFD0]">
+      {/* 2. Sticky Header (Remains Visible Above the Mobile Menu so Logo & Cart Stay Accessible) */}
+      <header className="sticky top-0 z-50 bg-[#FFFDF9]/95 backdrop-blur-md border-b border-[#EADFD0]">
         <div className="max-w-[1440px] mx-auto px-3.5 sm:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-6">
           {/* Left: Official Macklemore Logo */}
           <Link
             href="/"
+            onClick={() => setIsMobileMenuOpen(false)}
             className="shrink-0 transition-transform duration-200 hover:scale-[1.02]"
           >
             <MacklemoreLogo theme="light" showSubline={false} />
@@ -177,8 +248,8 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* Right: Compact Luxury Currency Toggle + Iconic Bag Button + Custom Hamburger/X */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Right: Compact Currency Toggle + Borderless/Background-Free Cart & Morphing Hamburger/X */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Compact & Elegant Currency Popover Switcher */}
             <div ref={currencyMenuRef} className="relative">
               <button
@@ -186,7 +257,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 onClick={() => setIsCurrencyMenuOpen((prev) => !prev)}
                 aria-label="Select currency"
                 aria-expanded={isCurrencyMenuOpen}
-                className="h-9 sm:h-10 px-2.5 sm:px-3 rounded-md bg-[#FAF5EE] hover:bg-white border border-[#E2D6C5] hover:border-[#D4860B] text-[#1F1A17] text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                className="h-9 px-2.5 rounded-md bg-[#FAF5EE]/80 hover:bg-white border border-[#E2D6C5]/80 hover:border-[#D4860B] text-[#1F1A17] text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-1.5"
               >
                 <MacklemoreCurrencyIcon className="w-3.5 h-3.5 shrink-0" />
                 <span className="tracking-tight">{currency}</span>
@@ -248,36 +319,39 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
               </AnimatePresence>
             </div>
 
-            {/* Iconic Shopping Bag Button */}
+            {/* Borderless, Background-Free Iconic Shopping Bag Button */}
             <button
               type="button"
               onClick={() => {
+                setIsMobileMenuOpen(false);
                 setReservationSent(false);
                 setIsCartOpen(true);
               }}
               aria-label={`Shopping bag with ${cartCount} items`}
-              className="h-9 sm:h-10 px-2.5 sm:px-3.5 rounded-md bg-[#1F1A17] text-white hover:bg-[#E31E24] text-xs font-medium transition-all duration-200 cursor-pointer shadow-xs hover:shadow-md flex items-center gap-1.5"
+              className="relative p-2 bg-transparent border-none text-[#1F1A17] hover:text-[#E31E24] transition-colors duration-200 cursor-pointer flex items-center justify-center"
             >
-              <MacklemoreBagIcon className="w-4 h-4 shrink-0" />
-              <span className="hidden sm:inline">Bag</span>
-              <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#D4860B] text-[#1F1A17] text-[10px] font-bold flex items-center justify-center">
+              <MacklemoreBagIcon className="w-5.5 h-5.5 sm:w-6 sm:h-6" />
+              <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#E31E24] text-white text-[10px] font-bold flex items-center justify-center shadow-2xs">
                 {cartCount}
               </span>
             </button>
 
-            {/* Custom Luxury Hamburger / X Toggle Button (Mobile & Tablet) */}
+            {/* Borderless, Background-Free Morphing Hamburger <-> X Toggle Button */}
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              aria-label={
+                isMobileMenuOpen
+                  ? "Close navigation menu"
+                  : "Open navigation menu"
+              }
               aria-expanded={isMobileMenuOpen}
-              className="xl:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-md border border-[#E2D6C5] bg-white hover:border-[#D4860B] hover:bg-[#FAF5EE] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-2xs"
+              className="xl:hidden p-2 bg-transparent border-none flex items-center justify-center cursor-pointer"
             >
-              {isMobileMenuOpen ? (
-                <MacklemoreCloseIcon className="w-5 h-5" />
-              ) : (
-                <MacklemoreHamburgerIcon className="w-5 h-5" />
-              )}
+              <MacklemoreMenuToggleIcon
+                isOpen={isMobileMenuOpen}
+                className="w-6 h-6"
+              />
             </button>
           </div>
         </div>
@@ -331,92 +405,183 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
         </div>
+
+        {/* Semi-Transparent Mobile Menu with Accordion Dropdowns (Logo & Cart remain visible in Header above) */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Subtle Backdrop to close when tapping outside */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-x-0 top-16 sm:top-20 bottom-0 bg-[#1F1A17]/25 backdrop-blur-[2px] xl:hidden z-40"
+              />
+
+              {/* Semi-Transparent Accordion Menu Panel */}
+              <motion.div
+                data-native-scroll="true"
+                data-lenis-prevent
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute left-0 right-0 top-full xl:hidden z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto bg-[#FFFDF9]/90 backdrop-blur-md border-b border-[#EADFD0] shadow-xl px-4 py-4"
+              >
+                <div className="max-w-lg mx-auto divide-y divide-[#EADFD0]/80">
+                  {/* Direct Home Link */}
+                  <div className="py-1">
+                    <Link
+                      href="/"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center justify-between py-2.5 px-2 text-sm font-semibold transition-colors ${
+                        pathname === "/"
+                          ? "text-[#E31E24]"
+                          : "text-[#1F1A17] hover:text-[#7A491D]"
+                      }`}
+                    >
+                      <span>Home</span>
+                      <span className="text-xs text-[#7A491D]">→</span>
+                    </Link>
+                  </div>
+
+                  {/* Collapsible Dropdown Groups: Shop, Company, Resources */}
+                  {MOBILE_ACCORDION_GROUPS.map((group) => {
+                    const isExpanded = openMobileGroup === group.id;
+                    return (
+                      <div key={group.id} className="py-1">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenMobileGroup(isExpanded ? null : group.id)
+                          }
+                          className="w-full flex items-center justify-between py-2.5 px-2 text-sm font-semibold text-[#1F1A17] hover:text-[#7A491D] transition-colors cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rotate-45 bg-[#D4860B]" />
+                            <span>{group.label}</span>
+                          </span>
+                          <motion.span
+                            animate={{ rotate: isExpanded ? 180 : 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="text-xs text-[#7A491D]"
+                          >
+                            ▾
+                          </motion.span>
+                        </button>
+
+                        <AnimatePresence initial={false}>
+                          {isExpanded && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{
+                                duration: 0.3,
+                                ease: [0.16, 1, 0.3, 1],
+                              }}
+                              className="overflow-hidden"
+                            >
+                              <div className="pl-5 pr-2 pb-2.5 pt-1 grid grid-cols-1 gap-1">
+                                {group.items.map((item) => (
+                                  <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="py-2 px-3 rounded-md text-xs font-medium text-[#5C5147] hover:text-[#E31E24] hover:bg-[#FAF5EE]/90 flex items-center justify-between transition-colors"
+                                  >
+                                    <span>{item.label}</span>
+                                    <span className="text-[10px] text-[#8C7E71]">
+                                      →
+                                    </span>
+                                  </Link>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </header>
-
-      {/* Mobile Navigation Drawer (Weighted Non-Bouncy Bezier Curve) */}
-      <EditorialDrawer
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        title="Macklemore Fashion"
-        subtitle="Navigation & Shop Categories"
-        widthClass="max-w-sm"
-      >
-        <div className="p-5 sm:p-6 space-y-6">
-          <div className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] block mb-2">
-              Navigation
-            </span>
-            <div className="grid grid-cols-1 gap-2">
-              {PRIMARY_NAV_LINKS.map((item) => {
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/" && pathname?.startsWith(item.href));
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`px-4 py-2.5 rounded-md border text-xs font-medium transition-colors flex items-center justify-between ${
-                      isActive
-                        ? "border-[#1F1A17] bg-[#1F1A17] text-white"
-                        : "border-[#EADFD0] bg-[#FAF5EE] text-[#1F1A17] hover:border-[#E31E24] hover:bg-white"
-                    }`}
-                  >
-                    <span>{item.label}</span>
-                    <span>→</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="space-y-2 pt-4 border-t border-[#EADFD0]">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] block mb-2">
-              Shop Categories
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { href: "/shop?category=Men+Wears", label: "Men Wears" },
-                { href: "/shop?category=Male+Accessories", label: "Male Accessories" },
-                { href: "/shop?category=Women+Wears", label: "Women Wears" },
-                { href: "/shop?category=Female+Accessories", label: "Female Accessories" },
-                { href: "/shop?category=Kids+Wears", label: "Kids Wears" },
-                { href: "/shop?category=Fabrics", label: "Prints & Fabrics" },
-              ].map((cat) => (
-                <Link
-                  key={cat.href}
-                  href={cat.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-md border border-[#EADFD0] bg-white text-xs font-medium text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17] transition-colors"
-                >
-                  {cat.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </EditorialDrawer>
 
       {/* 3. Main Page Content */}
       <main className="flex-1 w-full max-w-[100vw] overflow-x-clip">
         {children}
       </main>
 
-      {/* Floating Back to Top Button */}
+      {/* Circular Scroll-Progress Back to Top Button in Macklemore Brand Colors */}
       <AnimatePresence>
         {showBackToTop && (
           <motion.button
             type="button"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, scale: 0.85, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 12 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onClick={scrollToTop}
-            aria-label="Scroll to top of page"
-            className="fixed bottom-5 right-4 sm:right-5 z-40 px-3.5 py-2.5 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white border border-[#D4860B]/40 shadow-lg flex items-center gap-1.5 text-xs font-medium transition-colors duration-200 cursor-pointer transform-gpu"
+            aria-label={`Scroll to top (${Math.round(scrollProgress * 100)}% scrolled)`}
+            className="fixed bottom-5 right-4 sm:right-6 z-40 w-14 h-14 sm:w-15 sm:h-15 rounded-full bg-[#FFFDF9]/95 backdrop-blur-md shadow-xl flex items-center justify-center cursor-pointer group transform-gpu hover:scale-105 transition-transform duration-200"
           >
-            <span className="text-[#D4860B] font-bold">↑</span>
-            <span>{pathname === "/shop" ? "Top & Filters" : "Top"}</span>
+            {/* Circular SVG Scroll Progress Ring */}
+            <svg
+              viewBox="0 0 60 60"
+              className="absolute inset-0 w-full h-full -rotate-90"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient
+                  id="macklemore-scroll-progress-grad"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#E31E24" />
+                  <stop offset="50%" stopColor="#D4860B" />
+                  <stop offset="100%" stopColor="#1A7A6E" />
+                </linearGradient>
+              </defs>
+              {/* Subtle Track Circle */}
+              <circle
+                cx="30"
+                cy="30"
+                r="25.5"
+                fill="none"
+                stroke="#EADFD0"
+                strokeWidth="3.2"
+              />
+              {/* Dynamic Scroll Progress Circle */}
+              <circle
+                cx="30"
+                cy="30"
+                r="25.5"
+                fill="none"
+                stroke="url(#macklemore-scroll-progress-grad)"
+                strokeWidth="3.6"
+                strokeLinecap="round"
+                strokeDasharray={circleCircumference}
+                strokeDashoffset={strokeDashoffset}
+                className="transition-[stroke-dashoffset] duration-150 ease-out"
+              />
+            </svg>
+
+            {/* Inner Arrow & Percentage */}
+            <div className="relative z-10 flex flex-col items-center justify-center leading-none">
+              <span className="text-sm font-bold text-[#1F1A17] group-hover:text-[#E31E24] transition-colors">
+                ↑
+              </span>
+              <span className="text-[9px] font-semibold text-[#7A491D] mt-0.5">
+                {Math.round(scrollProgress * 100)}%
+              </span>
+            </div>
           </motion.button>
         )}
       </AnimatePresence>
@@ -430,7 +595,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             <div className="lg:col-span-6 space-y-2.5">
               <MacklemoreLogo showSubline theme="light" />
               <p className="text-xs sm:text-sm text-[#5C5147] leading-relaxed max-w-lg">
-                A Canadian-based fashion company with operational headquarters in Lagos, Nigeria—curating authentic African luxury and connecting international brands across West Africa, East Africa, and global markets.
+                A Canadian-based fashion company with operational headquarters in Lagos, Nigeria, curating authentic African luxury and connecting international brands across West Africa, East Africa, and global markets.
               </p>
             </div>
 

@@ -902,7 +902,7 @@ export default function AdminConsolePage() {
                 VIP TRIBAL TEASER MODE (&ldquo;PREPARING SOMETHING GOOD&rdquo; EVOLUTION)
               </h2>
               <p className="text-sm text-[#4A4742] leading-relaxed">
-                Activating the Master Vault Gate switches the public storefront into our warm cream &amp; bronze VIP Drop-Locker teaser page—featuring 1px hairline geometric vectors, countdown timer, and SMS/Email VIP registration.
+                Activating the Master Vault Gate switches the public storefront into our warm cream &amp; bronze VIP Drop-Locker teaser page, featuring 1px hairline geometric vectors, countdown timer, and SMS/Email VIP registration.
               </p>
 
               <div className="border border-[#E5E0D8] bg-[#FAF9F6] p-6 space-y-4 font-mono text-xs">
@@ -1040,7 +1040,7 @@ export default function AdminConsolePage() {
                         </span>
                       </div>
                       <h3 className="font-display text-2xl font-bold uppercase text-[#111111] mt-2">
-                        {inq.brandOrCompanyName} — {inq.headquartersCountry}
+                        {inq.brandOrCompanyName} · {inq.headquartersCountry}
                       </h3>
                       <div className="font-mono text-xs text-[#4A4742] mt-1">
                         CONTACT: {inq.contactName} ({inq.contactRole}) ·{" "}
@@ -1203,7 +1203,7 @@ export default function AdminConsolePage() {
                         className="py-1.5 flex items-center justify-between text-[#111111]"
                       >
                         <span>
-                          [{item.brandName}] {item.productTitle} — SIZE:{" "}
+                          [{item.brandName}] {item.productTitle} · SIZE:{" "}
                           {item.size} × {item.quantity}
                         </span>
                         <span className="font-semibold">
