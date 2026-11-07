@@ -21,7 +21,7 @@ export function MacklemoreLogo({
       <img
         src="/assets/fashion-Boutique-logo-1.svg"
         alt="Macklemore Fashion"
-        className="h-11 sm:h-13 w-auto object-contain object-left transition-transform duration-300 hover:scale-[1.02]"
+        className="h-9 sm:h-12 max-w-[165px] sm:max-w-none w-auto object-contain object-left transition-transform duration-300 hover:scale-[1.02]"
       />
       {showSubline && (
         <span className="text-[10px] tracking-[0.18em] uppercase text-[#7A491D] font-medium mt-1">
@@ -203,6 +203,146 @@ export function TribalCornerWatermark({
         stroke="#1A7A6E"
         strokeWidth="1.5"
       />
+    </svg>
+  );
+}
+
+/**
+ * Custom Luxury Hamburger Icon in Macklemore Fashion Logo Colors
+ * Crimson (#E31E24), Royal Gold (#D4860B), Savannah Bronze (#7A491D), and Teal (#1A7A6E)
+ */
+export function MacklemoreHamburgerIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      {/* Top Crimson Bar with Gold Diamond Node */}
+      <line
+        x1="3"
+        y1="6.5"
+        x2="17"
+        y2="6.5"
+        stroke="#E31E24"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <polygon points="20,4.5 22,6.5 20,8.5 18,6.5" fill="#D4860B" />
+
+      {/* Middle Royal Gold Bar with Center Crimson Diamond */}
+      <line
+        x1="5"
+        y1="12"
+        x2="21"
+        y2="12"
+        stroke="#D4860B"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <polygon points="3.5,10.5 5,12 3.5,13.5 2,12" fill="#E31E24" />
+
+      {/* Bottom Savannah Bronze Bar with Teal Diamond Node */}
+      <line
+        x1="3"
+        y1="17.5"
+        x2="16"
+        y2="17.5"
+        stroke="#7A491D"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <polygon points="19.5,15.5 21.5,17.5 19.5,19.5 17.5,17.5" fill="#1A7A6E" />
+    </svg>
+  );
+}
+
+/**
+ * Custom Luxury Close (X) Icon in Macklemore Fashion Logo Colors
+ */
+export function MacklemoreCloseIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <line
+        x1="5.5"
+        y1="5.5"
+        x2="18.5"
+        y2="18.5"
+        stroke="#1F1A17"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="18.5"
+        y1="5.5"
+        x2="5.5"
+        y2="18.5"
+        stroke="#E31E24"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <polygon points="12,9.5 14.5,12 12,14.5 9.5,12" fill="#D4860B" />
+    </svg>
+  );
+}
+
+/**
+ * Iconic Luxury Shopping Bag / Atelier Tote Icon
+ */
+export function MacklemoreBagIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      {/* Arched Handle */}
+      <path
+        d="M8.5 8V6.5C8.5 4.567 10.067 3 12 3C13.933 3 15.5 4.567 15.5 6.5V8"
+        stroke="#D4860B"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Sculpted Luxury Tote Body */}
+      <path
+        d="M4.8 8H19.2L20.4 20.2C20.46 20.68 20.08 21.1 19.6 21.1H4.4C3.92 21.1 3.54 20.68 3.6 20.2L4.8 8Z"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+      />
+      {/* Signature Macklemore Diamond Clasp */}
+      <polygon points="12,11.5 14.2,14 12,16.5 9.8,14" fill="#D4860B" />
+      <polygon points="12,12.8 13,14 12,15.2 11,14" fill="#E31E24" />
+    </svg>
+  );
+}
+
+/**
+ * Compact Luxury Currency / Globe Medallion Icon
+ */
+export function MacklemoreCurrencyIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="10" r="7.5" stroke="#D4860B" strokeWidth="1.5" />
+      <ellipse cx="10" cy="10" rx="3.6" ry="7.5" stroke="#7A491D" strokeWidth="1.2" />
+      <line x1="2.8" y1="10" x2="17.2" y2="10" stroke="#7A491D" strokeWidth="1.2" />
+      <polygon points="10,7.8 12.2,10 10,12.2 7.8,10" fill="#E31E24" />
     </svg>
   );
 }

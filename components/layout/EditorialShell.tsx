@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,6 +15,10 @@ import {
 import {
   MacklemoreLogo,
   TribalPatternRibbon,
+  MacklemoreHamburgerIcon,
+  MacklemoreCloseIcon,
+  MacklemoreBagIcon,
+  MacklemoreCurrencyIcon,
 } from "@/components/vectors/TribalVectors";
 import { EditorialDrawer } from "@/components/motion/MotionPrimitives";
 
@@ -44,11 +48,12 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
     cartCount,
   } = usePlatform();
 
-  const [isCurrencyDrawerOpen, setIsCurrencyDrawerOpen] = useState(false);
+  const [isCurrencyMenuOpen, setIsCurrencyMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [reservationSent, setReservationSent] = useState(false);
   const [guestEmail, setGuestEmail] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const currencyMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -59,6 +64,21 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        currencyMenuRef.current &&
+        !currencyMenuRef.current.contains(e.target as Node)
+      ) {
+        setIsCurrencyMenuOpen(false);
+      }
+    };
+    if (isCurrencyMenuOpen) {
+      document.addEventListener("mousedown", onClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [isCurrencyMenuOpen]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -86,40 +106,38 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFFDF9] text-[#1F1A17]">
-      {/* Multi-color Tribal Ribbon Accent */}
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-clip flex flex-col bg-[#FFFDF9] text-[#1F1A17]">
+      {/* Multi-color Tribal Ribbon Accent (Infinite Left-to-Right Motion) */}
       <TribalPatternRibbon />
 
-      {/* 1. Warm Top Welcome & Currency Bar */}
-      <div className="w-full bg-[#FAF5EE] text-[#5C5147] border-b border-[#EADFD0] px-4 sm:px-8 py-2 text-xs flex flex-wrap items-center justify-between gap-2 z-40">
-        <div className="flex items-center gap-2.5">
-          <span className="inline-block w-2 h-2 rounded-full bg-[#D4860B]" />
-          <span className="font-medium text-[#1F1A17]">
+      {/* 1. Compact Welcome Ribbon */}
+      <div className="w-full bg-[#FAF5EE] text-[#5C5147] border-b border-[#EADFD0] px-4 sm:px-8 py-1.5 text-[11px] sm:text-xs flex items-center justify-between gap-2 z-40">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="inline-block w-1.5 h-1.5 rotate-45 bg-[#E31E24] shrink-0" />
+          <span className="font-medium text-[#1F1A17] truncate">
             Canadian-Based · Lagos Operations
           </span>
-          <span className="hidden md:inline text-[#7D7065]">
+          <span className="hidden md:inline text-[#7D7065] truncate">
             — Connecting international luxury &amp; African fashion across West Africa, East Africa &amp; global markets
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={() => setIsCurrencyDrawerOpen(true)}
-            className="px-2.5 py-1 rounded-md bg-white border border-[#E2D6C5] hover:border-[#7A491D] text-[#1F1A17] text-xs font-medium transition-all duration-200 cursor-pointer flex items-center gap-1.5 shadow-2xs"
-          >
-            <span className="text-[#7A491D] font-semibold">{currency}</span>
-            <span>({CURRENCIES[currency].symbol})</span>
-            <span className="text-[10px] text-[#8C7E71]">▾</span>
-          </button>
-        </div>
+        <Link
+          href="/partnerships"
+          className="hidden sm:inline-block shrink-0 text-[11px] font-medium text-[#7A491D] hover:text-[#E31E24] transition-colors"
+        >
+          Brand Partnerships →
+        </Link>
       </div>
 
-      {/* 2. Warm Minimalist Header */}
+      {/* 2. Warm Minimalist Header with Iconic Controls */}
       <header className="sticky top-0 z-30 bg-[#FFFDF9]/95 backdrop-blur-md border-b border-[#EADFD0]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 h-20 flex items-center justify-between gap-6">
+        <div className="max-w-[1440px] mx-auto px-3.5 sm:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-6">
           {/* Left: Official Macklemore Logo */}
-          <Link href="/" className="shrink-0 transition-transform duration-200 hover:scale-[1.02]">
+          <Link
+            href="/"
+            className="shrink-0 transition-transform duration-200 hover:scale-[1.02]"
+          >
             <MacklemoreLogo theme="light" showSubline={false} />
           </Link>
 
@@ -159,38 +177,112 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* Right: Quick Segment Links + Shopping Bag + Mobile Menu */}
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/brands/luca"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-[#E2D6C5] bg-[#FAF5EE] hover:bg-[#F3EAE0] hover:border-[#D4860B] text-xs font-medium text-[#7A491D] transition-all duration-200"
-            >
-              <span>Featured:</span>
-              <span className="font-semibold text-[#1F1A17]">LUCA</span>
-            </Link>
+          {/* Right: Compact Luxury Currency Toggle + Iconic Bag Button + Custom Hamburger/X */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Compact & Elegant Currency Popover Switcher */}
+            <div ref={currencyMenuRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setIsCurrencyMenuOpen((prev) => !prev)}
+                aria-label="Select currency"
+                aria-expanded={isCurrencyMenuOpen}
+                className="h-9 sm:h-10 px-2.5 sm:px-3 rounded-md bg-[#FAF5EE] hover:bg-white border border-[#E2D6C5] hover:border-[#D4860B] text-[#1F1A17] text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-1.5 shadow-2xs"
+              >
+                <MacklemoreCurrencyIcon className="w-3.5 h-3.5 shrink-0" />
+                <span className="tracking-tight">{currency}</span>
+                <span
+                  className={`text-[9px] text-[#7A491D] transition-transform duration-200 ${
+                    isCurrencyMenuOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  ▾
+                </span>
+              </button>
 
+              <AnimatePresence>
+                {isCurrencyMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.97 }}
+                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute right-0 mt-2 w-40 rounded-lg border border-[#E2D6C5] bg-[#FFFDF9]/98 backdrop-blur-md shadow-xl p-1.5 z-50"
+                  >
+                    {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => {
+                      const cfg = CURRENCIES[code];
+                      const isSelected = currency === code;
+                      return (
+                        <button
+                          key={code}
+                          type="button"
+                          onClick={() => {
+                            setCurrency(code);
+                            setIsCurrencyMenuOpen(false);
+                          }}
+                          className={`w-full px-3 py-2 rounded-md text-xs flex items-center justify-between transition-colors cursor-pointer ${
+                            isSelected
+                              ? "bg-[#1F1A17] text-white font-semibold"
+                              : "text-[#1F1A17] hover:bg-[#FAF5EE]"
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span
+                              className={`w-1.5 h-1.5 rotate-45 ${
+                                isSelected ? "bg-[#D4860B]" : "bg-[#D4B895]"
+                              }`}
+                            />
+                            <span>{cfg.code}</span>
+                          </span>
+                          <span
+                            className={`text-[11px] ${
+                              isSelected ? "text-[#D4860B]" : "text-[#7A491D]"
+                            }`}
+                          >
+                            {cfg.symbol.replace(cfg.code, "").trim() || "$"}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Iconic Shopping Bag Button */}
             <button
               type="button"
               onClick={() => {
                 setReservationSent(false);
                 setIsCartOpen(true);
               }}
-              className="px-4 py-2.5 rounded-md bg-[#1F1A17] text-white hover:bg-[#E31E24] text-xs font-medium tracking-wide transition-all duration-200 cursor-pointer shadow-xs hover:shadow-md"
+              aria-label={`Shopping bag with ${cartCount} items`}
+              className="h-9 sm:h-10 px-2.5 sm:px-3.5 rounded-md bg-[#1F1A17] text-white hover:bg-[#E31E24] text-xs font-medium transition-all duration-200 cursor-pointer shadow-xs hover:shadow-md flex items-center gap-1.5"
             >
-              Bag ({cartCount})
+              <MacklemoreBagIcon className="w-4 h-4 shrink-0" />
+              <span className="hidden sm:inline">Bag</span>
+              <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#D4860B] text-[#1F1A17] text-[10px] font-bold flex items-center justify-center">
+                {cartCount}
+              </span>
             </button>
 
+            {/* Custom Luxury Hamburger / X Toggle Button (Mobile & Tablet) */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="xl:hidden px-3.5 py-2.5 rounded-md border border-[#E2D6C5] bg-white text-xs font-medium text-[#1F1A17] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileMenuOpen}
+              className="xl:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-md border border-[#E2D6C5] bg-white hover:border-[#D4860B] hover:bg-[#FAF5EE] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-2xs"
             >
-              {isMobileMenuOpen ? "Close" : "Menu"}
+              {isMobileMenuOpen ? (
+                <MacklemoreCloseIcon className="w-5 h-5" />
+              ) : (
+                <MacklemoreHamburgerIcon className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Sub-Bar: Active Shop Categories from macklemorefashions.com */}
+        {/* Sub-Bar: Active Shop Categories from macklemorefashions.com (Desktop) */}
         <div className="hidden md:block border-t border-[#F0E6D8] bg-[#FAF5EE]/60">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-2 flex items-center justify-between text-xs text-[#5C5147]">
             <div className="flex items-center gap-6">
@@ -232,14 +324,13 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
             <Link
-              href="/partnerships"
+              href="/brands/luca"
               className="text-[#7A491D] font-medium hover:text-[#E31E24] transition-colors"
             >
-              Brand Representation &amp; African Distribution →
+              Featured Partner: LUCA →
             </Link>
           </div>
         </div>
-
       </header>
 
       {/* Mobile Navigation Drawer (Weighted Non-Bouncy Bezier Curve) */}
@@ -250,10 +341,10 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
         subtitle="Navigation & Shop Categories"
         widthClass="max-w-sm"
       >
-        <div className="p-6 space-y-6">
+        <div className="p-5 sm:p-6 space-y-6">
           <div className="space-y-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] block mb-2">
-              Menu
+              Navigation
             </span>
             <div className="grid grid-cols-1 gap-2">
               {PRIMARY_NAV_LINKS.map((item) => {
@@ -265,7 +356,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`px-4 py-3 rounded-md border text-xs font-medium transition-colors flex items-center justify-between ${
+                    className={`px-4 py-2.5 rounded-md border text-xs font-medium transition-colors flex items-center justify-between ${
                       isActive
                         ? "border-[#1F1A17] bg-[#1F1A17] text-white"
                         : "border-[#EADFD0] bg-[#FAF5EE] text-[#1F1A17] hover:border-[#E31E24] hover:bg-white"
@@ -307,7 +398,9 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
       </EditorialDrawer>
 
       {/* 3. Main Page Content */}
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 w-full max-w-[100vw] overflow-x-clip">
+        {children}
+      </main>
 
       {/* Floating Back to Top Button */}
       <AnimatePresence>
@@ -320,147 +413,57 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onClick={scrollToTop}
             aria-label="Scroll to top of page"
-            className="fixed bottom-5 right-5 z-40 px-4 py-2.5 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white border border-[#D4860B]/40 shadow-lg flex items-center gap-2 text-xs font-medium transition-colors duration-200 cursor-pointer transform-gpu"
+            className="fixed bottom-5 right-4 sm:right-5 z-40 px-3.5 py-2.5 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white border border-[#D4860B]/40 shadow-lg flex items-center gap-1.5 text-xs font-medium transition-colors duration-200 cursor-pointer transform-gpu"
           >
             <span className="text-[#D4860B] font-bold">↑</span>
-            <span>{pathname === "/shop" ? "Top & Filters" : "Back to Top"}</span>
+            <span>{pathname === "/shop" ? "Top & Filters" : "Top"}</span>
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* 4. Warm Multi-Column Footer */}
-      <footer className="bg-[#FAF5EE] text-[#1F1A17] border-t border-[#EADFD0] mt-16">
+      {/* 4. Compact, Refined Luxury Footer */}
+      <footer className="bg-[#FAF5EE] text-[#1F1A17] border-t border-[#EADFD0] mt-12">
         <TribalPatternRibbon />
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-14">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#EADFD0]">
-            {/* Brand Identity Column (4 Cols) */}
-            <div className="lg:col-span-4 space-y-4">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-8 sm:py-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start lg:items-center pb-6 sm:pb-8 border-b border-[#EADFD0]">
+            {/* Brand Identity (6 Cols) */}
+            <div className="lg:col-span-6 space-y-2.5">
               <MacklemoreLogo showSubline theme="light" />
-              <p className="text-sm text-[#5C5147] leading-relaxed max-w-sm">
-                A Canadian-based fashion company with operational headquarters in Lagos, Nigeria—curating premium fashion and connecting international brands with dynamic markets across West and East Africa.
+              <p className="text-xs sm:text-sm text-[#5C5147] leading-relaxed max-w-lg">
+                A Canadian-based fashion company with operational headquarters in Lagos, Nigeria—curating authentic African luxury and connecting international brands across West Africa, East Africa, and global markets.
               </p>
-              <div className="text-xs text-[#7A491D] font-medium space-y-1 pt-1">
-                <div>Canada HQ: King Street West, Toronto</div>
-                <div>West Africa HQ: Victoria Island, Lagos</div>
-                <div>East Africa Hub: Westlands, Nairobi</div>
+            </div>
+
+            {/* Global Hubs Pill Grid (6 Cols) */}
+            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div className="p-3 rounded-md border border-[#EADFD0] bg-[#FFFDF9]">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#D4860B] block">
+                  Canada HQ
+                </span>
+                <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block">
+                  King St. West, Toronto
+                </span>
               </div>
-            </div>
-
-            {/* Shopping & Categories (2 Cols) */}
-            <div className="lg:col-span-2 space-y-3">
-              <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
-                Shop Categories
-              </span>
-              <ul className="space-y-2.5 text-sm text-[#5C5147]">
-                <li>
-                  <Link href="/shop?category=Men+Wears" className="hover:text-[#E31E24] transition-colors">
-                    Men Wears
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shop?category=Male+Accessories" className="hover:text-[#E31E24] transition-colors">
-                    Male Accessories
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shop?category=Women+Wears" className="hover:text-[#E31E24] transition-colors">
-                    Women Wears
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shop?category=Female+Accessories" className="hover:text-[#E31E24] transition-colors">
-                    Female Accessories
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shop?category=Kids+Wears" className="hover:text-[#E31E24] transition-colors">
-                    Kids Wears
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shop?category=Fabrics" className="hover:text-[#E31E24] transition-colors">
-                    Prints &amp; Fabrics
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company & B2B Distribution (3 Cols) */}
-            <div className="lg:col-span-3 space-y-3">
-              <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
-                Company &amp; Partnerships
-              </span>
-              <ul className="space-y-2.5 text-sm text-[#5C5147]">
-                <li>
-                  <Link href="/our-story" className="hover:text-[#E31E24] transition-colors">
-                    Our Story
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/partnerships" className="hover:text-[#E31E24] transition-colors">
-                    Brand Partnerships &amp; Distribution
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/markets" className="hover:text-[#E31E24] transition-colors">
-                    Our Markets
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/journal" className="hover:text-[#E31E24] transition-colors">
-                    Journal &amp; Stories
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-[#E31E24] transition-colors">
-                    Contact &amp; Showrooms
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Currency Switcher (3 Cols) */}
-            <div className="lg:col-span-3 space-y-3">
-              <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
-                Shopping Currency
-              </span>
-              <p className="text-xs text-[#5C5147] leading-relaxed">
-                Preview pricing in your local currency across our North American, European, and African markets.
-              </p>
-              <div className="grid grid-cols-4 gap-1.5 pt-1">
-                {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => {
-                  const isActive = currency === code;
-                  return (
-                    <button
-                      key={code}
-                      type="button"
-                      onClick={() => setCurrency(code)}
-                      className={`relative py-2 rounded-md border text-xs font-medium cursor-pointer transition-colors duration-200 overflow-hidden ${
-                        isActive
-                          ? "border-[#1F1A17] text-white shadow-xs"
-                          : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.span
-                          layoutId="footer-currency-pill"
-                          transition={{
-                            type: "spring",
-                            stiffness: 380,
-                            damping: 32,
-                          }}
-                          className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
-                        />
-                      )}
-                      <span className="relative z-10">{code}</span>
-                    </button>
-                  );
-                })}
+              <div className="p-3 rounded-md border border-[#EADFD0] bg-[#FFFDF9]">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#E31E24] block">
+                  West Africa HQ
+                </span>
+                <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block">
+                  Victoria Island, Lagos
+                </span>
+              </div>
+              <div className="p-3 rounded-md border border-[#EADFD0] bg-[#FFFDF9]">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#1A7A6E] block">
+                  East Africa Hub
+                </span>
+                <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block">
+                  Westlands, Nairobi
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#7D7065]">
+          <div className="pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] sm:text-xs text-[#7D7065]">
             <span>
               © 2026 Macklemore Fashion Inc. (Canada · Nigeria). All rights reserved.
             </span>
@@ -471,69 +474,16 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
         </div>
       </footer>
 
-      {/* 5. Currency & Region Switcher Drawer */}
-      <EditorialDrawer
-        isOpen={isCurrencyDrawerOpen}
-        onClose={() => setIsCurrencyDrawerOpen(false)}
-        title="Select Your Currency"
-        subtitle="International & Regional Pricing"
-        widthClass="max-w-md"
-      >
-        <div className="p-6 space-y-4">
-          <p className="text-sm text-[#5C5147] leading-relaxed">
-            Choose your preferred currency to browse collections across Canada, the UK, Europe, Nigeria, Ghana, and Kenya.
-          </p>
-
-          <div className="space-y-2.5">
-            {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => {
-              const cfg = CURRENCIES[code];
-              const isSelected = currency === code;
-              return (
-                <button
-                  key={code}
-                  type="button"
-                  onClick={() => {
-                    setCurrency(code);
-                    setIsCurrencyDrawerOpen(false);
-                  }}
-                  className={`w-full p-4 rounded-lg border text-left transition-all duration-200 cursor-pointer flex items-center justify-between ${
-                    isSelected
-                      ? "border-[#7A491D] bg-[#FAF5EE] shadow-xs"
-                      : "border-[#EADFD0] bg-white hover:border-[#7A491D] hover:bg-[#FFFDF9]"
-                  }`}
-                >
-                  <div>
-                    <span className="text-xs text-[#7A491D] font-medium block">
-                      {cfg.regionLabel}
-                    </span>
-                    <span className="font-display text-base font-semibold text-[#1F1A17] mt-0.5 block">
-                      {cfg.code} — {cfg.label} ({cfg.symbol})
-                    </span>
-                  </div>
-                  <span
-                    className={`w-3.5 h-3.5 rounded-full border ${
-                      isSelected
-                        ? "bg-[#E31E24] border-[#E31E24]"
-                        : "border-[#C5BEB3]"
-                    }`}
-                  />
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </EditorialDrawer>
-
-      {/* 6. Shopping Bag Drawer */}
+      {/* 5. Shopping Bag Drawer (Fits Mobile Screen Cleanly Without Horizontal Scroll) */}
       <EditorialDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         title={`Shopping Bag (${cartCount})`}
         subtitle={`Prices shown in ${currency}`}
-        widthClass="max-w-lg"
+        widthClass="max-w-md"
       >
         {reservationSent ? (
-          <div className="p-8 text-center space-y-4 my-auto">
+          <div className="p-6 sm:p-8 text-center space-y-4 my-auto">
             <div className="w-12 h-12 rounded-full bg-[#2E6B4E]/10 text-[#2E6B4E] flex items-center justify-center mx-auto text-xl font-bold">
               ✓
             </div>
@@ -556,6 +506,9 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
           </div>
         ) : cart.length === 0 ? (
           <div className="p-8 text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-[#FAF5EE] border border-[#EADFD0] text-[#1F1A17] flex items-center justify-center mx-auto">
+              <MacklemoreBagIcon className="w-5 h-5" />
+            </div>
             <p className="text-sm text-[#5C5147]">
               Your shopping bag is currently empty.
             </p>
@@ -575,17 +528,17 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 return (
                   <div
                     key={`${item.product.id}-${item.size}`}
-                    className="p-5 flex gap-4 bg-white"
+                    className="p-4 sm:p-5 flex gap-3.5 bg-white"
                   >
                     <img
                       src={item.product.editorialImageUrl}
                       alt={item.product.title}
-                      className="w-20 h-24 object-cover rounded-md border border-[#EADFD0] shrink-0 bg-[#FAF5EE]"
+                      className="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-md border border-[#EADFD0] shrink-0 bg-[#FAF5EE]"
                     />
-                    <div className="flex-1 flex flex-col justify-between">
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <div className="flex items-start justify-between gap-2">
-                          <span className="text-xs text-[#7A491D] font-medium">
+                          <span className="text-xs text-[#7A491D] font-medium truncate">
                             {item.product.brandName}
                           </span>
                           <button
@@ -593,15 +546,15 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                             onClick={() =>
                               removeFromCart(item.product.id, item.size)
                             }
-                            className="text-xs text-[#8C7E71] hover:text-[#E31E24] transition-colors cursor-pointer"
+                            className="text-xs text-[#8C7E71] hover:text-[#E31E24] transition-colors cursor-pointer shrink-0"
                           >
                             Remove
                           </button>
                         </div>
-                        <h4 className="font-display text-sm font-semibold text-[#1F1A17] mt-0.5">
+                        <h4 className="font-display text-sm font-semibold text-[#1F1A17] mt-0.5 line-clamp-2">
                           {item.product.title}
                         </h4>
-                        <span className="text-xs text-[#7D7065] block mt-0.5">
+                        <span className="text-xs text-[#7D7065] block mt-0.5 truncate">
                           Size: {item.size} · {item.product.colorName}
                         </span>
                       </div>
@@ -644,22 +597,24 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Bag Summary & Direct Concierge Reservation */}
-            <div className="p-6 bg-[#FAF5EE] border-t border-[#EADFD0] space-y-4">
-              <div className="space-y-1.5 text-sm">
+            <div className="p-4 sm:p-6 bg-[#FAF5EE] border-t border-[#EADFD0] space-y-4">
+              <div className="space-y-1.5 text-xs sm:text-sm">
                 <div className="flex justify-between text-[#5C5147]">
                   <span>Subtotal</span>
                   <span>{formatCurrencyValue(cartSubtotal, currency)}</span>
                 </div>
-                <div className="flex justify-between text-[#5C5147]">
-                  <span>Estimated Shipping ({logisticsEstimate.estimatedTransitDays})</span>
-                  <span>
+                <div className="flex justify-between text-[#5C5147] gap-2">
+                  <span className="truncate">
+                    Est. Shipping ({logisticsEstimate.estimatedTransitDays})
+                  </span>
+                  <span className="shrink-0">
                     {formatCurrencyValue(
                       logisticsEstimate.shippingFee,
                       currency
                     )}
                   </span>
                 </div>
-                <div className="flex justify-between text-base font-semibold text-[#1F1A17] pt-2 border-t border-[#EADFD0]">
+                <div className="flex justify-between text-sm sm:text-base font-semibold text-[#1F1A17] pt-2 border-t border-[#EADFD0]">
                   <span>Estimated Total</span>
                   <span className="text-[#E31E24]">
                     {formatCurrencyValue(

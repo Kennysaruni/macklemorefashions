@@ -28,6 +28,8 @@ html {
   background-color: #FFFDF9;
   color: #1F1A17;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
@@ -35,6 +37,8 @@ body {
   color: #1F1A17;
   font-family: var(--font-sans);
   overflow-x: hidden;
+  max-width: 100%;
+  position: relative;
 }
 
 ::selection {
@@ -97,13 +101,22 @@ body {
 }
 
 .tribal-ribbon-viewport {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  height: 15px;
+  overflow: hidden;
   content-visibility: auto;
-  contain-intrinsic-size: 100% 16px;
+  contain-intrinsic-size: 100% 15px;
   contain: layout paint style;
 }
 
 .animate-tribal-ltr {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 200%;
+  height: 100%;
   animation: tribal-ribbon-ltr 26s linear infinite;
   will-change: transform;
   transform: translate3d(-50%, 0, 0);

@@ -464,7 +464,11 @@ export function EditorialDrawer({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50" aria-modal="true" role="dialog">
+        <div
+          className="fixed inset-0 z-50 overflow-hidden"
+          aria-modal="true"
+          role="dialog"
+        >
           {/* Backdrop Fade: opacity 0 -> 1 over 0.3s */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -488,25 +492,53 @@ export function EditorialDrawer({
               x: "100%",
               transition: { duration: 0.45, ease: FAST_EXIT_EASE },
             }}
-            className={`absolute top-0 right-0 bottom-0 w-full ${widthClass} bg-[#FFFDF9] text-[#1F1A17] border-l border-[#EADFD0] sm:rounded-l-lg shadow-2xl flex flex-col justify-between transform-gpu will-change-transform`}
+            className={`absolute top-0 right-0 bottom-0 w-full max-w-[100vw] ${widthClass} bg-[#FFFDF9] text-[#1F1A17] border-l border-[#EADFD0] sm:rounded-l-lg shadow-2xl flex flex-col justify-between overflow-x-hidden transform-gpu will-change-transform`}
           >
             {/* Drawer Header */}
-            <div className="px-6 py-5 border-b border-[#EADFD0] flex items-center justify-between bg-[#FAF5EE] sm:rounded-tl-lg">
-              <div>
+            <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-[#EADFD0] flex items-center justify-between gap-3 bg-[#FAF5EE] sm:rounded-tl-lg">
+              <div className="min-w-0">
                 {subtitle && (
-                  <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-[#7A491D] block">
+                  <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-[#7A491D] block truncate">
                     {subtitle}
                   </span>
                 )}
-                <h3 className="font-display text-lg font-semibold tracking-tight text-[#1F1A17] mt-0.5">
+                <h3 className="font-display text-base sm:text-lg font-semibold tracking-tight text-[#1F1A17] mt-0.5 truncate">
                   {title}
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={onClose}
-                className="px-3.5 py-1.5 rounded-md border border-[#E2D6C5] bg-white hover:bg-[#1F1A17] hover:text-white hover:border-[#1F1A17] text-[#1F1A17] text-xs font-medium transition-all duration-200 cursor-pointer"
+                aria-label="Close drawer"
+                className="w-9 h-9 shrink-0 rounded-md border border-[#E2D6C5] bg-white hover:border-[#E31E24] hover:bg-[#FAF5EE] flex items-center justify-center transition-all duration-200 cursor-pointer"
               >
-                Close
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  aria-hidden="true"
+                >
+                  <line
+                    x1="5.5"
+                    y1="5.5"
+                    x2="18.5"
+                    y2="18.5"
+                    stroke="#1F1A17"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <line
+                    x1="18.5"
+                    y1="5.5"
+                    x2="5.5"
+                    y2="18.5"
+                    stroke="#E31E24"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <polygon points="12,9.5 14.5,12 12,14.5 9.5,12" fill="#D4860B" />
+                </svg>
               </button>
             </div>
 
@@ -514,7 +546,7 @@ export function EditorialDrawer({
             <div
               data-native-scroll="true"
               data-lenis-prevent
-              className="flex-1 overflow-y-auto divide-y divide-[#EADFD0]"
+              className="flex-1 overflow-y-auto overflow-x-hidden divide-y divide-[#EADFD0]"
             >
               {children}
             </div>

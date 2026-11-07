@@ -159,8 +159,8 @@ export default function ShopCatalogPage() {
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-3.5 space-y-2.5">
           {/* Primary Category Pills: Single horizontal scroll row on mobile, wrapped on desktop */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap sm:overflow-visible no-scrollbar flex-1">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap sm:overflow-visible flex-1 min-w-0">
               {CATEGORIES.map((cat) => {
                 const isActive = selectedCategory === cat.value;
                 return (
