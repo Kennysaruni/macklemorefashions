@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import { InquiryChannel } from "@/lib/store-data";
-import { StaggeredText } from "@/components/motion/MotionPrimitives";
+import { TextReveal } from "@/components/motion/MotionPrimitives";
 import { TribalCornerWatermark } from "@/components/vectors/TribalVectors";
 
 const CHANNELS: {
@@ -95,7 +96,7 @@ export default function ContactPage() {
           <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
             Get in Touch
           </span>
-          <StaggeredText
+          <TextReveal
             text="Contact Macklemore Fashion"
             as="h1"
             className="font-display text-3xl sm:text-5xl font-semibold tracking-tight text-[#1F1A17]"
@@ -108,7 +109,7 @@ export default function ContactPage() {
 
       {/* Channel Tabs + Contact Form */}
       <section className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 md:py-16">
-        {/* 4 Contact Option Cards */}
+        {/* 4 Contact Option Cards with layoutId Spring Indicator */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {CHANNELS.map((ch) => {
             const isSelected = ch.code === activeChannel;
@@ -120,20 +121,31 @@ export default function ContactPage() {
                   setActiveChannel(ch.code);
                   setSubmittedRef(null);
                 }}
-                className={`p-5 rounded-lg border text-left transition-all duration-200 cursor-pointer ${
+                className={`relative p-5 rounded-lg border text-left transition-colors duration-200 cursor-pointer overflow-hidden ${
                   isSelected
-                    ? "bg-[#1F1A17] border-[#1F1A17] text-white shadow-md"
+                    ? "border-[#1F1A17] text-white shadow-md"
                     : "bg-white border-[#EADFD0] text-[#1F1A17] hover:border-[#7A491D] hover:bg-[#FAF5EE]"
                 }`}
               >
+                {isSelected && (
+                  <motion.span
+                    layoutId="contact-channel-tab"
+                    transition={{
+                      type: "spring",
+                      stiffness: 380,
+                      damping: 32,
+                    }}
+                    className="absolute inset-0 bg-[#1F1A17] rounded-[7px]"
+                  />
+                )}
                 <span
-                  className={`text-xs font-medium block mb-1 ${
+                  className={`relative z-10 text-xs font-medium block mb-1 ${
                     isSelected ? "text-[#D4860B]" : "text-[#7A491D]"
                   }`}
                 >
                   {ch.label}
                 </span>
-                <div className="font-display text-base font-semibold">
+                <div className="relative z-10 font-display text-base font-semibold">
                   {ch.deskTitle}
                 </div>
               </button>

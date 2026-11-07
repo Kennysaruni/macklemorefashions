@@ -4,7 +4,10 @@ import React from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { usePlatform } from "@/lib/platform-context";
-import { CurtainReveal, StaggeredText } from "@/components/motion/MotionPrimitives";
+import {
+  CurtainImage,
+  TextReveal,
+} from "@/components/motion/MotionPrimitives";
 import {
   TribalCornerWatermark,
   TribalSectionSeparator,
@@ -53,7 +56,8 @@ export default function PartnerBrandMicrositePage() {
                     {brand.originCity}
                   </span>
 
-                  <StaggeredText
+                  <TextReveal
+                    key={brand.name}
                     text={brand.name}
                     as="h1"
                     className="font-display text-4xl sm:text-6xl font-semibold tracking-tight text-[#1F1A17] mt-1"
@@ -100,15 +104,18 @@ export default function PartnerBrandMicrositePage() {
               </div>
             </div>
 
-            {/* Right 5 Columns: Campaign Imagery */}
-            <div className="lg:col-span-5 relative bg-[#FAF5EE] min-h-[380px]">
-              <CurtainReveal duration={0.95} className="w-full h-full">
-                <img
-                  src={brand.lookbookBannerUrl}
-                  alt={`${brand.name} Campaign`}
-                  className="w-full h-full object-cover object-center min-h-[380px]"
-                />
-              </CurtainReveal>
+            {/* Right 5 Columns: Campaign Imagery with CurtainImage */}
+            <div className="lg:col-span-5 relative bg-[#FAF5EE] min-h-[420px] overflow-hidden">
+              <CurtainImage
+                key={brand.lookbookBannerUrl}
+                src={brand.lookbookBannerUrl}
+                secondarySrc={brand.secondaryBannerUrl}
+                alt={`${brand.name} Campaign`}
+                aspectClass="h-full w-full min-h-[420px]"
+                sizes="(max-width: 1024px) 100vw, 45vw"
+                priority
+                className="!absolute inset-0"
+              />
             </div>
           </div>
         </div>

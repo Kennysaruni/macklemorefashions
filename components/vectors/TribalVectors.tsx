@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { DrawDivider } from "@/components/motion/MotionPrimitives";
 
 /**
  * Official Macklemore Fashion Boutique Logo Asset
@@ -99,9 +100,14 @@ export function TribalSectionSeparator({
       className={`relative w-full flex items-center justify-center gap-4 py-4 select-none ${className}`}
       aria-hidden="true"
     >
-      <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#E5DEC9] to-[#D4860B]/50" />
+      <div className="flex-1">
+        <DrawDivider
+          originX={0}
+          className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#E5DEC9] to-[#D4860B]/60"
+        />
+      </div>
 
-      <div className="flex items-center gap-2.5 px-3 py-1 rounded-md bg-[#FAF5EE] border border-[#EDE3D5]">
+      <div className="flex items-center gap-2.5 px-3 py-1 rounded-md bg-[#FAF5EE] border border-[#EDE3D5] shrink-0">
         <span className="w-2 h-2 rotate-45 bg-[#E31E24]" />
         <span className="w-2 h-2 rotate-45 bg-[#D4860B]" />
         {label && (
@@ -113,7 +119,13 @@ export function TribalSectionSeparator({
         <span className="w-2 h-2 rotate-45 bg-[#7A491D]" />
       </div>
 
-      <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#E5DEC9] to-[#D4860B]/50" />
+      <div className="flex-1">
+        <DrawDivider
+          originX={0}
+          delay={0.08}
+          className="h-[1px] w-full bg-gradient-to-l from-transparent via-[#E5DEC9] to-[#D4860B]/60"
+        />
+      </div>
     </div>
   );
 }

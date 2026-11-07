@@ -3,7 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { usePlatform } from "@/lib/platform-context";
-import { CurtainReveal, StaggeredText } from "@/components/motion/MotionPrimitives";
+import {
+  CurtainImage,
+  DrawDivider,
+  TextReveal,
+} from "@/components/motion/MotionPrimitives";
 import {
   TribalCornerWatermark,
   TribalSectionSeparator,
@@ -22,7 +26,7 @@ export default function BrandsDirectoryPage() {
             <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
               Represented &amp; Partner Houses
             </span>
-            <StaggeredText
+            <TextReveal
               text="Our Brands"
               as="h1"
               className="font-display text-3xl sm:text-5xl font-semibold tracking-tight text-[#1F1A17]"
@@ -53,26 +57,26 @@ export default function BrandsDirectoryPage() {
           return (
             <div
               key={brand.id}
-              className="group rounded-lg border border-[#EADFD0] bg-white grid grid-cols-1 lg:grid-cols-12 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-[#D4B895]"
+              className="group rounded-lg border border-[#EADFD0] bg-white grid grid-cols-1 lg:grid-cols-12 overflow-hidden transform-gpu transition-all duration-300 hover:shadow-lg hover:border-[#D4B895]"
             >
-              {/* Left 5 Columns: Lookbook Visual */}
-              <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#EADFD0] relative bg-[#FAF5EE] min-h-[320px] overflow-hidden">
-                <CurtainReveal
+              {/* Left 5 Columns: Lookbook Visual with CurtainImage */}
+              <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#EADFD0] relative bg-[#FAF5EE] min-h-[340px] overflow-hidden">
+                <CurtainImage
+                  src={brand.lookbookBannerUrl}
+                  secondarySrc={brand.secondaryBannerUrl}
+                  alt={brand.name}
+                  aspectClass="h-full w-full min-h-[340px]"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
                   delay={idx * 0.05}
-                  duration={0.9}
-                  className="w-full h-full"
+                  duration={1.1}
+                  className="!absolute inset-0"
                 >
-                  <img
-                    src={brand.lookbookBannerUrl}
-                    alt={brand.name}
-                    className="w-full h-full object-cover object-center min-h-[320px] scale-100 group-hover:scale-[1.03] transition-transform duration-700"
-                  />
-                </CurtainReveal>
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-md bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] text-xs font-medium text-[#7A491D]">
-                  {brand.isProprietary
-                    ? "Flagship House"
-                    : "Represented Partner Brand"}
-                </div>
+                  <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-md bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] text-xs font-medium text-[#7A491D]">
+                    {brand.isProprietary
+                      ? "Flagship House"
+                      : "Represented Partner Brand"}
+                  </div>
+                </CurtainImage>
               </div>
 
               {/* Right 7 Columns: Brand Story & Link */}
@@ -100,24 +104,27 @@ export default function BrandsDirectoryPage() {
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-[#F2EAE0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="text-xs text-[#6E6359] space-y-1">
-                    <div>
-                      <strong className="text-[#1F1A17]">Creative Direction:</strong>{" "}
-                      {brand.creativeDirector}
+                <div className="space-y-4">
+                  <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="text-xs text-[#6E6359] space-y-1">
+                      <div>
+                        <strong className="text-[#1F1A17]">Creative Direction:</strong>{" "}
+                        {brand.creativeDirector}
+                      </div>
+                      <div>
+                        <strong className="text-[#1F1A17]">Markets:</strong>{" "}
+                        {brand.allocatedRegions.join(" · ")}
+                      </div>
                     </div>
-                    <div>
-                      <strong className="text-[#1F1A17]">Markets:</strong>{" "}
-                      {brand.allocatedRegions.join(" · ")}
-                    </div>
-                  </div>
 
-                  <Link
-                    href={`/brands/${brand.slug}`}
-                    className="px-6 py-3 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-xs font-medium transition-colors text-center shrink-0 shadow-2xs"
-                  >
-                    Explore {brand.name} →
-                  </Link>
+                    <Link
+                      href={`/brands/${brand.slug}`}
+                      className="px-6 py-3 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-xs font-medium transition-colors text-center shrink-0 shadow-2xs"
+                    >
+                      Explore {brand.name} →
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

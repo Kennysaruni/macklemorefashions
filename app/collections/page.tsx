@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePlatform } from "@/lib/platform-context";
-import { CurtainReveal, StaggeredText } from "@/components/motion/MotionPrimitives";
+import {
+  CurtainImage,
+  DrawDivider,
+  TextReveal,
+} from "@/components/motion/MotionPrimitives";
 import {
   TribalCornerWatermark,
   TribalSectionSeparator,
@@ -33,7 +37,7 @@ export default function CollectionsPage() {
           <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
             New Arrivals &amp; Featured Collections
           </span>
-          <StaggeredText
+          <TextReveal
             text="Seasonal Campaigns & Capsules"
             as="h1"
             className="font-display text-3xl sm:text-5xl font-semibold tracking-tight max-w-3xl text-[#1F1A17]"
@@ -56,28 +60,28 @@ export default function CollectionsPage() {
             return (
               <div
                 key={col.id}
-                className={`group rounded-lg overflow-hidden border transition-all duration-300 flex flex-col justify-between bg-white ${
+                className={`group rounded-lg overflow-hidden border transform-gpu transition-all duration-300 flex flex-col justify-between bg-white ${
                   isSelected
                     ? "border-[#E31E24] shadow-md"
                     : "border-[#EADFD0] hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895]"
                 }`}
               >
                 <div>
-                  <CurtainReveal delay={idx * 0.06} duration={0.9}>
-                    <div className="aspect-[16/9] relative overflow-hidden bg-[#FAF5EE]">
-                      <img
-                        src={col.heroImageUrl}
-                        alt={col.title}
-                        className="w-full h-full object-cover object-center scale-100 group-hover:scale-[1.03] transition-transform duration-700"
-                      />
-                      <span className="absolute top-3 left-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-3 py-1 text-xs font-medium text-[#7A491D]">
-                        {col.brandName}
-                      </span>
-                      <span className="absolute top-3 right-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-3 py-1 text-xs font-medium text-[#2E6B4E]">
-                        {colProducts.length} Pieces
-                      </span>
-                    </div>
-                  </CurtainReveal>
+                  <CurtainImage
+                    src={col.heroImageUrl}
+                    alt={col.title}
+                    aspectClass="aspect-[16/9]"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    delay={idx * 0.06}
+                    duration={1.1}
+                  >
+                    <span className="absolute top-3 left-3 z-10 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-3 py-1 text-xs font-medium text-[#7A491D]">
+                      {col.brandName}
+                    </span>
+                    <span className="absolute top-3 right-3 z-10 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-3 py-1 text-xs font-medium text-[#2E6B4E]">
+                      {colProducts.length} Pieces
+                    </span>
+                  </CurtainImage>
 
                   <div className="p-6 space-y-2.5">
                     <h2 className="font-display text-2xl font-semibold text-[#1F1A17]">
@@ -89,29 +93,32 @@ export default function CollectionsPage() {
                   </div>
                 </div>
 
-                <div className="px-6 pb-6 pt-4 border-t border-[#F2EAE0] flex flex-wrap items-center justify-between gap-3">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setSelectedSlug(isSelected ? "ALL" : col.slug)
-                    }
-                    className={`px-5 py-2.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
-                      isSelected
-                        ? "bg-[#E31E24] border-[#E31E24] text-white"
-                        : "border-[#1F1A17] bg-[#1F1A17] text-white hover:bg-[#E31E24] hover:border-[#E31E24]"
-                    }`}
-                  >
-                    {isSelected
-                      ? "Showing This Collection (Show All)"
-                      : `View Collection Pieces (${colProducts.length})`}
-                  </button>
+                <div className="px-6 pb-6 space-y-4">
+                  <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSelectedSlug(isSelected ? "ALL" : col.slug)
+                      }
+                      className={`px-5 py-2.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
+                        isSelected
+                          ? "bg-[#E31E24] border-[#E31E24] text-white"
+                          : "border-[#1F1A17] bg-[#1F1A17] text-white hover:bg-[#E31E24] hover:border-[#E31E24]"
+                      }`}
+                    >
+                      {isSelected
+                        ? "Showing This Collection (Show All)"
+                        : `View Collection Pieces (${colProducts.length})`}
+                    </button>
 
-                  <Link
-                    href="/shop"
-                    className="text-xs font-medium text-[#7A491D] hover:text-[#E31E24] transition-colors"
-                  >
-                    Open in Shop →
-                  </Link>
+                    <Link
+                      href="/shop"
+                      className="text-xs font-medium text-[#7A491D] hover:text-[#E31E24] transition-colors"
+                    >
+                      Open in Shop →
+                    </Link>
+                  </div>
                 </div>
               </div>
             );

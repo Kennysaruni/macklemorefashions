@@ -1,10 +1,22 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import {
+  motion,
+  AnimatePresence,
+  useInView,
+  type Variants,
+} from "framer-motion";
+import Lenis from "lenis";
+
+const EDITORIAL_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const FAST_EXIT_EASE: [number, number, number, number] = [0.32, 0, 0.67, 0];
 
 /**
- * 1. INERTIAL SMOOTH SCROLL PROVIDER (Lenis Physics Engine)
- * Provides weighted, tactile editorial scroll dampening across the storefront.
+ * 1. GLOBAL LENIS SMOOTH SCROLL PROVIDER
+ * Calibrated for 60fps+ hardware-accelerated rendering without scroll hitching.
+ * Automatically disables wheel hijacking on touch devices so native momentum scrolling excels.
  */
 export function SmoothScrollProvider({
   children,
@@ -12,59 +24,48 @@ export function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    let rafId: number | null = null;
-    let targetScroll = window.scrollY;
-    let currentScroll = window.scrollY;
-    let isTicking = false;
-    const dampFactor = 0.11; // Weighted editorial inertia
+    if (typeof window === "undefined") return;
 
-    const onScroll = () => {
-      if (!isTicking) {
-        currentScroll = window.scrollY;
-        targetScroll = window.scrollY;
-      }
+    const isTouchDevice =
+      window.matchMedia("(pointer: coarse)").matches ||
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // Disable smooth scrolling on touch devices or when reduced motion is preferred
+    if (isTouchDevice || prefersReducedMotion) {
+      return;
+    }
+
+    const lenis = new Lenis({
+      lerp: 0.1,
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      syncTouch: false,
+      wheelMultiplier: 1,
+      autoRaf: false,
+      prevent: (node: HTMLElement) =>
+        node?.getAttribute("data-native-scroll") === "true" ||
+        node?.hasAttribute("data-lenis-prevent"),
+    });
+
+    let rafId = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
     };
 
-    const update = () => {
-      const diff = targetScroll - currentScroll;
-      if (Math.abs(diff) > 0.5) {
-        currentScroll += diff * dampFactor;
-        window.scrollTo(0, currentScroll);
-        rafId = requestAnimationFrame(update);
-      } else {
-        currentScroll = targetScroll;
-        isTicking = false;
-      }
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      // Allow native scrolling inside modal/drawer overflow containers
-      const target = e.target as HTMLElement | null;
-      if (target?.closest("[data-native-scroll='true']")) {
-        return;
-      }
-      // Only apply on non-touch desktop precision wheel events
-      if (Math.abs(e.deltaY) < 4) return;
-      e.preventDefault();
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-      targetScroll = Math.max(
-        0,
-        Math.min(maxScroll, targetScroll + e.deltaY * 0.92)
-      );
-      if (!isTicking) {
-        isTicking = true;
-        rafId = requestAnimationFrame(update);
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("scroll", onScroll, { passive: true });
+    rafId = requestAnimationFrame(raf);
 
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("scroll", onScroll);
       if (rafId) cancelAnimationFrame(rafId);
+      lenis.destroy();
     };
   }, []);
 
@@ -72,15 +73,156 @@ export function SmoothScrollProvider({
 }
 
 /**
- * 2. MASKED CURTAIN REVEAL
- * Initial: clipPath: 'inset(100% 0% 0% 0%)'
- * Target:  clipPath: 'inset(0% 0% 0% 0%)'
- * Easing:  cubic-bezier(0.16, 1, 0.3, 1) over 0.9s - 1.2s
+ * 2. REUSABLE <CurtainImage /> PRIMITIVE
+ * - Uses next/image with `fill` inside an explicit aspect-ratio / relative container so it never collapses to 0x0.
+ * - Executes the Masked Clip-Path Curtain Reveal:
+ *   Initial: clipPath: 'inset(100% 0% 0%)', scale: 1.06
+ *   In-View: clipPath: 'inset(0% 0% 0%)', scale: 1
+ *   Transition: duration 1.1s, cubic-bezier [0.16, 1, 0.3, 1]
+ *   Viewport: { once: true, margin: "-10%" } observed on the unclipped outer container.
+ * - Includes skeleton pulse while loading, automatic unoptimized fallback if remote proxy times out, and graceful 404 fallback UI.
+ */
+export function CurtainImage({
+  src,
+  secondarySrc,
+  alt,
+  aspectClass = "aspect-[3/4]",
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  priority = false,
+  delay = 0,
+  duration = 1.1,
+  className = "",
+  imgClassName = "object-cover object-top",
+  children,
+}: {
+  src: string;
+  secondarySrc?: string;
+  alt: string;
+  aspectClass?: string;
+  sizes?: string;
+  priority?: boolean;
+  delay?: number;
+  duration?: number;
+  className?: string;
+  imgClassName?: string;
+  children?: React.ReactNode;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-10%" });
+
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [useDirectFallback, setUseDirectFallback] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [secondaryError, setSecondaryError] = useState(false);
+  const [animComplete, setAnimComplete] = useState(false);
+
+  const hasDistinctSecondary =
+    Boolean(secondarySrc) && secondarySrc !== src && !secondaryError;
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative w-full overflow-hidden bg-[#FAF5EE] ${aspectClass} ${className}`}
+    >
+      {/* Skeleton Pulse Placeholder while image bytes load */}
+      {!isLoaded && !hasError && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-0 animate-pulse bg-gradient-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]"
+        />
+      )}
+
+      {/* Masked Clip-Path Curtain Reveal Layer */}
+      <motion.div
+        initial={{ clipPath: "inset(100% 0% 0%)", scale: 1.06 }}
+        animate={
+          isInView
+            ? { clipPath: "inset(0% 0% 0%)", scale: 1 }
+            : { clipPath: "inset(100% 0% 0%)", scale: 1.06 }
+        }
+        transition={{
+          duration,
+          delay,
+          ease: EDITORIAL_EASE,
+        }}
+        onAnimationComplete={() => {
+          if (isInView) setAnimComplete(true);
+        }}
+        className={`relative w-full h-full transform-gpu ${
+          animComplete ? "" : "will-change-[clip-path,transform]"
+        }`}
+      >
+        {hasError ? (
+          /* Graceful Fallback Block if image URL returns 404 */
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF5EE] p-6 text-center border border-[#EADFD0]">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-2 h-2 rotate-45 bg-[#E31E24]" />
+              <span className="w-2 h-2 rotate-45 bg-[#D4860B]" />
+              <span className="w-2 h-2 rotate-45 bg-[#1A7A6E]" />
+            </div>
+            <span className="font-display text-xs font-semibold text-[#1F1A17] line-clamp-2 max-w-[200px]">
+              {alt || "Macklemore Fashion"}
+            </span>
+            <span className="text-[10px] uppercase tracking-wider text-[#7A491D] mt-1">
+              Macklemore Archive
+            </span>
+          </div>
+        ) : (
+          <>
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              sizes={sizes}
+              priority={priority}
+              unoptimized={useDirectFallback}
+              onLoad={() => setIsLoaded(true)}
+              onError={() => {
+                if (!useDirectFallback) {
+                  setUseDirectFallback(true);
+                } else {
+                  setHasError(true);
+                }
+              }}
+              className={`${imgClassName} transform-gpu scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                hasDistinctSecondary
+                  ? "opacity-100 group-hover:opacity-0"
+                  : "opacity-100"
+              }`}
+            />
+
+            {hasDistinctSecondary && secondarySrc && (
+              <Image
+                src={secondarySrc}
+                alt={`${alt} alternate view`}
+                fill
+                sizes={sizes}
+                unoptimized={useDirectFallback}
+                onError={() => setSecondaryError(true)}
+                className={`${imgClassName} transform-gpu scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100`}
+              />
+            )}
+          </>
+        )}
+      </motion.div>
+
+      {/* Optional Overlay Badges / Captions */}
+      {children}
+    </div>
+  );
+}
+
+/**
+ * 3. MASKED CURTAIN REVEAL WRAPPER
+ * Observed on an unclipped outer container so IntersectionObserver never deadlocks on inset(100%).
+ * Initial: clipPath: 'inset(100% 0% 0%)', scale: 1.06
+ * In-View: clipPath: 'inset(0% 0% 0%)', scale: 1
+ * Transition: duration: 1.1s, ease: [0.16, 1, 0.3, 1]
  */
 export function CurtainReveal({
   children,
   delay = 0,
-  duration = 1.05,
+  duration = 1.1,
   direction = "bottom-up",
   className = "",
 }: {
@@ -90,65 +232,59 @@ export function CurtainReveal({
   direction?: "bottom-up" | "top-down" | "left-right";
   className?: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [revealed, setRevealed] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setRevealed(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const outerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(outerRef, { once: true, margin: "-10%" });
+  const [animComplete, setAnimComplete] = useState(false);
 
   const initialClip =
     direction === "bottom-up"
-      ? "inset(100% 0% 0% 0%)"
+      ? "inset(100% 0% 0%)"
       : direction === "top-down"
       ? "inset(0% 0% 100% 0%)"
       : "inset(0% 100% 0% 0%)";
 
+  const targetClip =
+    direction === "bottom-up" ? "inset(0% 0% 0%)" : "inset(0% 0% 0% 0%)";
+
   return (
-    <div
-      ref={ref}
-      className={`will-change-[clip-path,transform] ${className}`}
-      style={{
-        clipPath: revealed ? "inset(0% 0% 0% 0%)" : initialClip,
-        transform: revealed ? "scale(1)" : "scale(1.04)",
-        transitionProperty: "clip-path, transform",
-        transitionDuration: `${duration}s`,
-        transitionDelay: `${delay}s`,
-        transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-      }}
-    >
-      {children}
+    <div ref={outerRef} className={`relative overflow-hidden ${className}`}>
+      <motion.div
+        initial={{ clipPath: initialClip, scale: 1.06 }}
+        animate={
+          isInView
+            ? { clipPath: targetClip, scale: 1 }
+            : { clipPath: initialClip, scale: 1.06 }
+        }
+        transition={{
+          duration,
+          delay,
+          ease: EDITORIAL_EASE,
+        }}
+        onAnimationComplete={() => {
+          if (isInView) setAnimComplete(true);
+        }}
+        className={`w-full h-full transform-gpu ${
+          animComplete ? "" : "will-change-[clip-path,transform]"
+        }`}
+      >
+        {children}
+      </motion.div>
     </div>
   );
 }
 
 /**
- * 3. STAGGERED TEXT LIFT
- * Section headings and editorial manifestos reveal upward from overflow-hidden
- * containers, staggered at 0.04s intervals with cubic-bezier(0.16, 1, 0.3, 1).
+ * 4. <TextReveal /> & <StaggeredText /> (STAGGERED MASKED TEXT LIFT)
+ * - Container: staggerChildren: 0.05s, delayChildren: 0.1s
+ * - Children (Words/Lines): y: "115%" to y: "0%"
+ * - Transition: duration: 0.8s, easing curve [0.16, 1, 0.3, 1]
  */
-export function StaggeredText({
+export function TextReveal({
   text,
   as: Tag = "h2",
   className = "",
-  delay = 0,
-  stagger = 0.04,
+  delay = 0.1,
+  stagger = 0.05,
   mode = "words",
 }: {
   text: string;
@@ -159,60 +295,113 @@ export function StaggeredText({
   mode?: "words" | "lines";
 }) {
   const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const [animDone, setAnimDone] = useState(false);
 
   const tokens = mode === "lines" ? text.split("\n") : text.split(" ");
+
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: stagger,
+        delayChildren: delay,
+      },
+    },
+  };
+
+  const childVariants: Variants = {
+    hidden: { y: "115%" },
+    visible: {
+      y: "0%",
+      transition: {
+        duration: 0.8,
+        ease: EDITORIAL_EASE,
+      },
+    },
+  };
 
   return (
     // @ts-expect-error Dynamic heading tag ref
     <Tag ref={ref} className={className} aria-label={text}>
-      {tokens.map((token, idx) => (
-        <span
-          key={idx}
-          className="inline-block overflow-hidden align-bottom mr-[0.26em] last:mr-0"
-        >
+      <motion.span
+        variants={containerVariants}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        onAnimationComplete={() => {
+          if (isInView) setAnimDone(true);
+        }}
+        className="inline"
+      >
+        {tokens.map((token, idx) => (
           <span
-            className="inline-block will-change-transform"
-            style={{
-              transform: visible ? "translate3d(0, 0%, 0)" : "translate3d(0, 112%, 0)",
-              opacity: visible ? 1 : 0,
-              transitionProperty: "transform, opacity",
-              transitionDuration: "0.95s",
-              transitionDelay: `${delay + idx * stagger}s`,
-              transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-            }}
+            key={`${token}-${idx}`}
+            className="inline-block overflow-hidden align-bottom mr-[0.26em] last:mr-0 pb-[0.04em]"
           >
-            {token}
+            <motion.span
+              variants={childVariants}
+              className={`inline-block transform-gpu ${
+                animDone ? "" : "will-change-transform"
+              }`}
+            >
+              {token}
+            </motion.span>
           </span>
-        </span>
-      ))}
+        ))}
+      </motion.span>
     </Tag>
   );
 }
 
+// Keep StaggeredText exported as an alias to TextReveal for backwards compatibility across all routes
+export const StaggeredText = TextReveal;
+
 /**
- * 4. SINGLE-AXIS EDITORIAL DRAWER
- * Slides on a single axis with zero rubber-band bounce, anchored by obsidian backdrop blur.
+ * 5. <DrawDivider /> (EXPANDING HAIRLINE SEPARATORS & TRIBAL LINES)
+ * - Initial: scaleX: 0, originX: 0
+ * - In-View: scaleX: 1
+ * - Transition: duration: 1.2s, easing curve [0.16, 1, 0.3, 1]
+ */
+export function DrawDivider({
+  className = "h-[1px] w-full bg-[#EADFD0]",
+  delay = 0,
+  originX = 0,
+}: {
+  className?: string;
+  delay?: number;
+  originX?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const [animDone, setAnimDone] = useState(false);
+
+  return (
+    <div ref={ref} className="w-full overflow-hidden">
+      <motion.div
+        initial={{ scaleX: 0, originX }}
+        animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+        transition={{
+          duration: 1.2,
+          delay,
+          ease: EDITORIAL_EASE,
+        }}
+        onAnimationComplete={() => {
+          if (isInView) setAnimDone(true);
+        }}
+        style={{ transformOrigin: `${originX * 100}% 50%` }}
+        className={`transform-gpu ${
+          animDone ? "" : "will-change-transform"
+        } ${className}`}
+      />
+    </div>
+  );
+}
+
+/**
+ * 6. NON-BOUNCY WEIGHTED DRAWER (Cart, Navigation & Currency)
+ * - Open: x: "0%", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+ * - Close: x: "100%", transition: { duration: 0.45, ease: [0.32, 0, 0.67, 0] }
+ * - Backdrop fade: opacity: 0 to 1 over 0.3s
  */
 export function EditorialDrawer({
   isOpen,
@@ -238,59 +427,65 @@ export function EditorialDrawer({
   }, [isOpen, onClose]);
 
   return (
-    <div
-      className={`fixed inset-0 z-50 transition-opacity duration-500 ${
-        isOpen
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
-      }`}
-      style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-      aria-hidden={!isOpen}
-    >
-      {/* Warm Soft Backdrop Blur */}
-      <div
-        onClick={onClose}
-        className="absolute inset-0 backdrop-blur-sm bg-[#1F1A17]/30"
-      />
-
-      {/* Single-Axis Panel */}
-      <aside
-        data-native-scroll="true"
-        className={`absolute top-0 right-0 bottom-0 w-full ${widthClass} bg-[#FFFDF9] text-[#1F1A17] border-l border-[#EADFD0] sm:rounded-l-lg shadow-2xl flex flex-col justify-between transition-transform duration-500`}
-        style={{
-          transform: isOpen ? "translate3d(0%, 0, 0)" : "translate3d(100%, 0, 0)",
-          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      >
-        {/* Drawer Header */}
-        <div className="px-6 py-5 border-b border-[#EADFD0] flex items-center justify-between bg-[#FAF5EE] sm:rounded-tl-lg">
-          <div>
-            {subtitle && (
-              <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-[#7A491D] block">
-                {subtitle}
-              </span>
-            )}
-            <h3 className="font-display text-lg font-semibold tracking-tight text-[#1F1A17] mt-0.5">
-              {title}
-            </h3>
-          </div>
-          <button
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50" aria-modal="true" role="dialog">
+          {/* Backdrop Fade: opacity 0 -> 1 over 0.3s */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             onClick={onClose}
-            className="px-3.5 py-1.5 rounded-md border border-[#E2D6C5] bg-white hover:bg-[#1F1A17] hover:text-white hover:border-[#1F1A17] text-[#1F1A17] text-xs font-medium transition-all duration-200 cursor-pointer"
-          >
-            Close
-          </button>
-        </div>
+            className="absolute inset-0 backdrop-blur-sm bg-[#1F1A17]/30"
+          />
 
-        {/* Drawer Body */}
-        <div
-          data-native-scroll="true"
-          className="flex-1 overflow-y-auto divide-y divide-[#EADFD0]"
-        >
-          {children}
+          {/* Weighted Non-Bouncy Panel */}
+          <motion.aside
+            data-native-scroll="true"
+            data-lenis-prevent
+            initial={{ x: "100%" }}
+            animate={{
+              x: "0%",
+              transition: { duration: 0.7, ease: EDITORIAL_EASE },
+            }}
+            exit={{
+              x: "100%",
+              transition: { duration: 0.45, ease: FAST_EXIT_EASE },
+            }}
+            className={`absolute top-0 right-0 bottom-0 w-full ${widthClass} bg-[#FFFDF9] text-[#1F1A17] border-l border-[#EADFD0] sm:rounded-l-lg shadow-2xl flex flex-col justify-between transform-gpu will-change-transform`}
+          >
+            {/* Drawer Header */}
+            <div className="px-6 py-5 border-b border-[#EADFD0] flex items-center justify-between bg-[#FAF5EE] sm:rounded-tl-lg">
+              <div>
+                {subtitle && (
+                  <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-[#7A491D] block">
+                    {subtitle}
+                  </span>
+                )}
+                <h3 className="font-display text-lg font-semibold tracking-tight text-[#1F1A17] mt-0.5">
+                  {title}
+                </h3>
+              </div>
+              <button
+                onClick={onClose}
+                className="px-3.5 py-1.5 rounded-md border border-[#E2D6C5] bg-white hover:bg-[#1F1A17] hover:text-white hover:border-[#1F1A17] text-[#1F1A17] text-xs font-medium transition-all duration-200 cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Drawer Body */}
+            <div
+              data-native-scroll="true"
+              data-lenis-prevent
+              className="flex-1 overflow-y-auto divide-y divide-[#EADFD0]"
+            >
+              {children}
+            </div>
+          </motion.aside>
         </div>
-      </aside>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }
-

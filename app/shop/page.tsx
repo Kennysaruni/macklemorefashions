@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import { GenderTarget, ShopCategory } from "@/lib/store-data";
 import { EditorialProductCard } from "@/components/commerce/EditorialProductCard";
-import { StaggeredText } from "@/components/motion/MotionPrimitives";
+import { DrawDivider, TextReveal } from "@/components/motion/MotionPrimitives";
 import { TribalCornerWatermark } from "@/components/vectors/TribalVectors";
 
 const CATEGORIES: { value: "ALL" | ShopCategory; label: string }[] = [
@@ -109,7 +110,8 @@ export default function ShopCatalogPage() {
             <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
               Macklemore Fashion · Ready-to-Wear, Accessories &amp; Fabrics
             </span>
-            <StaggeredText
+            <TextReveal
+              key={selectedCategory}
               text={
                 selectedCategory === "ALL"
                   ? "Shop the Collection"
@@ -147,26 +149,42 @@ export default function ShopCatalogPage() {
       {/* Clean Minimalist Filter Bar */}
       <section className="border-b border-[#EADFD0] bg-[#FFFDF9] sticky top-20 z-20">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-4 space-y-3">
-          {/* Primary Category Pills (Matching macklemorefashions.com Shop Nav) */}
+          {/* Primary Category Pills with layoutId Spring Indicator */}
           <div className="flex flex-wrap items-center gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                type="button"
-                onClick={() => setSelectedCategory(cat.value)}
-                className={`px-3.5 py-2 rounded-md text-xs font-medium border transition-all duration-200 cursor-pointer ${
-                  selectedCategory === cat.value
-                    ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-2xs"
-                    : "border-[#E2D6C5] bg-[#FAF5EE] text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
+            {CATEGORIES.map((cat) => {
+              const isActive = selectedCategory === cat.value;
+              return (
+                <button
+                  key={cat.value}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.value)}
+                  className={`relative px-3.5 py-2 rounded-md text-xs font-medium border transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    isActive
+                      ? "border-[#1F1A17] text-white shadow-2xs"
+                      : "border-[#E2D6C5] bg-[#FAF5EE] text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="shop-category-tab"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                      className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
+                    />
+                  )}
+                  <span className="relative z-10">{cat.label}</span>
+                </button>
+              );
+            })}
           </div>
 
+          <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+
           {/* Secondary Filter Row: Segment, Brand, Size & Clear */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#F2EAE0]">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
             <div className="flex flex-wrap items-center gap-1.5">
               {(
                 [
@@ -176,20 +194,34 @@ export default function ShopCatalogPage() {
                   { id: "KIDS", label: "Kids" },
                   { id: "UNISEX", label: "Unisex & Fabrics" },
                 ] as const
-              ).map((seg) => (
-                <button
-                  key={seg.id}
-                  type="button"
-                  onClick={() => setSelectedGender(seg.id)}
-                  className={`px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                    selectedGender === seg.id
-                      ? "bg-[#FAF5EE] text-[#E31E24] font-semibold border border-[#E31E24]/30"
-                      : "text-[#5C5147] hover:text-[#1F1A17] hover:bg-[#FAF5EE]/60"
-                  }`}
-                >
-                  {seg.label}
-                </button>
-              ))}
+              ).map((seg) => {
+                const isActive = selectedGender === seg.id;
+                return (
+                  <button
+                    key={seg.id}
+                    type="button"
+                    onClick={() => setSelectedGender(seg.id)}
+                    className={`relative px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer overflow-hidden ${
+                      isActive
+                        ? "text-[#E31E24] font-semibold"
+                        : "text-[#5C5147] hover:text-[#1F1A17] hover:bg-[#FAF5EE]/60"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="shop-gender-tab"
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 32,
+                        }}
+                        className="absolute inset-0 bg-[#FAF5EE] border border-[#E31E24]/30 rounded-md"
+                      />
+                    )}
+                    <span className="relative z-10">{seg.label}</span>
+                  </button>
+                );
+              })}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -207,20 +239,36 @@ export default function ShopCatalogPage() {
               </select>
 
               <div className="flex items-center gap-1">
-                {SIZES.map((sz) => (
-                  <button
-                    key={sz}
-                    type="button"
-                    onClick={() => setSelectedSize(sz)}
-                    className={`px-2 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
-                      selectedSize === sz
-                        ? "border-[#7A491D] bg-[#7A491D] text-white"
-                        : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D]"
-                    }`}
-                  >
-                    {sz === "ALL" ? "All Sizes" : sz}
-                  </button>
-                ))}
+                {SIZES.map((sz) => {
+                  const isActive = selectedSize === sz;
+                  return (
+                    <button
+                      key={sz}
+                      type="button"
+                      onClick={() => setSelectedSize(sz)}
+                      className={`relative px-2 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer overflow-hidden ${
+                        isActive
+                          ? "border-[#7A491D] text-white"
+                          : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D]"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.span
+                          layoutId="shop-size-tab"
+                          transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 32,
+                          }}
+                          className="absolute inset-0 bg-[#7A491D] rounded-[5px]"
+                        />
+                      )}
+                      <span className="relative z-10">
+                        {sz === "ALL" ? "All Sizes" : sz}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
               {(selectedGender !== "ALL" ||

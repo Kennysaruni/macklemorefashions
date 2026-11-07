@@ -2,7 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { CurtainReveal, StaggeredText } from "@/components/motion/MotionPrimitives";
+import {
+  CurtainImage,
+  TextReveal,
+} from "@/components/motion/MotionPrimitives";
 import {
   MacklemoreLogo,
   TribalCornerWatermark,
@@ -23,7 +26,7 @@ export default function OurStoryPage() {
               <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
                 Our Story · Canada &amp; Nigeria
               </span>
-              <StaggeredText
+              <TextReveal
                 text="Bridging International Fashion With Africa's Growing Markets."
                 as="h1"
                 className="font-display text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.08] text-[#1F1A17]"
@@ -63,20 +66,21 @@ export default function OurStoryPage() {
         <div className="mx-auto max-w-[1440px]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <CurtainReveal className="aspect-[4/5] rounded-lg overflow-hidden border border-[#EADFD0] bg-[#FAF5EE] shadow-xs">
-                <img
-                  src="https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg"
-                  alt="Macklemore Fashion at Toronto Fashion Week"
-                  className="h-full w-full object-cover"
-                />
-              </CurtainReveal>
-              <CurtainReveal delay={0.1} className="aspect-[4/5] rounded-lg overflow-hidden border border-[#EADFD0] bg-[#FAF5EE] shadow-xs">
-                <img
-                  src="https://macklemorefashions.com/wp-content/uploads/2025/05/Micah-sewing-.jpg"
-                  alt="Micah Elechi in the Macklemore Fashion Atelier"
-                  className="h-full w-full object-cover"
-                />
-              </CurtainReveal>
+              <CurtainImage
+                src="https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg"
+                alt="Macklemore Fashion at Toronto Fashion Week"
+                aspectClass="aspect-[4/5]"
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className="rounded-lg border border-[#EADFD0] shadow-xs"
+              />
+              <CurtainImage
+                src="https://macklemorefashions.com/wp-content/uploads/2025/05/Micah-sewing-.jpg"
+                alt="Micah Elechi in the Macklemore Fashion Atelier"
+                aspectClass="aspect-[4/5]"
+                delay={0.1}
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className="rounded-lg border border-[#EADFD0] shadow-xs"
+              />
             </div>
             <div className="lg:col-span-6 space-y-6">
               <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">

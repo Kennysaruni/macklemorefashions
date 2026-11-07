@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import { ShopCategory } from "@/lib/store-data";
 import {
-  CurtainReveal,
-  StaggeredText,
+  CurtainImage,
+  TextReveal,
 } from "@/components/motion/MotionPrimitives";
 import {
   TribalCornerWatermark,
@@ -154,22 +155,38 @@ export default function HomePage() {
             {/* Left 6 Columns: Minimalist Copy & Clear Positioning */}
             <div className="lg:col-span-6 p-6 sm:p-12 lg:p-14 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#EADFD0]">
               <div className="space-y-6">
-                {/* Slide Selector Pills */}
+                {/* Slide Selector Pills with layoutId Gliding Indicator */}
                 <div className="flex flex-wrap items-center gap-2">
-                  {HERO_SLIDES.map((slide, i) => (
-                    <button
-                      key={slide.id}
-                      type="button"
-                      onClick={() => setActiveSlideIdx(i)}
-                      className={`px-3.5 py-1.5 rounded-md text-xs font-medium border transition-all duration-200 cursor-pointer ${
-                        activeSlideIdx === i
-                          ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-2xs"
-                          : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
-                      }`}
-                    >
-                      0{i + 1} · {slide.eyebrow.split("·")[0].trim()}
-                    </button>
-                  ))}
+                  {HERO_SLIDES.map((slide, i) => {
+                    const isActive = activeSlideIdx === i;
+                    return (
+                      <button
+                        key={slide.id}
+                        type="button"
+                        onClick={() => setActiveSlideIdx(i)}
+                        className={`relative px-3.5 py-1.5 rounded-md text-xs font-medium border transition-colors duration-200 cursor-pointer overflow-hidden ${
+                          isActive
+                            ? "border-[#1F1A17] text-white shadow-2xs"
+                            : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.span
+                            layoutId="hero-slide-tab"
+                            transition={{
+                              type: "spring",
+                              stiffness: 380,
+                              damping: 32,
+                            }}
+                            className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
+                          />
+                        )}
+                        <span className="relative z-10">
+                          0{i + 1} · {slide.eyebrow.split("·")[0].trim()}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="space-y-3 pt-1">
@@ -177,7 +194,7 @@ export default function HomePage() {
                     {activeSlide.eyebrow}
                   </span>
 
-                  <StaggeredText
+                  <TextReveal
                     key={activeSlide.headline}
                     text={activeSlide.headline}
                     as="h1"
@@ -235,19 +252,17 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right 6 Columns: Official Macklemore Photography */}
+            {/* Right 6 Columns: Official Macklemore Photography with CurtainImage */}
             <div className="lg:col-span-6 relative bg-[#F3EAE0] min-h-[460px] sm:min-h-[580px] flex flex-col justify-end overflow-hidden">
-              <CurtainReveal
+              <CurtainImage
                 key={activeSlide.image}
-                duration={0.95}
-                className="absolute inset-0 w-full h-full"
-              >
-                <img
-                  src={activeSlide.image}
-                  alt={activeSlide.headline}
-                  className="w-full h-full object-cover object-top"
-                />
-              </CurtainReveal>
+                src={activeSlide.image}
+                alt={activeSlide.headline}
+                priority
+                aspectClass="h-full w-full"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className=" !absolute inset-0"
+              />
 
               {/* Floating Warm Caption Card */}
               <div className="relative z-10 m-5 sm:m-6 p-4 rounded-lg bg-[#FFFDF9]/95 backdrop-blur-md border border-[#EADFD0] shadow-md flex items-center justify-between gap-4 max-w-md ml-auto">
@@ -280,9 +295,11 @@ export default function HomePage() {
               <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
                 Official Store Departments
               </span>
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-[#1F1A17] mt-1">
-                Shop by Category
-              </h2>
+              <TextReveal
+                text="Shop by Category"
+                as="h2"
+                className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-[#1F1A17] mt-1"
+              />
             </div>
             <Link
               href="/shop"
@@ -297,20 +314,19 @@ export default function HomePage() {
               <Link
                 key={card.title}
                 href={card.href}
-                className="group rounded-lg overflow-hidden border border-[#EADFD0] bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895] flex flex-col justify-between"
+                className="group rounded-lg overflow-hidden border border-[#EADFD0] bg-white transform-gpu transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895] flex flex-col justify-between"
               >
-                <CurtainReveal delay={idx * 0.05} duration={0.85}>
-                  <div className="aspect-[4/4] overflow-hidden bg-[#FAF5EE] relative">
-                    <img
-                      src={card.image}
-                      alt={card.title}
-                      className="w-full h-full object-cover object-top scale-100 group-hover:scale-[1.04] transition-transform duration-700"
-                    />
-                    <span className="absolute top-3 left-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-xs font-medium text-[#7A491D]">
-                      {card.tag}
-                    </span>
-                  </div>
-                </CurtainReveal>
+                <CurtainImage
+                  src={card.image}
+                  alt={card.title}
+                  aspectClass="aspect-square"
+                  delay={(idx % 3) * 0.05}
+                  duration={1.1}
+                >
+                  <span className="absolute top-3 left-3 z-10 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-xs font-medium text-[#7A491D]">
+                    {card.tag}
+                  </span>
+                </CurtainImage>
                 <div className="p-5 bg-white">
                   <div className="flex items-center justify-between">
                     <h3 className="font-display text-lg font-semibold text-[#1F1A17] group-hover:text-[#E31E24] transition-colors">
@@ -340,9 +356,11 @@ export default function HomePage() {
               <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
                 Ready-to-Wear, Accessories &amp; Fabrics
               </span>
-              <h2 className="font-display text-2xl sm:text-4xl font-semibold tracking-tight text-[#1F1A17] mt-1">
-                Featured Collection
-              </h2>
+              <TextReveal
+                text="Featured Collection"
+                as="h2"
+                className="font-display text-2xl sm:text-4xl font-semibold tracking-tight text-[#1F1A17] mt-1"
+              />
             </div>
             <Link
               href="/shop"
@@ -352,22 +370,36 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Interactive Category Switcher Pills */}
+          {/* Interactive Category Switcher Pills with layoutId Spring Indicator */}
           <div className="flex flex-wrap items-center gap-2 mb-6">
-            {HOME_FILTER_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                type="button"
-                onClick={() => setHomeCategory(tab.value)}
-                className={`px-3.5 py-2 rounded-md text-xs font-medium border transition-all duration-200 cursor-pointer ${
-                  homeCategory === tab.value
-                    ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-2xs"
-                    : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+            {HOME_FILTER_TABS.map((tab) => {
+              const isActive = homeCategory === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  type="button"
+                  onClick={() => setHomeCategory(tab.value)}
+                  className={`relative px-3.5 py-2 rounded-md text-xs font-medium border transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    isActive
+                      ? "border-[#1F1A17] text-white shadow-2xs"
+                      : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="home-category-tab"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                      className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           <TribalSectionSeparator
@@ -404,9 +436,11 @@ export default function HomePage() {
               <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
                 Brand Representation &amp; Curated Houses
               </span>
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-[#1F1A17] mt-1">
-                Our Brands &amp; Partner Houses
-              </h2>
+              <TextReveal
+                text="Our Brands & Partner Houses"
+                as="h2"
+                className="font-display text-2xl sm:text-3xl font-semibold text-[#1F1A17] mt-1"
+              />
             </div>
             <Link
               href="/brands"
@@ -417,22 +451,23 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {brands.map((brand) => (
+            {brands.map((brand, idx) => (
               <Link
                 key={brand.id}
                 href={`/brands/${brand.slug}`}
-                className="group rounded-lg border border-[#EADFD0] bg-white overflow-hidden hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895] transition-all duration-300 flex flex-col justify-between"
+                className="group rounded-lg border border-[#EADFD0] bg-white overflow-hidden transform-gpu hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895] transition-all duration-300 flex flex-col justify-between"
               >
-                <div className="aspect-[4/3] overflow-hidden bg-[#FAF5EE] relative">
-                  <img
-                    src={brand.lookbookBannerUrl}
-                    alt={brand.name}
-                    className="w-full h-full object-cover object-top scale-100 group-hover:scale-[1.04] transition-transform duration-700"
-                  />
-                  <span className="absolute top-3 left-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-[11px] font-medium text-[#7A491D]">
+                <CurtainImage
+                  src={brand.lookbookBannerUrl}
+                  alt={brand.name}
+                  aspectClass="aspect-[4/3]"
+                  delay={(idx % 4) * 0.05}
+                  duration={1.1}
+                >
+                  <span className="absolute top-3 left-3 z-10 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-[11px] font-medium text-[#7A491D]">
                     {brand.originCity}
                   </span>
-                </div>
+                </CurtainImage>
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="font-display text-lg font-semibold text-[#1F1A17] group-hover:text-[#E31E24] transition-colors">

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import {
   CURRENCIES,
@@ -107,7 +108,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             <MacklemoreLogo theme="light" showSubline={false} />
           </Link>
 
-          {/* Center: Clean Minimalist Navigation */}
+          {/* Center: Clean Minimalist Navigation with layoutId Gliding Indicator */}
           <nav
             aria-label="Primary Navigation"
             className="hidden xl:flex items-center gap-7"
@@ -120,13 +121,24 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`editorial-link text-sm font-medium transition-colors py-1 ${
+                  className={`relative text-sm font-medium transition-colors py-1.5 ${
                     isActive
                       ? "text-[#E31E24] font-semibold"
                       : "text-[#1F1A17] hover:text-[#7A491D]"
                   }`}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="primary-nav-indicator"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                      className="absolute left-0 right-0 -bottom-0.5 h-[1.5px] bg-[#E31E24] rounded-full"
+                    />
+                  )}
                 </Link>
               );
             })}
@@ -213,22 +225,71 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        {/* Mobile Dropdown Navigation */}
-        {isMobileMenuOpen && (
-          <div className="xl:hidden border-t border-[#EADFD0] bg-[#FFFDF9] px-4 py-4 grid grid-cols-2 sm:grid-cols-3 gap-2 shadow-lg">
-            {PRIMARY_NAV_LINKS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-md border border-[#EADFD0] bg-[#FAF5EE] text-xs font-medium text-[#1F1A17] hover:border-[#E31E24] hover:bg-white transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </header>
+
+      {/* Mobile Navigation Drawer (Weighted Non-Bouncy Bezier Curve) */}
+      <EditorialDrawer
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        title="Macklemore Fashion"
+        subtitle="Navigation & Shop Categories"
+        widthClass="max-w-sm"
+      >
+        <div className="p-6 space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] block mb-2">
+              Menu
+            </span>
+            <div className="grid grid-cols-1 gap-2">
+              {PRIMARY_NAV_LINKS.map((item) => {
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== "/" && pathname?.startsWith(item.href));
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`px-4 py-3 rounded-md border text-xs font-medium transition-colors flex items-center justify-between ${
+                      isActive
+                        ? "border-[#1F1A17] bg-[#1F1A17] text-white"
+                        : "border-[#EADFD0] bg-[#FAF5EE] text-[#1F1A17] hover:border-[#E31E24] hover:bg-white"
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    <span>→</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t border-[#EADFD0]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] block mb-2">
+              Shop Categories
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { href: "/shop?category=Men+Wears", label: "Men Wears" },
+                { href: "/shop?category=Male+Accessories", label: "Male Accessories" },
+                { href: "/shop?category=Women+Wears", label: "Women Wears" },
+                { href: "/shop?category=Female+Accessories", label: "Female Accessories" },
+                { href: "/shop?category=Kids+Wears", label: "Kids Wears" },
+                { href: "/shop?category=Fabrics", label: "Prints & Fabrics" },
+              ].map((cat) => (
+                <Link
+                  key={cat.href}
+                  href={cat.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-3 py-2.5 rounded-md border border-[#EADFD0] bg-white text-xs font-medium text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17] transition-colors"
+                >
+                  {cat.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </EditorialDrawer>
 
       {/* 3. Main Page Content */}
       <main className="flex-1">{children}</main>
@@ -333,20 +394,34 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 Preview pricing in your local currency across our North American, European, and African markets.
               </p>
               <div className="grid grid-cols-4 gap-1.5 pt-1">
-                {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => (
-                  <button
-                    key={code}
-                    type="button"
-                    onClick={() => setCurrency(code)}
-                    className={`py-2 rounded-md border text-xs font-medium cursor-pointer transition-all duration-200 ${
-                      currency === code
-                        ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-xs"
-                        : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
-                    }`}
-                  >
-                    {code}
-                  </button>
-                ))}
+                {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => {
+                  const isActive = currency === code;
+                  return (
+                    <button
+                      key={code}
+                      type="button"
+                      onClick={() => setCurrency(code)}
+                      className={`relative py-2 rounded-md border text-xs font-medium cursor-pointer transition-colors duration-200 overflow-hidden ${
+                        isActive
+                          ? "border-[#1F1A17] text-white shadow-xs"
+                          : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.span
+                          layoutId="footer-currency-pill"
+                          transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 32,
+                          }}
+                          className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
+                        />
+                      )}
+                      <span className="relative z-10">{code}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

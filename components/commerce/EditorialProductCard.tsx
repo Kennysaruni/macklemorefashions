@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   ProductRecord,
   convertPrice,
@@ -9,7 +10,10 @@ import {
   getTotalProductStock,
 } from "@/lib/store-data";
 import { usePlatform } from "@/lib/platform-context";
-import { CurtainReveal } from "@/components/motion/MotionPrimitives";
+import {
+  CurtainImage,
+  DrawDivider,
+} from "@/components/motion/MotionPrimitives";
 
 export function EditorialProductCard({
   product,
@@ -73,46 +77,35 @@ export function EditorialProductCard({
   return (
     <article
       data-theme={theme}
-      className="group relative flex flex-col justify-between rounded-lg overflow-hidden border border-[#EADFD0] bg-white text-[#1F1A17] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895]"
+      className="group relative flex flex-col justify-between rounded-lg overflow-hidden border border-[#EADFD0] bg-white text-[#1F1A17] transform-gpu transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895]"
     >
-      {/* Image Viewport with Soft Hover Zoom & Crossfade */}
+      {/* Image Viewport with CurtainImage (Clip-Path Reveal, Next/Image, Hover Crossfade & Fallback) */}
       <div>
-        <CurtainReveal delay={(index % 4) * 0.05} duration={0.85}>
-          <div
-            className={`relative w-full ${aspectClass} overflow-hidden bg-[#FAF5EE]`}
-          >
-            {/* Primary Product Image */}
-            <img
-              src={product.editorialImageUrl}
-              alt={product.title}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover object-top scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-100 group-hover:opacity-0"
-            />
-            {/* Secondary Detail Image on Hover */}
-            <img
-              src={product.flatlayImageUrl}
-              alt={`${product.title} detail`}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover object-top scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100"
-            />
-
-            {/* Category Tag */}
-            <div className="absolute top-3 left-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-[11px] font-medium text-[#5C5147]">
-              {product.category}
-            </div>
-
-            {/* Price Range or Limited Badge */}
-            {product.priceRangeLabel && currency === "CAD" ? (
-              <div className="absolute top-3 right-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#D4860B]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#7A491D]">
-                {product.priceRangeLabel}
-              </div>
-            ) : stockInfo.total <= 18 ? (
-              <div className="absolute top-3 right-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#E05C1A]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#E05C1A]">
-                Custom &amp; Ready-to-Wear
-              </div>
-            ) : null}
+        <CurtainImage
+          src={product.editorialImageUrl}
+          secondarySrc={product.flatlayImageUrl}
+          alt={product.title}
+          aspectClass={aspectClass}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          delay={(index % 3) * 0.05}
+          duration={1.1}
+        >
+          {/* Category Tag */}
+          <div className="absolute top-3 left-3 z-10 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-[11px] font-medium text-[#5C5147]">
+            {product.category}
           </div>
-        </CurtainReveal>
+
+          {/* Price Range or Limited Badge */}
+          {product.priceRangeLabel && currency === "CAD" ? (
+            <div className="absolute top-3 right-3 z-10 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#D4860B]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#7A491D]">
+              {product.priceRangeLabel}
+            </div>
+          ) : stockInfo.total <= 18 ? (
+            <div className="absolute top-3 right-3 z-10 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#E05C1A]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#E05C1A]">
+              Custom &amp; Ready-to-Wear
+            </div>
+          ) : null}
+        </CurtainImage>
       </div>
 
       {/* Minimalist Product Details & Size / Yard Selector */}
@@ -148,10 +141,12 @@ export function EditorialProductCard({
           </p>
         </div>
 
-        {/* Clean Size / Yard Buttons & Add to Bag */}
-        <div className="pt-3 border-t border-[#F2EAE0] space-y-2.5">
+        {/* Clean Size / Yard Buttons with layoutId Spring Indicator & Add to Bag */}
+        <div className="space-y-2.5">
+          <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+
           <div
-            className={`grid gap-1.5 ${
+            className={`grid gap-1.5 pt-1 ${
               isFabric
                 ? "grid-cols-2"
                 : product.variants.length <= 3
@@ -169,15 +164,28 @@ export function EditorialProductCard({
                   type="button"
                   disabled={isOut}
                   onClick={() => setSelectedSize(v.size)}
-                  className={`h-8 rounded-md text-xs font-medium border transition-all duration-200 cursor-pointer ${
+                  className={`relative h-8 rounded-md text-xs font-medium border transition-colors duration-200 cursor-pointer overflow-hidden ${
                     isOut
                       ? "border-[#EFE7DC] bg-[#FAF5EE] text-[#C5B9AC] line-through cursor-not-allowed"
                       : isSelected
-                      ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-2xs"
+                      ? "border-[#1F1A17] text-white shadow-2xs"
                       : "border-[#E2D6C5] bg-white hover:border-[#7A491D] hover:bg-[#FAF5EE] text-[#1F1A17]"
                   }`}
                 >
-                  {formatOptionLabel(v.size)}
+                  {isSelected && !isOut && (
+                    <motion.span
+                      layoutId={`size-pill-${product.id}`}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                      className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
+                    />
+                  )}
+                  <span className="relative z-10">
+                    {formatOptionLabel(v.size)}
+                  </span>
                 </button>
               );
             })}

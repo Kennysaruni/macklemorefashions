@@ -2,8 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { JOURNAL_ARTICLES, JournalArticle } from "@/lib/store-data";
-import { CurtainReveal, StaggeredText } from "@/components/motion/MotionPrimitives";
+import {
+  CurtainImage,
+  TextReveal,
+} from "@/components/motion/MotionPrimitives";
 import {
   TribalCornerWatermark,
   TribalSectionSeparator,
@@ -23,7 +27,7 @@ export default function JournalPage() {
           <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
             Journal &amp; Editorial
           </span>
-          <StaggeredText
+          <TextReveal
             text="Stories on Style, Culture & Craft"
             as="h1"
             className="font-display text-3xl sm:text-5xl font-semibold tracking-tight max-w-3xl text-[#1F1A17]"
@@ -37,7 +41,7 @@ export default function JournalPage() {
       {/* Main Editorial Reader + Story List */}
       <section className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 md:py-16">
         <div className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden shadow-xs grid grid-cols-1 lg:grid-cols-12">
-          {/* Left Column: Story Selector */}
+          {/* Left Column: Story Selector with layoutId Gliding Indicator */}
           <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-[#EADFD0] divide-y divide-[#F2EAE0] bg-[#FAF5EE]/60">
             <div className="p-5 bg-white">
               <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D]">
@@ -50,12 +54,21 @@ export default function JournalPage() {
                 <button
                   key={article.id}
                   onClick={() => setSelectedArticle(article)}
-                  className={`w-full text-left p-6 transition-all duration-200 cursor-pointer ${
-                    isSelected
-                      ? "bg-white border-l-4 border-l-[#E31E24]"
-                      : "hover:bg-white/80"
+                  className={`relative w-full text-left p-6 transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    isSelected ? "bg-white" : "hover:bg-white/80"
                   }`}
                 >
+                  {isSelected && (
+                    <motion.span
+                      layoutId="journal-story-indicator"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                      className="absolute left-0 top-0 bottom-0 w-1 bg-[#E31E24]"
+                    />
+                  )}
                   <div className="flex items-center justify-between gap-2 text-xs text-[#7A491D] font-medium mb-1.5">
                     <span>{article.corridor}</span>
                     <span className="text-[#8C7E71]">{article.readTime}</span>
@@ -95,23 +108,24 @@ export default function JournalPage() {
               </span>
             </div>
 
-            <h2 className="font-display text-2xl sm:text-4xl font-semibold tracking-tight text-[#1F1A17] leading-snug mb-3">
-              {selectedArticle.title}
-            </h2>
+            <TextReveal
+              key={selectedArticle.title}
+              text={selectedArticle.title}
+              as="h2"
+              className="font-display text-2xl sm:text-4xl font-semibold tracking-tight text-[#1F1A17] leading-snug mb-3"
+            />
             <p className="text-base text-[#5C5147] leading-relaxed mb-6">
               {selectedArticle.subtitle}
             </p>
 
-            <CurtainReveal
+            <CurtainImage
               key={selectedArticle.id}
-              className="aspect-[16/9] rounded-lg overflow-hidden border border-[#EADFD0] mb-8 bg-[#FAF5EE]"
-            >
-              <img
-                src={selectedArticle.heroImageUrl}
-                alt={selectedArticle.title}
-                className="h-full w-full object-cover"
-              />
-            </CurtainReveal>
+              src={selectedArticle.heroImageUrl}
+              alt={selectedArticle.title}
+              aspectClass="aspect-[16/9]"
+              sizes="(max-width: 1024px) 100vw, 66vw"
+              className="rounded-lg border border-[#EADFD0] mb-8"
+            />
 
             <div className="space-y-5 max-w-3xl">
               <p className="text-sm font-medium text-[#7A491D] leading-relaxed border-l-3 border-[#D4860B] pl-4 py-1.5 bg-[#FAF5EE]/60 rounded-r-md">
