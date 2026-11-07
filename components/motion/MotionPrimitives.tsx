@@ -119,26 +119,32 @@ export function CurtainImage({
   const hasDistinctSecondary =
     Boolean(secondarySrc) && secondarySrc !== src && !secondaryError;
 
+  // Wait until the image is BOTH in viewport AND loaded so the exact Hero curtain reveal
+  // plays visibly after the picture finishes loading (instead of animating while blank).
+  const shouldReveal = isInView && (isLoaded || hasError);
+
   return (
     <div
       ref={containerRef}
       className={`relative w-full overflow-hidden bg-[#FAF5EE] ${aspectClass} ${className}`}
     >
-      {/* Skeleton Pulse Placeholder while image bytes load */}
+      {/* Suspense-Style Warm Shimmer Placeholder while image bytes load */}
       {!isLoaded && !hasError && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-0 animate-pulse bg-gradient-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]"
-        />
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center animate-pulse bg-gradient-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]"
+        >
+          <span className="w-2.5 h-2.5 rotate-45 bg-[#D4860B]/40" />
+        </div>
       )}
 
-      {/* Masked Clip-Path Curtain Reveal Layer */}
+      {/* Masked Clip-Path Curtain Reveal Layer (Matches Homepage Hero Transition) */}
       <motion.div
-        initial={{ clipPath: "inset(100% 0% 0%)", scale: 1.06 }}
+        initial={{ clipPath: "inset(100% 0% 0% 0%)", scale: 1.06 }}
         animate={
-          isInView
-            ? { clipPath: "inset(0% 0% 0%)", scale: 1 }
-            : { clipPath: "inset(100% 0% 0%)", scale: 1.06 }
+          shouldReveal
+            ? { clipPath: "inset(0% 0% 0% 0%)", scale: 1 }
+            : { clipPath: "inset(100% 0% 0% 0%)", scale: 1.06 }
         }
         transition={{
           duration,
@@ -146,7 +152,7 @@ export function CurtainImage({
           ease: EDITORIAL_EASE,
         }}
         onAnimationComplete={() => {
-          if (isInView) setAnimComplete(true);
+          if (shouldReveal) setAnimComplete(true);
         }}
         className={`relative w-full h-full transform-gpu ${
           animComplete ? "" : "will-change-[clip-path,transform]"
@@ -355,6 +361,35 @@ export function TextReveal({
 
 // Keep StaggeredText exported as an alias to TextReveal for backwards compatibility across all routes
 export const StaggeredText = TextReveal;
+
+/**
+ * REUSABLE REACT SUSPENSE SKELETON FOR CLOTHING & COLLECTION GRIDS
+ */
+export function CatalogGridSuspenseFallback({
+  count = 6,
+  columnsClass = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+}: {
+  count?: number;
+  columnsClass?: string;
+}) {
+  return (
+    <div className={`grid ${columnsClass} gap-6`}>
+      {Array.from({ length: count }).map((_, idx) => (
+        <div
+          key={idx}
+          className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden"
+        >
+          <div className="aspect-[3/4] w-full animate-pulse bg-gradient-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]" />
+          <div className="p-5 space-y-3">
+            <div className="h-3 w-24 rounded-sm bg-[#F3EAE0] animate-pulse" />
+            <div className="h-4 w-3/4 rounded-sm bg-[#EADFD0] animate-pulse" />
+            <div className="h-8 w-full rounded-md bg-[#FAF5EE] animate-pulse mt-3" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /**
  * 5. <DrawDivider /> (EXPANDING HAIRLINE SEPARATORS & TRIBAL LINES)

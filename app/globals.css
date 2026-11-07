@@ -86,6 +86,37 @@ body {
   animation-play-state: paused;
 }
 
+/* Infinite Left-to-Right Tribal Ribbon Animation (GPU Compositor Only, Minimal Memory) */
+@keyframes tribal-ribbon-ltr {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+.tribal-ribbon-viewport {
+  content-visibility: auto;
+  contain-intrinsic-size: 100% 16px;
+  contain: layout paint style;
+}
+
+.animate-tribal-ltr {
+  width: 200%;
+  animation: tribal-ribbon-ltr 26s linear infinite;
+  will-change: transform;
+  transform: translate3d(-50%, 0, 0);
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-tribal-ltr {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 /* Warm Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 7px;

@@ -33,53 +33,61 @@ export function MacklemoreLogo({
 }
 
 /**
- * Multi-Color Tribal Geometric Ribbon
+ * Multi-Color Tribal Geometric Ribbon (Infinite Left-to-Right Motion)
  * Reflects the exact warm colors of the Macklemore Fashion logo:
  * Crimson (#E31E24), Gold (#D4860B), Terracotta (#E05C1A), Savannah Bronze (#7A491D), and Teal (#1A7A6E).
+ * Uses a single native SVG <pattern> tiled across a 2400px viewBox animated on the GPU compositor
+ * (`translate3d(-50%, 0, 0)` -> `translate3d(0%, 0, 0)`) with `content-visibility: auto` so off-screen
+ * ribbons pause painting automatically and consume minimal memory.
  */
 export function TribalPatternRibbon({ className = "" }: { className?: string }) {
+  const rawId = React.useId();
+  const patternId = `macklemore-tribal-weave-${rawId.replace(/:/g, "")}`;
+
   return (
     <div
-      className={`w-full overflow-hidden select-none ${className}`}
+      className={`tribal-ribbon-viewport w-full overflow-hidden select-none bg-[#FAF5EE] ${className}`}
       aria-hidden="true"
     >
-      <svg
-        viewBox="0 0 1200 18"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-3.5 sm:h-4"
-        preserveAspectRatio="none"
-      >
-        <defs>
-          <pattern
-            id="macklemore-tribal-weave"
-            x="0"
-            y="0"
-            width="120"
-            height="18"
-            patternUnits="userSpaceOnUse"
-          >
-            {/* Warm Cream Base */}
-            <rect width="120" height="18" fill="#FAF5EE" />
-            {/* Top & Bottom Gold Hairlines */}
-            <line x1="0" y1="1" x2="120" y2="1" stroke="#D4860B" strokeWidth="1" strokeOpacity="0.45" />
-            <line x1="0" y1="17" x2="120" y2="17" stroke="#7A491D" strokeWidth="1" strokeOpacity="0.35" />
+      <div className="animate-tribal-ltr">
+        <svg
+          viewBox="0 0 2400 18"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-full h-3.5 sm:h-4 block"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <pattern
+              id={patternId}
+              x="0"
+              y="0"
+              width="120"
+              height="18"
+              patternUnits="userSpaceOnUse"
+            >
+              {/* Warm Cream Base */}
+              <rect width="120" height="18" fill="#FAF5EE" />
+              {/* Top & Bottom Gold Hairlines */}
+              <line x1="0" y1="1" x2="120" y2="1" stroke="#D4860B" strokeWidth="1" strokeOpacity="0.45" />
+              <line x1="0" y1="17" x2="120" y2="17" stroke="#7A491D" strokeWidth="1" strokeOpacity="0.35" />
 
-            {/* Multi-Color Chevron & Diamond Motif from the Macklemore Logo */}
-            <path d="M0 15L12 3L24 15H18L12 8L6 15H0Z" fill="#E31E24" />
-            <polygon points="36,3 44,9 36,15 28,9" fill="#D4860B" />
-            <polygon points="36,6 40,9 36,12 32,9" fill="#FFFDF9" />
+              {/* Multi-Color Chevron & Diamond Motif from the Macklemore Logo */}
+              <path d="M0 15L12 3L24 15H18L12 8L6 15H0Z" fill="#E31E24" />
+              <polygon points="36,3 44,9 36,15 28,9" fill="#D4860B" />
+              <polygon points="36,6 40,9 36,12 32,9" fill="#FFFDF9" />
 
-            <path d="M48 15L60 3L72 15H66L60 8L54 15H48Z" fill="#7A491D" />
-            <polygon points="84,3 92,9 84,15 76,9" fill="#E05C1A" />
-            <polygon points="84,6 88,9 84,12 80,9" fill="#D4860B" />
+              <path d="M48 15L60 3L72 15H66L60 8L54 15H48Z" fill="#7A491D" />
+              <polygon points="84,3 92,9 84,15 76,9" fill="#E05C1A" />
+              <polygon points="84,6 88,9 84,12 80,9" fill="#D4860B" />
 
-            <path d="M96 15L104 4L112 15H96Z" fill="#1A7A6E" />
-            <circle cx="116" cy="9" r="2.2" fill="#E31E24" />
-          </pattern>
-        </defs>
-        <rect width="1200" height="18" fill="url(#macklemore-tribal-weave)" />
-      </svg>
+              <path d="M96 15L104 4L112 15H96Z" fill="#1A7A6E" />
+              <circle cx="116" cy="9" r="2.2" fill="#E31E24" />
+            </pattern>
+          </defs>
+          <rect width="2400" height="18" fill={`url(#${patternId})`} />
+        </svg>
+      </div>
     </div>
   );
 }

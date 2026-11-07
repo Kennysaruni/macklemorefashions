@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import {
   CURRENCIES,
@@ -48,6 +48,21 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [reservationSent, setReservationSent] = useState(false);
   const [guestEmail, setGuestEmail] = useState("");
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const shouldShow = window.scrollY > 320;
+      setShowBackToTop((prev) => (prev !== shouldShow ? shouldShow : prev));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const cartSubtotal = cart.reduce(
     (acc, item) =>
@@ -293,6 +308,25 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
 
       {/* 3. Main Page Content */}
       <main className="flex-1">{children}</main>
+
+      {/* Floating Back to Top Button */}
+      <AnimatePresence>
+        {showBackToTop && (
+          <motion.button
+            type="button"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            onClick={scrollToTop}
+            aria-label="Scroll to top of page"
+            className="fixed bottom-5 right-5 z-40 px-4 py-2.5 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white border border-[#D4860B]/40 shadow-lg flex items-center gap-2 text-xs font-medium transition-colors duration-200 cursor-pointer transform-gpu"
+          >
+            <span className="text-[#D4860B] font-bold">↑</span>
+            <span>{pathname === "/shop" ? "Top & Filters" : "Back to Top"}</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* 4. Warm Multi-Column Footer */}
       <footer className="bg-[#FAF5EE] text-[#1F1A17] border-t border-[#EADFD0] mt-16">

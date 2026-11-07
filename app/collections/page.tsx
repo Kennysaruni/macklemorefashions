@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { usePlatform } from "@/lib/platform-context";
 import {
+  CatalogGridSuspenseFallback,
   CurtainImage,
   DrawDivider,
   TextReveal,
@@ -133,17 +134,19 @@ export default function CollectionsPage() {
           }
         />
 
-        {/* Collection Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedProducts.map((product, idx) => (
-            <EditorialProductCard
-              key={product.id}
-              product={product}
-              theme="light"
-              index={idx}
-            />
-          ))}
-        </div>
+        {/* Collection Products Grid with React Suspense & Hero Curtain Reveal */}
+        <Suspense fallback={<CatalogGridSuspenseFallback count={6} />}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayedProducts.map((product, idx) => (
+              <EditorialProductCard
+                key={`${selectedSlug}-${product.id}`}
+                product={product}
+                theme="light"
+                index={idx}
+              />
+            ))}
+          </div>
+        </Suspense>
       </section>
     </div>
   );

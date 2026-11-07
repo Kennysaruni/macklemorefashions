@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import { GenderTarget, ShopCategory } from "@/lib/store-data";
 import { EditorialProductCard } from "@/components/commerce/EditorialProductCard";
-import { DrawDivider, TextReveal } from "@/components/motion/MotionPrimitives";
+import {
+  CatalogGridSuspenseFallback,
+  DrawDivider,
+  TextReveal,
+} from "@/components/motion/MotionPrimitives";
 import { TribalCornerWatermark } from "@/components/vectors/TribalVectors";
 
 const CATEGORIES: { value: "ALL" | ShopCategory; label: string }[] = [
@@ -30,6 +34,8 @@ export default function ShopCatalogPage() {
   const [sortBy, setSortBy] = useState<
     "FEATURED" | "PRICE_ASC" | "PRICE_DESC"
   >("FEATURED");
+  const [showMobileSecondaryFilters, setShowMobileSecondaryFilters] =
+    useState(false);
 
   useEffect(() => {
     const syncFromUrl = () => {
@@ -146,175 +152,199 @@ export default function ShopCatalogPage() {
         </div>
       </section>
 
-      {/* Clean Minimalist Filter Bar */}
-      <section className="border-b border-[#EADFD0] bg-[#FFFDF9] sticky top-20 z-20">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-4 space-y-3">
-          {/* Primary Category Pills with layoutId Spring Indicator */}
-          <div className="flex flex-wrap items-center gap-2">
-            {CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat.value;
-              return (
-                <button
-                  key={cat.value}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.value)}
-                  className={`relative px-3.5 py-2 rounded-md text-xs font-medium border transition-colors duration-200 cursor-pointer overflow-hidden ${
-                    isActive
-                      ? "border-[#1F1A17] text-white shadow-2xs"
-                      : "border-[#E2D6C5] bg-[#FAF5EE] text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="shop-category-tab"
-                      transition={{
-                        type: "spring",
-                        stiffness: 380,
-                        damping: 32,
-                      }}
-                      className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
-                    />
-                  )}
-                  <span className="relative z-10">{cat.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
-
-          {/* Secondary Filter Row: Segment, Brand, Size & Clear */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <div className="flex flex-wrap items-center gap-1.5">
-              {(
-                [
-                  { id: "ALL", label: "All Segments" },
-                  { id: "MEN", label: "Men" },
-                  { id: "WOMEN", label: "Women" },
-                  { id: "KIDS", label: "Kids" },
-                  { id: "UNISEX", label: "Unisex & Fabrics" },
-                ] as const
-              ).map((seg) => {
-                const isActive = selectedGender === seg.id;
+      {/* Clean Minimalist Filter Bar (Non-Sticky so it never covers the screen on mobile) */}
+      <section
+        id="shop-filters"
+        className="border-b border-[#EADFD0] bg-[#FFFDF9]"
+      >
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-3.5 space-y-2.5">
+          {/* Primary Category Pills: Single horizontal scroll row on mobile, wrapped on desktop */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap sm:overflow-visible no-scrollbar flex-1">
+              {CATEGORIES.map((cat) => {
+                const isActive = selectedCategory === cat.value;
                 return (
                   <button
-                    key={seg.id}
+                    key={cat.value}
                     type="button"
-                    onClick={() => setSelectedGender(seg.id)}
-                    className={`relative px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer overflow-hidden ${
+                    onClick={() => setSelectedCategory(cat.value)}
+                    className={`relative shrink-0 px-3.5 py-2 rounded-md text-xs font-medium border transition-colors duration-200 cursor-pointer overflow-hidden ${
                       isActive
-                        ? "text-[#E31E24] font-semibold"
-                        : "text-[#5C5147] hover:text-[#1F1A17] hover:bg-[#FAF5EE]/60"
+                        ? "border-[#1F1A17] text-white shadow-2xs"
+                        : "border-[#E2D6C5] bg-[#FAF5EE] text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
                     }`}
                   >
                     {isActive && (
                       <motion.span
-                        layoutId="shop-gender-tab"
+                        layoutId="shop-category-tab"
                         transition={{
                           type: "spring",
                           stiffness: 380,
                           damping: 32,
                         }}
-                        className="absolute inset-0 bg-[#FAF5EE] border border-[#E31E24]/30 rounded-md"
+                        className="absolute inset-0 bg-[#1F1A17] rounded-[5px]"
                       />
                     )}
-                    <span className="relative z-10">{seg.label}</span>
+                    <span className="relative z-10">{cat.label}</span>
                   </button>
                 );
               })}
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <select
-                value={selectedBrand}
-                onChange={(e) => setSelectedBrand(e.target.value)}
-                className="px-3 py-1.5 rounded-md border border-[#E2D6C5] bg-white text-xs font-medium text-[#1F1A17] outline-none cursor-pointer"
-              >
-                <option value="ALL">All Brands</option>
-                {brands.map((b) => (
-                  <option key={b.id} value={b.slug}>
-                    {b.name}
-                  </option>
-                ))}
-              </select>
+            {/* Compact Mobile Toggle for Secondary Filters */}
+            <button
+              type="button"
+              onClick={() =>
+                setShowMobileSecondaryFilters(!showMobileSecondaryFilters)
+              }
+              className="md:hidden shrink-0 px-3 py-2 rounded-md border border-[#D4B895] bg-white text-xs font-medium text-[#7A491D] cursor-pointer"
+            >
+              {showMobileSecondaryFilters ? "Hide Filters ▴" : "Filters ▾"}
+            </button>
+          </div>
 
-              <div className="flex items-center gap-1">
-                {SIZES.map((sz) => {
-                  const isActive = selectedSize === sz;
+          {/* Secondary Filter Row: Collapsible on Mobile, Always Visible on Desktop */}
+          <div
+            className={`${
+              showMobileSecondaryFilters ? "block" : "hidden md:block"
+            } space-y-2.5`}
+          >
+            <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {(
+                  [
+                    { id: "ALL", label: "All Segments" },
+                    { id: "MEN", label: "Men" },
+                    { id: "WOMEN", label: "Women" },
+                    { id: "KIDS", label: "Kids" },
+                    { id: "UNISEX", label: "Unisex & Fabrics" },
+                  ] as const
+                ).map((seg) => {
+                  const isActive = selectedGender === seg.id;
                   return (
                     <button
-                      key={sz}
+                      key={seg.id}
                       type="button"
-                      onClick={() => setSelectedSize(sz)}
-                      className={`relative px-2 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer overflow-hidden ${
+                      onClick={() => setSelectedGender(seg.id)}
+                      className={`relative px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer overflow-hidden ${
                         isActive
-                          ? "border-[#7A491D] text-white"
-                          : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D]"
+                          ? "text-[#E31E24] font-semibold"
+                          : "text-[#5C5147] hover:text-[#1F1A17] hover:bg-[#FAF5EE]/60"
                       }`}
                     >
                       {isActive && (
                         <motion.span
-                          layoutId="shop-size-tab"
+                          layoutId="shop-gender-tab"
                           transition={{
                             type: "spring",
                             stiffness: 380,
                             damping: 32,
                           }}
-                          className="absolute inset-0 bg-[#7A491D] rounded-[5px]"
+                          className="absolute inset-0 bg-[#FAF5EE] border border-[#E31E24]/30 rounded-md"
                         />
                       )}
-                      <span className="relative z-10">
-                        {sz === "ALL" ? "All Sizes" : sz}
-                      </span>
+                      <span className="relative z-10">{seg.label}</span>
                     </button>
                   );
                 })}
               </div>
 
-              {(selectedGender !== "ALL" ||
-                selectedBrand !== "ALL" ||
-                selectedCategory !== "ALL" ||
-                selectedSize !== "ALL") && (
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className="px-3 py-1 rounded-md border border-[#E31E24]/40 text-[#E31E24] hover:bg-[#E31E24] hover:text-white text-xs font-medium transition-colors cursor-pointer"
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  value={selectedBrand}
+                  onChange={(e) => setSelectedBrand(e.target.value)}
+                  className="px-3 py-1.5 rounded-md border border-[#E2D6C5] bg-white text-xs font-medium text-[#1F1A17] outline-none cursor-pointer"
                 >
-                  Reset
-                </button>
-              )}
+                  <option value="ALL">All Brands</option>
+                  {brands.map((b) => (
+                    <option key={b.id} value={b.slug}>
+                      {b.name}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="flex items-center gap-1 overflow-x-auto">
+                  {SIZES.map((sz) => {
+                    const isActive = selectedSize === sz;
+                    return (
+                      <button
+                        key={sz}
+                        type="button"
+                        onClick={() => setSelectedSize(sz)}
+                        className={`relative shrink-0 px-2 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer overflow-hidden ${
+                          isActive
+                            ? "border-[#7A491D] text-white"
+                            : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D]"
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.span
+                            layoutId="shop-size-tab"
+                            transition={{
+                              type: "spring",
+                              stiffness: 380,
+                              damping: 32,
+                            }}
+                            className="absolute inset-0 bg-[#7A491D] rounded-[5px]"
+                          />
+                        )}
+                        <span className="relative z-10">
+                          {sz === "ALL" ? "All Sizes" : sz}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {(selectedGender !== "ALL" ||
+                  selectedBrand !== "ALL" ||
+                  selectedCategory !== "ALL" ||
+                  selectedSize !== "ALL") && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="px-3 py-1 rounded-md border border-[#E31E24]/40 text-[#E31E24] hover:bg-[#E31E24] hover:text-white text-xs font-medium transition-colors cursor-pointer"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Product Grid */}
+      {/* Product Grid with React Suspense & Hero Curtain Reveal */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-8 py-10 sm:py-14">
-        {filteredProducts.length === 0 ? (
-          <div className="p-12 rounded-lg border border-[#EADFD0] bg-[#FAF5EE] text-center space-y-4">
-            <p className="text-sm text-[#5C5147]">
-              No items match your current filter selection.
-            </p>
-            <button
-              type="button"
-              onClick={resetFilters}
-              className="px-5 py-2.5 rounded-md bg-[#1F1A17] text-white text-xs font-medium cursor-pointer hover:bg-[#E31E24] transition-colors"
-            >
-              Show All {products.length} Items
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product, idx) => (
-              <EditorialProductCard
-                key={product.id}
-                product={product}
-                theme="light"
-                index={idx}
-              />
-            ))}
-          </div>
-        )}
+        <Suspense fallback={<CatalogGridSuspenseFallback count={6} />}>
+          {filteredProducts.length === 0 ? (
+            <div className="p-12 rounded-lg border border-[#EADFD0] bg-[#FAF5EE] text-center space-y-4">
+              <p className="text-sm text-[#5C5147]">
+                No items match your current filter selection.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="px-5 py-2.5 rounded-md bg-[#1F1A17] text-white text-xs font-medium cursor-pointer hover:bg-[#E31E24] transition-colors"
+              >
+                Show All {products.length} Items
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product, idx) => (
+                <EditorialProductCard
+                  key={`${selectedCategory}-${selectedGender}-${selectedBrand}-${selectedSize}-${product.id}`}
+                  product={product}
+                  theme="light"
+                  index={idx}
+                />
+              ))}
+            </div>
+          )}
+        </Suspense>
       </section>
     </div>
   );

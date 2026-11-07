@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import { ShopCategory } from "@/lib/store-data";
 import {
+  CatalogGridSuspenseFallback,
   CurtainImage,
   TextReveal,
 } from "@/components/motion/MotionPrimitives";
@@ -411,16 +412,18 @@ export default function HomePage() {
             className="my-6"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {displayedProducts.map((product, index) => (
-              <EditorialProductCard
-                key={product.id}
-                product={product}
-                theme="light"
-                index={index}
-              />
-            ))}
-          </div>
+          <Suspense fallback={<CatalogGridSuspenseFallback count={6} />}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {displayedProducts.map((product, index) => (
+                <EditorialProductCard
+                  key={`${homeCategory}-${product.id}`}
+                  product={product}
+                  theme="light"
+                  index={index}
+                />
+              ))}
+            </div>
+          </Suspense>
         </div>
       </section>
 
