@@ -12,34 +12,30 @@ import {
 const MARKET_REGIONS = [
   {
     region: "West Africa",
-    badge: "Operational Hub · Nigeria",
-    cities: "Nigeria · Ghana · Senegal · Côte d'Ivoire",
-    summary:
-      "Anchored by our operational presence in Nigeria, with express fulfillment and partner brand representation across West Africa.",
+    badge: "Nigeria Hub",
+    cities: "Nigeria · Ghana · Senegal",
+    summary: "Operations hub in Nigeria serving West Africa.",
     accent: "#E31E24",
   },
   {
     region: "North America",
-    badge: "Corporate Headquarters · Toronto, Canada",
-    cities: "Toronto, Canada · United States",
-    summary:
-      "Our Canadian corporate base in Toronto, Canada connects North American shoppers and international partners with our collections.",
+    badge: "Toronto, Canada HQ",
+    cities: "Toronto, Canada · USA",
+    summary: "Corporate base in Toronto, Canada serving North America.",
     accent: "#D4860B",
   },
   {
     region: "East Africa",
-    badge: "Express Delivery Destination",
+    badge: "Express Delivery",
     cities: "Kenya · Uganda · Rwanda · Tanzania",
-    summary:
-      "Delivering curated retail collections and partner brand pieces directly to customers across East Africa from our Nigeria and Toronto, Canada hubs.",
+    summary: "Direct express delivery across East Africa.",
     accent: "#E05C1A",
   },
   {
     region: "UK, Europe & Global",
-    badge: "International Delivery & Partner Network",
-    cities: "United Kingdom · Italy · France · Worldwide",
-    summary:
-      "Collaborating with international fashion labels, such as LUCA, and delivering orders worldwide from Toronto, Canada and Nigeria.",
+    badge: "Worldwide Delivery",
+    cities: "UK · Italy · France · Global",
+    summary: "International partner houses and worldwide delivery.",
     accent: "#1A7A6E",
   },
 ];
@@ -48,19 +44,19 @@ export default function MarketsFootprintPage() {
   return (
     <div className="min-h-screen bg-[#FFFDF9] text-[#1F1A17]">
       {/* Page Hero */}
-      <section className="relative border-b border-[#EADFD0] bg-[#FAF5EE] px-4 sm:px-8 py-12 sm:py-16 overflow-hidden">
+      <section className="relative border-b border-[#EADFD0] bg-[#FAF5EE] px-4 sm:px-8 py-10 sm:py-14 overflow-hidden">
         <TribalCornerWatermark position="top-right" opacity={0.05} />
-        <div className="max-w-[1440px] mx-auto space-y-3">
+        <div className="max-w-[1440px] mx-auto space-y-2.5">
           <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
-            Our Markets &amp; Regional Reach
+            Global Network
           </span>
           <StaggeredText
-            text="Serving International & African Markets"
+            text="Hubs & Delivery Reach"
             as="h1"
             className="font-display text-3xl sm:text-5xl font-semibold tracking-tight max-w-3xl text-[#1F1A17]"
           />
-          <p className="text-sm sm:text-base text-[#5C5147] max-w-2xl leading-relaxed">
-            From our corporate base in Canada and operational headquarters in Lagos, Nigeria, Macklemore Fashion connects customers and partner brands across West Africa, East Africa, the UK, Europe, and North America.
+          <p className="text-sm text-[#5C5147] max-w-xl">
+            Anchored in Toronto, Canada and Nigeria, delivering across Africa and worldwide.
           </p>
         </div>
       </section>

@@ -50,10 +50,10 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
   {
     id: "west-africa",
     label: "West Africa",
-    badge: "Operational Hub · Nigeria",
-    hubCity: "Nigeria · Hub",
+    badge: "Nigeria · Operations Hub",
+    hubCity: "Nigeria Hub",
     isOperationalHub: true,
-    countries: ["Nigeria", "Ghana", "Senegal", "Côte d'Ivoire", "Benin", "Togo"],
+    countries: ["Nigeria", "Ghana", "Senegal", "Côte d'Ivoire"],
     codes: new Set([
       "686", "270", "624", "324", "694", "430", "384", "288", "768", "204",
       "566", "854", "132", "466", "478", "562",
@@ -61,18 +61,18 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#E31E24",
     baseFill: "#E9D6BE",
     baseStroke: "#C4A482",
-    role: "Primary operational presence in Nigeria with regional distribution, bespoke fittings, and partner brand representation across West Africa.",
-    deliverySummary: "1–3 business days across Nigeria & West Africa",
-    showroomAddress: "Nigeria (Operational Hub)",
+    role: "Operations hub in Nigeria serving West Africa.",
+    deliverySummary: "1–3 Business Days",
+    showroomAddress: "Nigeria",
     hubCoordinates: [8.6753, 9.082],
   },
   {
     id: "north-america",
     label: "North America",
-    badge: "Corporate Headquarters · Toronto, Canada",
-    hubCity: "Toronto, Canada · HQ",
+    badge: "Toronto, Canada · Corporate HQ",
+    hubCity: "Toronto HQ",
     isOperationalHub: true,
-    countries: ["Canada", "United States", "Mexico", "Jamaica", "Trinidad & Tobago"],
+    countries: ["Canada", "United States"],
     codes: new Set([
       "124", "840", "484", "304", "044", "192", "214", "332", "388", "630",
       "780", "084", "188", "222", "320", "340", "558", "591", "028", "052",
@@ -82,18 +82,18 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#7A491D",
     baseFill: "#F1E7D8",
     baseStroke: "#D2BFA6",
-    role: "Canadian corporate base in Toronto, Canada directing international brand strategy, Toronto Fashion Week showcases, North American client service, and global partnerships.",
-    deliverySummary: "2–4 business days across Canada & USA",
-    showroomAddress: "Toronto, Canada (Corporate HQ)",
+    role: "Corporate headquarters in Toronto, Canada.",
+    deliverySummary: "2–4 Business Days",
+    showroomAddress: "Toronto, Canada",
     hubCoordinates: [-79.3832, 43.6532],
   },
   {
     id: "east-africa",
     label: "East Africa",
-    badge: "East Africa · Express Delivery Destination",
-    hubCity: "Delivery Region",
+    badge: "East Africa · Delivery",
+    hubCity: "Delivery",
     isOperationalHub: false,
-    countries: ["Kenya", "Uganda", "Rwanda", "Tanzania", "Ethiopia"],
+    countries: ["Kenya", "Uganda", "Rwanda", "Tanzania"],
     codes: new Set([
       "231", "232", "262", "706", "404", "800", "646", "108", "834", "729",
       "728", "690", "480", "174", "450",
@@ -102,27 +102,18 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#D4860B",
     baseFill: "#ECDCBE",
     baseStroke: "#C4A482",
-    role: "Express delivery destination serving East Africa's dynamic fashion and creative community directly from our hubs in Nigeria and Toronto, Canada.",
-    deliverySummary: "2–4 business days express delivery to East Africa",
-    showroomAddress: "Delivered from Nigeria & Toronto, Canada",
+    role: "Express delivery across East Africa.",
+    deliverySummary: "2–4 Business Days",
+    showroomAddress: "From Nigeria & Canada",
     hubCoordinates: [36.8219, -1.2921],
   },
   {
     id: "north-southern-africa",
-    label: "North, Central & Southern Africa",
-    badge: "Pan-African Delivery Destination",
-    hubCity: "Delivery Region",
+    label: "Southern & North Africa",
+    badge: "Pan-African Delivery",
+    hubCity: "Delivery",
     isOperationalHub: false,
-    countries: [
-      "South Africa",
-      "Egypt",
-      "Morocco",
-      "Cameroon",
-      "DR Congo",
-      "Botswana",
-      "Namibia",
-      "Zambia",
-    ],
+    countries: ["South Africa", "Egypt", "Morocco", "Cameroon"],
     codes: new Set([
       // North Africa
       "504", "732", "012", "788", "434", "818", "736",
@@ -134,18 +125,18 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#E05C1A",
     baseFill: "#EFE2CE",
     baseStroke: "#C8AC8C",
-    role: "Continental delivery network connecting North, Central, and Southern African markets directly with our operational hubs in Nigeria and Toronto, Canada.",
-    deliverySummary: "3–5 business days express continental delivery",
-    showroomAddress: "Delivered from Nigeria & Toronto, Canada",
+    role: "Continental delivery from Nigeria and Toronto, Canada.",
+    deliverySummary: "3–5 Business Days",
+    showroomAddress: "From Nigeria & Canada",
     hubCoordinates: [28.0473, -26.2041],
   },
   {
     id: "europe-uk",
     label: "UK & Europe",
-    badge: "UK & Europe · Delivery & Partner Reach",
-    hubCity: "Delivery & Partners",
+    badge: "UK & Europe · Delivery",
+    hubCity: "Delivery",
     isOperationalHub: false,
-    countries: ["United Kingdom", "Italy", "France", "Germany", "Spain", "Netherlands"],
+    countries: ["United Kingdom", "Italy", "France", "Germany"],
     codes: new Set([
       "826", "372", "250", "276", "380", "724", "620", "528", "056", "442",
       "756", "040", "208", "578", "752", "246", "352", "616", "203", "703",
@@ -157,25 +148,25 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#1A7A6E",
     baseFill: "#F1E7D8",
     baseStroke: "#D2BFA6",
-    role: "International delivery destination and partner brand collaborations for labels such as LUCA entering African markets.",
-    deliverySummary: "2–4 business days express international delivery",
-    showroomAddress: "Delivered from Toronto, Canada & Nigeria",
+    role: "International delivery & partner brand network.",
+    deliverySummary: "2–4 Business Days",
+    showroomAddress: "From Canada & Nigeria",
     hubCoordinates: [-0.1276, 51.5072],
   },
   {
     id: "global-continents",
-    label: "South America, Asia & Oceania",
-    badge: "Worldwide Express Delivery",
-    hubCity: "Worldwide Delivery",
+    label: "Global Markets",
+    badge: "Worldwide Delivery",
+    hubCity: "Delivery",
     isOperationalHub: false,
-    countries: ["Brazil", "UAE", "Japan", "Australia", "Singapore", "Global"],
+    countries: ["UAE", "Brazil", "Japan", "Australia"],
     codes: new Set<string>(), // Matches remaining global countries
     color: "#9A6B3B",
     baseFill: "#F5EDE1",
     baseStroke: "#DCCBB5",
-    role: "International DHL Express delivery serving diaspora communities, red carpet stylists, and private clients worldwide from Toronto, Canada and Nigeria.",
-    deliverySummary: "3–6 business days worldwide DHL Express",
-    showroomAddress: "Delivered from Toronto, Canada & Nigeria",
+    role: "Worldwide express delivery.",
+    deliverySummary: "3–6 Business Days",
+    showroomAddress: "From Canada & Nigeria",
     hubCoordinates: [55.2708, 25.2048],
   },
 ];
@@ -330,9 +321,7 @@ function classifyContinentRegion(geom: TopoGeometry): string {
   return "global-continents";
 }
 
-export function ContinentalMapBanner({
-  compact = false,
-}: {
+export function ContinentalMapBanner({}: {
   compact?: boolean;
 }) {
   const [topology, setTopology] = useState<WorldAtlasTopology | null>(null);
@@ -490,19 +479,19 @@ export function ContinentalMapBanner({
               LEFT COLUMN: AFRIKLINK-STYLE INTERACTIVE CONTINENTAL & REGIONAL LIST
              =============================================================== */}
           <div>
-            <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-[#E31E24] mb-3">
-              International Presence &amp; Pan-African Network
+            <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-[#E31E24] mb-2">
+              Global Network
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-[42px] font-semibold text-[#1F1A17] leading-[1.12] mb-4">
-              Connected Across{" "}
-              <span className="text-[#7A491D]">Africa &amp; Global Continents</span>
+            <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#1F1A17] leading-[1.12] mb-2.5">
+              Hubs &amp;{" "}
+              <span className="text-[#7A491D]">Delivery Reach</span>
             </h2>
-            <p className="text-sm sm:text-base text-[#5C5147] mb-7 max-w-[500px] leading-relaxed">
-              Explore the African regions and global continents where Macklemore Fashion serves customers, represents partner brands, and distributes collections.
+            <p className="text-xs sm:text-sm text-[#5C5147] mb-5 max-w-[440px]">
+              Toronto, Canada and Nigeria hubs delivering across Africa and worldwide.
             </p>
 
             {/* Interactive Region / Continent Cards (AfrikLink Pattern) */}
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2">
               {CONTINENTAL_REGIONS.map((region) => {
                 const isActive = activeRegionId === region.id;
                 return (
@@ -511,9 +500,9 @@ export function ContinentalMapBanner({
                     onMouseEnter={() => setHoveredRegionId(region.id)}
                     onMouseLeave={() => setHoveredRegionId(null)}
                     onClick={() => setSelectedRegionId(region.id)}
-                    className={`flex items-center gap-3.5 p-3.5 sm:p-4 rounded-xl border transition-all duration-300 cursor-pointer group relative overflow-hidden ${
+                    className={`flex items-center gap-3 p-3 sm:p-3.5 rounded-xl border transition-all duration-300 cursor-pointer group relative overflow-hidden ${
                       isActive
-                        ? "bg-white border-[#7A491D]/40 shadow-sm translate-x-1.5"
+                        ? "bg-white border-[#7A491D]/40 shadow-sm translate-x-1"
                         : "bg-[#FFFDF9]/80 border-[#EADFD0] hover:bg-white hover:border-[#D4B895]"
                     }`}
                   >
@@ -522,7 +511,7 @@ export function ContinentalMapBanner({
                       style={{ background: region.color }}
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-0.5">
+                      <div className="flex items-center justify-between gap-2">
                         <h4 className="text-sm font-semibold text-[#1F1A17] truncate">
                           {region.label}
                         </h4>
@@ -530,29 +519,10 @@ export function ContinentalMapBanner({
                           {region.hubCity}
                         </span>
                       </div>
-                      <p className="text-[11px] text-[#6E6359] truncate font-medium group-hover:text-[#1F1A17] transition-colors">
+                      <p className="text-[11px] text-[#6E6359] truncate">
                         {region.countries.join(" · ")}
                       </p>
                     </div>
-                    <svg
-                      className={`shrink-0 transition-transform duration-300 group-hover:translate-x-1 ${
-                        isActive
-                          ? "text-[#E31E24] scale-110"
-                          : "text-[#8C7E70]"
-                      }`}
-                      width="18"
-                      height="18"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                    >
-                      <path
-                        d="M3 8h10M9 4l4 4-4 4"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
                   </div>
                 );
               })}
@@ -810,42 +780,34 @@ export function ContinentalMapBanner({
               </div>
 
               {/* Selected Region / Hub Summary Footer Inside Map Card */}
-              <div className="mt-4 pt-4 border-t border-[#EFE7DC] grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
+              <div className="mt-4 pt-3.5 border-t border-[#EFE7DC] grid grid-cols-3 gap-2.5">
+                <div className="p-2.5 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7A491D] block">
-                    {activeRegion.isOperationalHub
-                      ? "Operational Hub"
-                      : "Fulfillment Origin"}
+                    {activeRegion.isOperationalHub ? "Hub" : "Origin"}
                   </span>
                   <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block truncate">
                     {activeRegion.showroomAddress}
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
+                <div className="p-2.5 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7A491D] block">
-                    Express Delivery
+                    Delivery
                   </span>
                   <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block truncate">
                     {activeRegion.deliverySummary}
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
+                <div className="p-2.5 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7A491D] block">
-                    Countries Served
+                    Markets
                   </span>
                   <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block truncate">
-                    {activeRegion.countries.slice(0, 4).join(" · ")}
+                    {activeRegion.countries.slice(0, 3).join(" · ")}
                   </span>
                 </div>
               </div>
-
-              {!compact && (
-                <p className="mt-3 text-xs text-[#5C5147] leading-relaxed">
-                  {activeRegion.role}
-                </p>
-              )}
 
               {/* Floating Cursor Tooltip (AfrikLink Pattern) */}
               <AnimatePresence>

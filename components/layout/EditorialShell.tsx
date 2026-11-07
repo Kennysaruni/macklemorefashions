@@ -202,7 +202,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
 
       {/* 2. Sticky Header (Remains Visible Above the Mobile Menu so Logo & Cart Stay Accessible) */}
       <header className="sticky top-0 z-50 bg-[#FFFDF9]/95 backdrop-blur-md border-b border-[#EADFD0]">
-        <div className="max-w-[1440px] mx-auto px-3.5 sm:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-6">
+        <div className="max-w-[1440px] mx-auto px-3.5 sm:px-8 h-18 sm:h-22 lg:h-24 flex items-center justify-between gap-2 sm:gap-6">
           {/* Left: Official Macklemore Logo */}
           <Link
             href="/"

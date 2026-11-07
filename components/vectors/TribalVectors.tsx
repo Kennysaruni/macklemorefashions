@@ -22,11 +22,11 @@ export function MacklemoreLogo({
       <img
         src="/assets/fashion-Boutique-logo-1.svg"
         alt="Macklemore Fashion"
-        className="h-9 sm:h-12 max-w-[165px] sm:max-w-none w-auto object-contain object-left transition-transform duration-300 hover:scale-[1.02]"
+        className="h-12 sm:h-15 lg:h-16 max-w-[205px] sm:max-w-none w-auto object-contain object-left transition-transform duration-300 hover:scale-[1.02]"
       />
       {showSubline && (
         <span className="text-[10px] tracking-[0.18em] uppercase text-[#7A491D] font-medium mt-1">
-          Canada · Nigeria · Global Fashion
+          Toronto, Canada · Nigeria
         </span>
       )}
     </div>
@@ -52,7 +52,7 @@ export function TribalPatternRibbon({ className = "" }: { className?: string }) 
     >
       <div className="animate-tribal-ltr">
         <svg
-          viewBox="0 0 2400 32"
+          viewBox="0 0 2400 20"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="w-full h-full block"
@@ -63,32 +63,30 @@ export function TribalPatternRibbon({ className = "" }: { className?: string }) 
               id={patternId}
               x="0"
               y="0"
-              width="160"
-              height="32"
+              width="120"
+              height="20"
               patternUnits="userSpaceOnUse"
             >
               {/* Warm Cream Base */}
-              <rect width="160" height="32" fill="#FAF5EE" />
+              <rect width="120" height="20" fill="#FAF5EE" />
               {/* Top & Bottom Gold & Bronze Hairlines */}
-              <line x1="0" y1="1.5" x2="160" y2="1.5" stroke="#D4860B" strokeWidth="1.5" strokeOpacity="0.55" />
-              <line x1="0" y1="30.5" x2="160" y2="30.5" stroke="#7A491D" strokeWidth="1.5" strokeOpacity="0.45" />
+              <line x1="0" y1="1" x2="120" y2="1" stroke="#D4860B" strokeWidth="1" strokeOpacity="0.5" />
+              <line x1="0" y1="19" x2="120" y2="19" stroke="#7A491D" strokeWidth="1" strokeOpacity="0.4" />
 
-              {/* Enlarged Multi-Color Chevron & Diamond Motif from the Macklemore Logo */}
-              <path d="M2 27L18 5L34 27H26L18 14L10 27H2Z" fill="#E31E24" />
-              <polygon points="50,5 62,16 50,27 38,16" fill="#D4860B" />
-              <polygon points="50,10 56,16 50,22 44,16" fill="#FFFDF9" />
-              <polygon points="50,13 53,16 50,19 47,16" fill="#E31E24" />
+              {/* Multi-Color Chevron & Diamond Motif from the Macklemore Logo */}
+              <path d="M1 17L13 3L25 17H19L13 9L7 17H1Z" fill="#E31E24" />
+              <polygon points="37,3 46,10 37,17 28,10" fill="#D4860B" />
+              <polygon points="37,6.5 41.5,10 37,13.5 32.5,10" fill="#FFFDF9" />
 
-              <path d="M66 27L82 5L98 27H90L82 14L74 27H66Z" fill="#7A491D" />
-              <polygon points="114,5 126,16 114,27 102,16" fill="#E05C1A" />
-              <polygon points="114,10 120,16 114,22 108,16" fill="#D4860B" />
-              <polygon points="114,13 117,16 114,19 111,16" fill="#FFFDF9" />
+              <path d="M49 17L61 3L73 17H67L61 9L55 17H49Z" fill="#7A491D" />
+              <polygon points="85,3 94,10 85,17 76,10" fill="#E05C1A" />
+              <polygon points="85,6.5 89.5,10 85,13.5 80.5,10" fill="#D4860B" />
 
-              <path d="M130 27L142 6L154 27H147L142 16L137 27H130Z" fill="#1A7A6E" />
-              <polygon points="156,11 160,16 156,21 152,16" fill="#E31E24" />
+              <path d="M97 17L105 4L113 17H97Z" fill="#1A7A6E" />
+              <polygon points="116.5,7 120,10 116.5,13 113,10" fill="#E31E24" />
             </pattern>
           </defs>
-          <rect width="2400" height="32" fill={`url(#${patternId})`} />
+          <rect width="2400" height="20" fill={`url(#${patternId})`} />
         </svg>
       </div>
     </div>
