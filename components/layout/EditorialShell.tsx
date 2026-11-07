@@ -185,7 +185,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
         <div className="flex items-center gap-2 min-w-0">
           <span className="inline-block w-1.5 h-1.5 rotate-45 bg-[#E31E24] shrink-0" />
           <span className="font-medium text-[#1F1A17] truncate">
-            Canadian-Based · Lagos Operations
+            Toronto, Canada · Nigeria
           </span>
           <span className="hidden md:inline text-[#7D7065] truncate">
             · Connecting international luxury &amp; African fashion across global markets
@@ -517,7 +517,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      {/* Circular Scroll-Progress Back to Top Button in Macklemore Brand Colors */}
+      {/* Circular Scroll-Progress Back to Top Button with Tribal Pattern Border */}
       <AnimatePresence>
         {showBackToTop && (
           <motion.button
@@ -527,27 +527,32 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
             exit={{ opacity: 0, scale: 0.85, y: 12 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onClick={scrollToTop}
-            aria-label={`Scroll to top (${Math.round(scrollProgress * 100)}% scrolled)`}
-            className="fixed bottom-5 right-4 sm:right-6 z-40 w-14 h-14 sm:w-15 sm:h-15 rounded-full bg-[#FFFDF9]/95 backdrop-blur-md shadow-xl flex items-center justify-center cursor-pointer group transform-gpu hover:scale-105 transition-transform duration-200"
+            aria-label="Scroll to top"
+            className="fixed bottom-5 right-4 sm:right-6 z-40 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#FFFDF9]/95 backdrop-blur-md shadow-xl flex items-center justify-center cursor-pointer group transform-gpu hover:scale-105 transition-transform duration-200"
           >
-            {/* Circular SVG Scroll Progress Ring */}
+            {/* Circular SVG Scroll Progress Ring with Macklemore Tribal Pattern */}
             <svg
               viewBox="0 0 60 60"
               className="absolute inset-0 w-full h-full -rotate-90"
               aria-hidden="true"
             >
               <defs>
-                <linearGradient
-                  id="macklemore-scroll-progress-grad"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="100%"
+                <pattern
+                  id="macklemore-scroll-tribal-pattern"
+                  x="0"
+                  y="0"
+                  width="12"
+                  height="12"
+                  patternUnits="userSpaceOnUse"
                 >
-                  <stop offset="0%" stopColor="#E31E24" />
-                  <stop offset="50%" stopColor="#D4860B" />
-                  <stop offset="100%" stopColor="#1A7A6E" />
-                </linearGradient>
+                  <rect width="12" height="12" fill="#7A491D" />
+                  <path d="M0 12L6 0L12 12H8.5L6 5.5L3.5 12H0Z" fill="#E31E24" />
+                  <polygon points="6,1 11,6 6,11 1,6" fill="#D4860B" />
+                  <polygon points="6,3 9,6 6,9 3,6" fill="#1A7A6E" />
+                  <polygon points="6,4.5 7.5,6 6,7.5 4.5,6" fill="#FFFDF9" />
+                  <polygon points="0,0 3.5,0 0,3.5" fill="#E05C1A" />
+                  <polygon points="12,0 8.5,0 12,3.5" fill="#E05C1A" />
+                </pattern>
               </defs>
               {/* Subtle Track Circle */}
               <circle
@@ -556,81 +561,81 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 r="25.5"
                 fill="none"
                 stroke="#EADFD0"
-                strokeWidth="3.2"
+                strokeWidth="4.6"
               />
-              {/* Dynamic Scroll Progress Circle */}
+              {/* Dynamic Tribal-Pattern Scroll Progress Circle */}
               <circle
                 cx="30"
                 cy="30"
                 r="25.5"
                 fill="none"
-                stroke="url(#macklemore-scroll-progress-grad)"
-                strokeWidth="3.6"
-                strokeLinecap="round"
+                stroke="url(#macklemore-scroll-tribal-pattern)"
+                strokeWidth="5.4"
+                strokeLinecap="butt"
                 strokeDasharray={circleCircumference}
                 strokeDashoffset={strokeDashoffset}
                 className="transition-[stroke-dashoffset] duration-150 ease-out"
               />
             </svg>
 
-            {/* Inner Arrow & Percentage */}
-            <div className="relative z-10 flex flex-col items-center justify-center leading-none">
-              <span className="text-sm font-bold text-[#1F1A17] group-hover:text-[#E31E24] transition-colors">
-                ↑
-              </span>
-              <span className="text-[9px] font-semibold text-[#7A491D] mt-0.5">
-                {Math.round(scrollProgress * 100)}%
-              </span>
+            {/* Centered Upward Arrow Icon (No Percentage Text) */}
+            <div className="relative z-10 flex items-center justify-center">
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                className="w-5 h-5 text-[#1F1A17] group-hover:text-[#E31E24] group-hover:-translate-y-0.5 transition-all duration-200"
+                aria-hidden="true"
+              >
+                <path
+                  d="M10 15.5V4.5M10 4.5L5.25 9.25M10 4.5L14.75 9.25"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* 4. Compact, Refined Luxury Footer */}
+      {/* 4. Compact, Refined Luxury Footer (Without Specific Street Locations) */}
       <footer className="bg-[#FAF5EE] text-[#1F1A17] border-t border-[#EADFD0] mt-12">
         <TribalPatternRibbon />
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-8 sm:py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start lg:items-center pb-6 sm:pb-8 border-b border-[#EADFD0]">
-            {/* Brand Identity (6 Cols) */}
-            <div className="lg:col-span-6 space-y-2.5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 sm:pb-7 border-b border-[#EADFD0]">
+            <div className="space-y-2.5 max-w-2xl">
               <MacklemoreLogo showSubline theme="light" />
-              <p className="text-xs sm:text-sm text-[#5C5147] leading-relaxed max-w-lg">
-                A Canadian-based fashion company with operational headquarters in Lagos, Nigeria, curating authentic African luxury and connecting international brands across West Africa, East Africa, and global markets.
+              <p className="text-xs sm:text-sm text-[#5C5147] leading-relaxed">
+                A Canadian-based fashion company in Toronto, Canada with operational presence in Nigeria, curating authentic African luxury and delivering to customers and partner brands across West Africa, East Africa, and global markets.
               </p>
             </div>
 
-            {/* Global Hubs Pill Grid (6 Cols) */}
-            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-              <div className="p-3 rounded-md border border-[#EADFD0] bg-[#FFFDF9]">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#D4860B] block">
-                  Canada HQ
-                </span>
-                <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block">
-                  King St. West, Toronto
-                </span>
-              </div>
-              <div className="p-3 rounded-md border border-[#EADFD0] bg-[#FFFDF9]">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#E31E24] block">
-                  West Africa HQ
-                </span>
-                <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block">
-                  Victoria Island, Lagos
-                </span>
-              </div>
-              <div className="p-3 rounded-md border border-[#EADFD0] bg-[#FFFDF9]">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#1A7A6E] block">
-                  East Africa Hub
-                </span>
-                <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block">
-                  Westlands, Nairobi
-                </span>
-              </div>
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+              <Link
+                href="/shop"
+                className="px-4 py-2.5 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-xs font-medium transition-colors"
+              >
+                Explore Shop
+              </Link>
+              <Link
+                href="/partnerships"
+                className="px-4 py-2.5 rounded-md border border-[#D4B895] bg-[#FFFDF9] hover:bg-[#1F1A17] hover:text-white text-xs font-medium text-[#1F1A17] transition-colors"
+              >
+                Brand Partnerships
+              </Link>
+              <Link
+                href="/contact"
+                className="px-4 py-2.5 rounded-md border border-[#EADFD0] bg-[#FFFDF9] hover:border-[#7A491D] text-xs font-medium text-[#5C5147] hover:text-[#1F1A17] transition-colors"
+              >
+                Contact Us
+              </Link>
             </div>
           </div>
 
           <div className="pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] sm:text-xs text-[#7D7065]">
             <span>
-              © 2026 Macklemore Fashion Inc. (Canada · Nigeria). All rights reserved.
+              © 2026 Macklemore Fashion Inc. (Toronto, Canada · Nigeria). All rights reserved.
             </span>
             <span className="text-[#7A491D] font-medium">
               Premium Fashion · International Credibility · African Market Reach

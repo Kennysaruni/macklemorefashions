@@ -108,19 +108,54 @@ export function CurtainImage({
   children?: React.ReactNode;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-10%" });
+  const isInView = useInView(containerRef, {
+    once: true,
+    amount: 0.01,
+    margin: "250px 0px",
+  });
 
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [useDirectFallback, setUseDirectFallback] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const [errorSrc, setErrorSrc] = useState<string | null>(null);
   const [secondaryError, setSecondaryError] = useState(false);
   const [animComplete, setAnimComplete] = useState(false);
+
+  const isLoaded = loadedSrc === src;
+  const hasError = errorSrc === src;
+
+  // Actively preload the image off-DOM so browser clip-path optimizations never delay image fetching
+  useEffect(() => {
+    if (typeof window === "undefined" || !src) return;
+    let cancelled = false;
+    const preloader = new window.Image();
+    preloader.decoding = "async";
+    preloader.onload = () => {
+      if (!cancelled) setLoadedSrc(src);
+    };
+    preloader.onerror = () => {
+      if (!cancelled) setErrorSrc(src);
+    };
+    preloader.src = src;
+
+    if (preloader.complete && preloader.naturalWidth > 0) {
+      const rafId = window.requestAnimationFrame(() => {
+        if (!cancelled) setLoadedSrc(src);
+      });
+      return () => {
+        cancelled = true;
+        window.cancelAnimationFrame(rafId);
+      };
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [src]);
 
   const hasDistinctSecondary =
     Boolean(secondarySrc) && secondarySrc !== src && !secondaryError;
 
   // Wait until the image is BOTH in viewport AND loaded so the exact Hero curtain reveal
-  // plays visibly after the picture finishes loading (instead of animating while blank).
+  // plays visibly after the picture finishes loading (and suspense disappears immediately on load).
   const shouldReveal = isInView && (isLoaded || hasError);
 
   return (
@@ -128,7 +163,7 @@ export function CurtainImage({
       ref={containerRef}
       className={`relative w-full overflow-hidden bg-[#FAF5EE] ${aspectClass} ${className}`}
     >
-      {/* Suspense-Style Warm Shimmer Placeholder while image bytes load */}
+      {/* Suspense-Style Warm Shimmer Placeholder ONLY while image bytes are actively loading */}
       {!isLoaded && !hasError && (
         <div
           aria-hidden="true"
@@ -181,15 +216,15 @@ export function CurtainImage({
               fill
               sizes={sizes}
               priority={priority}
-              unoptimized={useDirectFallback}
-              onLoad={() => setIsLoaded(true)}
-              onError={() => {
-                if (!useDirectFallback) {
-                  setUseDirectFallback(true);
-                } else {
-                  setHasError(true);
+              loading="eager"
+              unoptimized
+              ref={(node) => {
+                if (node && node.complete && node.naturalWidth > 0 && !isLoaded) {
+                  setLoadedSrc(src);
                 }
               }}
+              onLoad={() => setLoadedSrc(src)}
+              onError={() => setErrorSrc(src)}
               className={`${imgClassName} transform-gpu scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                 hasDistinctSecondary
                   ? "opacity-100 group-hover:opacity-0"
@@ -203,7 +238,8 @@ export function CurtainImage({
                 alt={`${alt} alternate view`}
                 fill
                 sizes={sizes}
-                unoptimized={useDirectFallback}
+                loading="lazy"
+                unoptimized
                 onError={() => setSecondaryError(true)}
                 className={`${imgClassName} transform-gpu scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100`}
               />

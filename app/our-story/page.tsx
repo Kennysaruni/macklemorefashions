@@ -49,10 +49,10 @@ export default function OurStoryPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Operations HQ:</span>
-                  <span className="text-[#1F1A17] font-semibold">Victoria Island, Lagos</span>
+                  <span className="text-[#1F1A17] font-semibold">Nigeria</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Regional Reach:</span>
+                  <span>Delivery Reach:</span>
                   <span className="text-[#7A491D] font-semibold">West &amp; East Africa + Global</span>
                 </div>
               </div>

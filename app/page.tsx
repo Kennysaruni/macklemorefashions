@@ -228,7 +228,7 @@ export default function HomePage() {
               <div className="grid grid-cols-3 gap-4 pt-8 mt-10 border-t border-[#E6DACB]">
                 <div>
                   <span className="text-xs text-[#7A491D] font-medium block">
-                    Global Base
+                    Corporate Base
                   </span>
                   <span className="text-sm font-semibold text-[#1F1A17] mt-0.5 block">
                     Toronto, Canada
@@ -236,15 +236,15 @@ export default function HomePage() {
                 </div>
                 <div>
                   <span className="text-xs text-[#7A491D] font-medium block">
-                    Operations HQ
+                    Operations Hub
                   </span>
                   <span className="text-sm font-semibold text-[#1F1A17] mt-0.5 block">
-                    Lagos, Nigeria
+                    Nigeria
                   </span>
                 </div>
                 <div>
                   <span className="text-xs text-[#7A491D] font-medium block">
-                    Market Reach
+                    Delivery Reach
                   </span>
                   <span className="text-sm font-semibold text-[#1F1A17] mt-0.5 block">
                     West &amp; East Africa + Global

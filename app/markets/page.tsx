@@ -12,34 +12,34 @@ import {
 const MARKET_REGIONS = [
   {
     region: "West Africa",
-    badge: "Operational Headquarters",
-    cities: "Lagos · Abuja · Accra",
+    badge: "Operational Hub · Nigeria",
+    cities: "Nigeria · Ghana · Senegal · Côte d'Ivoire",
     summary:
-      "Anchored by our operational headquarters in Victoria Island, Lagos, with express reach across Nigeria, Ghana, and key West African capitals.",
+      "Anchored by our operational presence in Nigeria, with express fulfillment and partner brand representation across West Africa.",
     accent: "#E31E24",
   },
   {
-    region: "East Africa",
-    badge: "Regional Market Hub",
-    cities: "Nairobi · Mombasa · Kigali",
-    summary:
-      "Serving East Africa's dynamic fashion and creative community with curated retail collections and partner brand distribution.",
-    accent: "#E05C1A",
-  },
-  {
     region: "North America",
-    badge: "Canadian Headquarters",
-    cities: "Toronto · Montreal · New York",
+    badge: "Corporate Headquarters · Toronto, Canada",
+    cities: "Toronto, Canada · United States",
     summary:
-      "Our Canadian corporate base in Toronto connects North American shoppers and diaspora communities with our latest collections.",
+      "Our Canadian corporate base in Toronto, Canada connects North American shoppers and international partners with our collections.",
     accent: "#D4860B",
   },
   {
-    region: "UK & Europe",
-    badge: "International Partner Network",
-    cities: "London · Milan · Paris",
+    region: "East Africa",
+    badge: "Express Delivery Destination",
+    cities: "Kenya · Uganda · Rwanda · Tanzania",
     summary:
-      "Collaborating with European and British fashion labels, such as LUCA, to bridge international design houses with African markets.",
+      "Delivering curated retail collections and partner brand pieces directly to customers across East Africa from our Nigeria and Toronto, Canada hubs.",
+    accent: "#E05C1A",
+  },
+  {
+    region: "UK, Europe & Global",
+    badge: "International Delivery & Partner Network",
+    cities: "United Kingdom · Italy · France · Worldwide",
+    summary:
+      "Collaborating with international fashion labels, such as LUCA, and delivering orders worldwide from Toronto, Canada and Nigeria.",
     accent: "#1A7A6E",
   },
 ];

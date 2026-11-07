@@ -52,10 +52,10 @@ export function TribalPatternRibbon({ className = "" }: { className?: string }) 
     >
       <div className="animate-tribal-ltr">
         <svg
-          viewBox="0 0 2400 18"
+          viewBox="0 0 2400 32"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-3.5 sm:h-4 block"
+          className="w-full h-full block"
           preserveAspectRatio="none"
         >
           <defs>
@@ -63,30 +63,32 @@ export function TribalPatternRibbon({ className = "" }: { className?: string }) 
               id={patternId}
               x="0"
               y="0"
-              width="120"
-              height="18"
+              width="160"
+              height="32"
               patternUnits="userSpaceOnUse"
             >
               {/* Warm Cream Base */}
-              <rect width="120" height="18" fill="#FAF5EE" />
-              {/* Top & Bottom Gold Hairlines */}
-              <line x1="0" y1="1" x2="120" y2="1" stroke="#D4860B" strokeWidth="1" strokeOpacity="0.45" />
-              <line x1="0" y1="17" x2="120" y2="17" stroke="#7A491D" strokeWidth="1" strokeOpacity="0.35" />
+              <rect width="160" height="32" fill="#FAF5EE" />
+              {/* Top & Bottom Gold & Bronze Hairlines */}
+              <line x1="0" y1="1.5" x2="160" y2="1.5" stroke="#D4860B" strokeWidth="1.5" strokeOpacity="0.55" />
+              <line x1="0" y1="30.5" x2="160" y2="30.5" stroke="#7A491D" strokeWidth="1.5" strokeOpacity="0.45" />
 
-              {/* Multi-Color Chevron & Diamond Motif from the Macklemore Logo */}
-              <path d="M0 15L12 3L24 15H18L12 8L6 15H0Z" fill="#E31E24" />
-              <polygon points="36,3 44,9 36,15 28,9" fill="#D4860B" />
-              <polygon points="36,6 40,9 36,12 32,9" fill="#FFFDF9" />
+              {/* Enlarged Multi-Color Chevron & Diamond Motif from the Macklemore Logo */}
+              <path d="M2 27L18 5L34 27H26L18 14L10 27H2Z" fill="#E31E24" />
+              <polygon points="50,5 62,16 50,27 38,16" fill="#D4860B" />
+              <polygon points="50,10 56,16 50,22 44,16" fill="#FFFDF9" />
+              <polygon points="50,13 53,16 50,19 47,16" fill="#E31E24" />
 
-              <path d="M48 15L60 3L72 15H66L60 8L54 15H48Z" fill="#7A491D" />
-              <polygon points="84,3 92,9 84,15 76,9" fill="#E05C1A" />
-              <polygon points="84,6 88,9 84,12 80,9" fill="#D4860B" />
+              <path d="M66 27L82 5L98 27H90L82 14L74 27H66Z" fill="#7A491D" />
+              <polygon points="114,5 126,16 114,27 102,16" fill="#E05C1A" />
+              <polygon points="114,10 120,16 114,22 108,16" fill="#D4860B" />
+              <polygon points="114,13 117,16 114,19 111,16" fill="#FFFDF9" />
 
-              <path d="M96 15L104 4L112 15H96Z" fill="#1A7A6E" />
-              <circle cx="116" cy="9" r="2.2" fill="#E31E24" />
+              <path d="M130 27L142 6L154 27H147L142 16L137 27H130Z" fill="#1A7A6E" />
+              <polygon points="156,11 160,16 156,21 152,16" fill="#E31E24" />
             </pattern>
           </defs>
-          <rect width="2400" height="18" fill={`url(#${patternId})`} />
+          <rect width="2400" height="32" fill={`url(#${patternId})`} />
         </svg>
       </div>
     </div>

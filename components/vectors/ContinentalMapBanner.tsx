@@ -33,6 +33,7 @@ export interface ContinentalRegionGroup {
   label: string;
   badge: string;
   hubCity: string;
+  isOperationalHub: boolean;
   countries: string[];
   codes: Set<string>;
   names?: Set<string>;
@@ -49,8 +50,9 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
   {
     id: "west-africa",
     label: "West Africa",
-    badge: "West African Operations HQ · Lagos & Accra",
-    hubCity: "Lagos & Accra",
+    badge: "Operational Hub · Nigeria",
+    hubCity: "Nigeria · Hub",
+    isOperationalHub: true,
     countries: ["Nigeria", "Ghana", "Senegal", "Côte d'Ivoire", "Benin", "Togo"],
     codes: new Set([
       "686", "270", "624", "324", "694", "430", "384", "288", "768", "204",
@@ -59,16 +61,38 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#E31E24",
     baseFill: "#E9D6BE",
     baseStroke: "#C4A482",
-    role: "Primary operational presence in Lagos with regional distribution, bespoke fittings, and partner brand representation across West Africa.",
-    deliverySummary: "1–3 business days across Lagos, Abuja & Accra",
-    showroomAddress: "Victoria Island, Lagos & Osu, Accra",
-    hubCoordinates: [3.3792, 6.5244],
+    role: "Primary operational presence in Nigeria with regional distribution, bespoke fittings, and partner brand representation across West Africa.",
+    deliverySummary: "1–3 business days across Nigeria & West Africa",
+    showroomAddress: "Nigeria (Operational Hub)",
+    hubCoordinates: [8.6753, 9.082],
+  },
+  {
+    id: "north-america",
+    label: "North America",
+    badge: "Corporate Headquarters · Toronto, Canada",
+    hubCity: "Toronto, Canada · HQ",
+    isOperationalHub: true,
+    countries: ["Canada", "United States", "Mexico", "Jamaica", "Trinidad & Tobago"],
+    codes: new Set([
+      "124", "840", "484", "304", "044", "192", "214", "332", "388", "630",
+      "780", "084", "188", "222", "320", "340", "558", "591", "028", "052",
+      "060", "092", "136", "212", "308", "500", "531", "533", "534", "652",
+      "659", "660", "662", "663", "666", "670", "796", "850",
+    ]),
+    color: "#7A491D",
+    baseFill: "#F1E7D8",
+    baseStroke: "#D2BFA6",
+    role: "Canadian corporate base in Toronto, Canada directing international brand strategy, Toronto Fashion Week showcases, North American client service, and global partnerships.",
+    deliverySummary: "2–4 business days across Canada & USA",
+    showroomAddress: "Toronto, Canada (Corporate HQ)",
+    hubCoordinates: [-79.3832, 43.6532],
   },
   {
     id: "east-africa",
     label: "East Africa",
-    badge: "East African Regional Hub · Nairobi",
-    hubCity: "Nairobi",
+    badge: "East Africa · Express Delivery Destination",
+    hubCity: "Delivery Region",
+    isOperationalHub: false,
     countries: ["Kenya", "Uganda", "Rwanda", "Tanzania", "Ethiopia"],
     codes: new Set([
       "231", "232", "262", "706", "404", "800", "646", "108", "834", "729",
@@ -78,16 +102,17 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#D4860B",
     baseFill: "#ECDCBE",
     baseStroke: "#C4A482",
-    role: "Serving East Africa's dynamic fashion and creative community with curated retail collections and partner brand distribution.",
-    deliverySummary: "1–2 business days in Nairobi; 2–4 days regionally",
-    showroomAddress: "Westlands, Nairobi, Kenya",
+    role: "Express delivery destination serving East Africa's dynamic fashion and creative community directly from our hubs in Nigeria and Toronto, Canada.",
+    deliverySummary: "2–4 business days express delivery to East Africa",
+    showroomAddress: "Delivered from Nigeria & Toronto, Canada",
     hubCoordinates: [36.8219, -1.2921],
   },
   {
     id: "north-southern-africa",
     label: "North, Central & Southern Africa",
-    badge: "Pan-African Distribution Network",
-    hubCity: "Johannesburg & Cairo",
+    badge: "Pan-African Delivery Destination",
+    hubCity: "Delivery Region",
+    isOperationalHub: false,
     countries: [
       "South Africa",
       "Egypt",
@@ -109,36 +134,17 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#E05C1A",
     baseFill: "#EFE2CE",
     baseStroke: "#C8AC8C",
-    role: "Continental fulfillment and retail partnerships connecting North, Central, and Southern African fashion capitals with our Lagos and Toronto hubs.",
+    role: "Continental delivery network connecting North, Central, and Southern African markets directly with our operational hubs in Nigeria and Toronto, Canada.",
     deliverySummary: "3–5 business days express continental delivery",
-    showroomAddress: "Pan-African Partner Boutiques · Johannesburg & Cairo",
+    showroomAddress: "Delivered from Nigeria & Toronto, Canada",
     hubCoordinates: [28.0473, -26.2041],
-  },
-  {
-    id: "north-america",
-    label: "North America",
-    badge: "Canadian Corporate Headquarters · Toronto",
-    hubCity: "Toronto & New York",
-    countries: ["Canada", "United States", "Mexico", "Jamaica", "Trinidad & Tobago"],
-    codes: new Set([
-      "124", "840", "484", "304", "044", "192", "214", "332", "388", "630",
-      "780", "084", "188", "222", "320", "340", "558", "591", "028", "052",
-      "060", "092", "136", "212", "308", "500", "531", "533", "534", "652",
-      "659", "660", "662", "663", "666", "670", "796", "850",
-    ]),
-    color: "#7A491D",
-    baseFill: "#F1E7D8",
-    baseStroke: "#D2BFA6",
-    role: "Canadian headquarters directing international brand strategy, Toronto Fashion Week showcases, North American client service, and global partnerships.",
-    deliverySummary: "2–4 business days across Canada & USA",
-    showroomAddress: "Downtown Design District, Toronto, ON",
-    hubCoordinates: [-79.3832, 43.6532],
   },
   {
     id: "europe-uk",
     label: "UK & Europe",
-    badge: "European Partner Brand Hub · London & Milan",
-    hubCity: "London & Milan",
+    badge: "UK & Europe · Delivery & Partner Reach",
+    hubCity: "Delivery & Partners",
+    isOperationalHub: false,
     countries: ["United Kingdom", "Italy", "France", "Germany", "Spain", "Netherlands"],
     codes: new Set([
       "826", "372", "250", "276", "380", "724", "620", "528", "056", "442",
@@ -151,24 +157,25 @@ const CONTINENTAL_REGIONS: ContinentalRegionGroup[] = [
     color: "#1A7A6E",
     baseFill: "#F1E7D8",
     baseStroke: "#D2BFA6",
-    role: "Partner brand curation and international consolidations for labels such as LUCA and European design houses entering African markets.",
+    role: "International delivery destination and partner brand collaborations for labels such as LUCA entering African markets.",
     deliverySummary: "2–4 business days express international delivery",
-    showroomAddress: "Partner Showroom Network · London & Milan",
+    showroomAddress: "Delivered from Toronto, Canada & Nigeria",
     hubCoordinates: [-0.1276, 51.5072],
   },
   {
     id: "global-continents",
     label: "South America, Asia & Oceania",
-    badge: "Worldwide Express Corridors",
-    hubCity: "Dubai · São Paulo · Tokyo · Sydney",
+    badge: "Worldwide Express Delivery",
+    hubCity: "Worldwide Delivery",
+    isOperationalHub: false,
     countries: ["Brazil", "UAE", "Japan", "Australia", "Singapore", "Global"],
     codes: new Set<string>(), // Matches remaining global countries
     color: "#9A6B3B",
     baseFill: "#F5EDE1",
     baseStroke: "#DCCBB5",
-    role: "International DHL Express fulfillment serving diaspora communities, red carpet stylists, and private clients across South America, the Middle East, Asia, and Oceania.",
+    role: "International DHL Express delivery serving diaspora communities, red carpet stylists, and private clients worldwide from Toronto, Canada and Nigeria.",
     deliverySummary: "3–6 business days worldwide DHL Express",
-    showroomAddress: "International Express Dispatch · Toronto & Lagos",
+    showroomAddress: "Delivered from Toronto, Canada & Nigeria",
     hubCoordinates: [55.2708, 25.2048],
   },
 ];
@@ -694,48 +701,65 @@ export function ContinentalMapBanner({
                       })}
                     </motion.g>
 
-                    {/* Trade & Distribution Arcs in World Mode */}
-                    {mapMode === "world" && projectedData.hubs.length >= 5 && (
-                      <g className="pointer-events-none">
-                        {/* Toronto to Lagos */}
-                        <path
-                          d={`M ${projectedData.hubs[3].svgX} ${projectedData.hubs[3].svgY} Q 360 205 ${projectedData.hubs[0].svgX} ${projectedData.hubs[0].svgY}`}
-                          stroke="#E31E24"
-                          strokeWidth="1.6"
-                          strokeDasharray="5 4"
-                          fill="none"
-                          opacity="0.75"
-                        />
-                        {/* London to Lagos */}
-                        <path
-                          d={`M ${projectedData.hubs[4].svgX} ${projectedData.hubs[4].svgY} Q 478 215 ${projectedData.hubs[0].svgX} ${projectedData.hubs[0].svgY}`}
-                          stroke="#1A7A6E"
-                          strokeWidth="1.5"
-                          strokeDasharray="4 4"
-                          fill="none"
-                          opacity="0.75"
-                        />
-                        {/* Lagos to Nairobi */}
-                        <path
-                          d={`M ${projectedData.hubs[0].svgX} ${projectedData.hubs[0].svgY} Q 505 275 ${projectedData.hubs[1].svgX} ${projectedData.hubs[1].svgY}`}
-                          stroke="#D4860B"
-                          strokeWidth="1.8"
-                          fill="none"
-                          opacity="0.85"
-                        />
-                        {/* Lagos to Johannesburg */}
-                        <path
-                          d={`M ${projectedData.hubs[0].svgX} ${projectedData.hubs[0].svgY} Q 485 335 ${projectedData.hubs[2].svgX} ${projectedData.hubs[2].svgY}`}
-                          stroke="#E05C1A"
-                          strokeWidth="1.5"
-                          strokeDasharray="4 3"
-                          fill="none"
-                          opacity="0.75"
-                        />
-                      </g>
-                    )}
+                    {/* Delivery Corridors from Nigeria & Toronto, Canada Hubs */}
+                    {mapMode === "world" && projectedData.hubs.length >= 5 && (() => {
+                      const nigeriaHub = projectedData.hubs.find((h) => h.id === "west-africa");
+                      const torontoHub = projectedData.hubs.find((h) => h.id === "north-america");
+                      const eastAfricaDest = projectedData.hubs.find((h) => h.id === "east-africa");
+                      const southAfricaDest = projectedData.hubs.find((h) => h.id === "north-southern-africa");
+                      const europeDest = projectedData.hubs.find((h) => h.id === "europe-uk");
 
-                    {/* Interactive Hub Markers */}
+                      if (!nigeriaHub || !torontoHub) return null;
+
+                      return (
+                        <g className="pointer-events-none">
+                          {/* Toronto, Canada HQ <-> Nigeria Hub */}
+                          <path
+                            d={`M ${torontoHub.svgX} ${torontoHub.svgY} Q 360 205 ${nigeriaHub.svgX} ${nigeriaHub.svgY}`}
+                            stroke="#E31E24"
+                            strokeWidth="1.8"
+                            strokeDasharray="5 4"
+                            fill="none"
+                            opacity="0.82"
+                          />
+                          {/* Nigeria Hub -> UK & Europe Delivery */}
+                          {europeDest && (
+                            <path
+                              d={`M ${nigeriaHub.svgX} ${nigeriaHub.svgY} Q 478 215 ${europeDest.svgX} ${europeDest.svgY}`}
+                              stroke="#1A7A6E"
+                              strokeWidth="1.5"
+                              strokeDasharray="4 4"
+                              fill="none"
+                              opacity="0.72"
+                            />
+                          )}
+                          {/* Nigeria Hub -> East Africa Delivery Destination */}
+                          {eastAfricaDest && (
+                            <path
+                              d={`M ${nigeriaHub.svgX} ${nigeriaHub.svgY} Q 520 272 ${eastAfricaDest.svgX} ${eastAfricaDest.svgY}`}
+                              stroke="#D4860B"
+                              strokeWidth="1.6"
+                              strokeDasharray="4 3"
+                              fill="none"
+                              opacity="0.82"
+                            />
+                          )}
+                          {/* Nigeria Hub -> Southern Africa Delivery Destination */}
+                          {southAfricaDest && (
+                            <path
+                              d={`M ${nigeriaHub.svgX} ${nigeriaHub.svgY} Q 495 335 ${southAfricaDest.svgX} ${southAfricaDest.svgY}`}
+                              stroke="#E05C1A"
+                              strokeWidth="1.5"
+                              strokeDasharray="4 3"
+                              fill="none"
+                              opacity="0.72"
+                            />
+                          )}
+                        </g>
+                      );
+                    })()}
+
+                    {/* Operational Hub Markers (Nigeria & Toronto, Canada) + Delivery Destination Dots */}
                     {projectedData.hubs.map((hub) => {
                       const isHubActive = activeRegionId === hub.id;
                       return (
@@ -746,24 +770,38 @@ export function ContinentalMapBanner({
                           onMouseLeave={() => setHoveredRegionId(null)}
                           onClick={() => setSelectedRegionId(hub.id)}
                         >
-                          <circle
-                            cx={hub.svgX}
-                            cy={hub.svgY}
-                            r={isHubActive ? 13 : 8}
-                            fill={hub.color}
-                            fillOpacity={isHubActive ? 0.24 : 0.14}
-                            stroke={hub.color}
-                            strokeOpacity={isHubActive ? 0.95 : 0.5}
-                            strokeWidth="1.2"
-                          />
-                          <circle
-                            cx={hub.svgX}
-                            cy={hub.svgY}
-                            r={isHubActive ? 4.8 : 3.5}
-                            fill={isHubActive ? "#FFFDF9" : hub.color}
-                            stroke={hub.color}
-                            strokeWidth="2"
-                          />
+                          {hub.isOperationalHub ? (
+                            <>
+                              <circle
+                                cx={hub.svgX}
+                                cy={hub.svgY}
+                                r={isHubActive ? 14 : 9.5}
+                                fill={hub.color}
+                                fillOpacity={isHubActive ? 0.28 : 0.18}
+                                stroke={hub.color}
+                                strokeOpacity={isHubActive ? 0.95 : 0.65}
+                                strokeWidth="1.4"
+                              />
+                              <circle
+                                cx={hub.svgX}
+                                cy={hub.svgY}
+                                r={isHubActive ? 5.2 : 4}
+                                fill="#FFFDF9"
+                                stroke={hub.color}
+                                strokeWidth="2.2"
+                              />
+                            </>
+                          ) : (
+                            <circle
+                              cx={hub.svgX}
+                              cy={hub.svgY}
+                              r={isHubActive ? 5 : 3.2}
+                              fill={hub.color}
+                              fillOpacity={isHubActive ? 0.95 : 0.65}
+                              stroke="#FFFDF9"
+                              strokeWidth="1.2"
+                            />
+                          )}
                         </g>
                       );
                     })}
@@ -775,7 +813,9 @@ export function ContinentalMapBanner({
               <div className="mt-4 pt-4 border-t border-[#EFE7DC] grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7A491D] block">
-                    Active Hub &amp; Showroom
+                    {activeRegion.isOperationalHub
+                      ? "Operational Hub"
+                      : "Fulfillment Origin"}
                   </span>
                   <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block truncate">
                     {activeRegion.showroomAddress}
@@ -784,7 +824,7 @@ export function ContinentalMapBanner({
 
                 <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7A491D] block">
-                    Express Fulfillment
+                    Express Delivery
                   </span>
                   <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block truncate">
                     {activeRegion.deliverySummary}
@@ -793,7 +833,7 @@ export function ContinentalMapBanner({
 
                 <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#EADFD0]">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-[#7A491D] block">
-                    Key Markets
+                    Countries Served
                   </span>
                   <span className="text-xs font-semibold text-[#1F1A17] mt-0.5 block truncate">
                     {activeRegion.countries.slice(0, 4).join(" · ")}

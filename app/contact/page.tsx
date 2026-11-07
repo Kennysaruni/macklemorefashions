@@ -19,7 +19,7 @@ const CHANNELS: {
     code: "CONCIERGE",
     label: "Customer Support",
     deskTitle: "Client Care, Sizing & Order Assistance",
-    office: "Lagos · Toronto · Nairobi",
+    office: "Toronto, Canada · Nigeria",
     email: "concierge@macklemorefashions.com",
     description:
       "Questions about sizing, garment fabrics, shipping timelines, or personal styling assistance.",
@@ -28,7 +28,7 @@ const CHANNELS: {
     code: "BRAND_REPRESENTATION",
     label: "Brand Partnerships",
     deskTitle: "Brand Representation & Distribution",
-    office: "Lagos HQ · Toronto HQ",
+    office: "Toronto, Canada · Nigeria",
     email: "partnerships@macklemorefashions.com",
     description:
       "For international and African fashion brands interested in working with Macklemore Fashion across West and East Africa.",
@@ -37,7 +37,7 @@ const CHANNELS: {
     code: "WHOLESALE",
     label: "Wholesale & Distribution",
     deskTitle: "Showroom & Retail Buying Enquiries",
-    office: "Toronto · Lagos · Accra",
+    office: "Toronto, Canada · Nigeria",
     email: "wholesale@macklemorefashions.com",
     description:
       "For boutiques, retail buyers, and regional distributors seeking seasonal allocations.",
@@ -46,7 +46,7 @@ const CHANNELS: {
     code: "PRESS",
     label: "General & Press",
     deskTitle: "General Enquiries, Media & Styling",
-    office: "International Desk",
+    office: "Toronto, Canada · Nigeria",
     email: "hello@macklemorefashions.com",
     description:
       "Editorial features, press requests, showroom visits, and general company enquiries.",
@@ -183,34 +183,34 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Locations */}
+            {/* Generalized Locations & Delivery Reach */}
             <div className="mt-10 border-t border-[#E6DACB] pt-6 space-y-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] block">
-                Our Offices &amp; Showrooms
+                Operational Presence &amp; Delivery Reach
               </span>
               <div className="space-y-2.5 text-xs">
                 <div className="rounded-md border border-[#EADFD0] p-3.5 bg-white">
-                  <div className="text-[#E31E24] font-semibold">
-                    Lagos Operational HQ
-                  </div>
-                  <div className="text-[#5C5147] mt-0.5">
-                    14 Adeola Odeku Street, Victoria Island, Lagos, Nigeria
-                  </div>
-                </div>
-                <div className="rounded-md border border-[#EADFD0] p-3.5 bg-white">
                   <div className="text-[#D4860B] font-semibold">
-                    Toronto Corporate HQ
+                    Canadian Corporate Base
                   </div>
                   <div className="text-[#5C5147] mt-0.5">
-                    620 King Street West, Toronto, ON, Canada
+                    Toronto, Canada
                   </div>
                 </div>
                 <div className="rounded-md border border-[#EADFD0] p-3.5 bg-white">
-                  <div className="text-[#E05C1A] font-semibold">
-                    East Africa Hub
+                  <div className="text-[#E31E24] font-semibold">
+                    African Operational Presence
                   </div>
                   <div className="text-[#5C5147] mt-0.5">
-                    Westlands Corridor, Nairobi, Kenya
+                    Nigeria
+                  </div>
+                </div>
+                <div className="rounded-md border border-[#EADFD0] p-3.5 bg-white">
+                  <div className="text-[#1A7A6E] font-semibold">
+                    Express Delivery Destinations
+                  </div>
+                  <div className="text-[#5C5147] mt-0.5">
+                    West Africa, East Africa, North America, UK &amp; Worldwide
                   </div>
                 </div>
               </div>
