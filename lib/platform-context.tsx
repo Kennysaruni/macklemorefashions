@@ -108,38 +108,41 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
 
   // Automatic Geolocation / Timezone Currency Detection on Initial Mount
   useEffect(() => {
-    try {
-      const savedCurr = localStorage.getItem("mkm_currency") as CurrencyCode | null;
-      if (savedCurr) {
-        setCurrency(savedCurr);
-        return;
+    const id = window.requestAnimationFrame(() => {
+      try {
+        const savedCurr = localStorage.getItem("mkm_currency") as CurrencyCode | null;
+        if (savedCurr) {
+          setCurrency(savedCurr);
+          return;
+        }
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+        if (tz.includes("Lagos") || tz.includes("Africa/Lagos")) {
+          setCurrency("NGN");
+          setDetectedRegion("WEST AFRICA // LAGOS DETECTED");
+        } else if (tz.includes("Accra")) {
+          setCurrency("GHS");
+          setDetectedRegion("WEST AFRICA // ACCRA DETECTED");
+        } else if (tz.includes("Nairobi")) {
+          setCurrency("KES");
+          setDetectedRegion("EAST AFRICA // NAIROBI DETECTED");
+        } else if (tz.includes("London")) {
+          setCurrency("GBP");
+          setDetectedRegion("UNITED KINGDOM // LONDON DETECTED");
+        } else if (tz.includes("Europe")) {
+          setCurrency("EUR");
+          setDetectedRegion("EUROPE // CONTINENTAL DETECTED");
+        } else if (tz.includes("America/New_York") || tz.includes("Chicago")) {
+          setCurrency("USD");
+          setDetectedRegion("NORTH AMERICA // US DETECTED");
+        } else {
+          setCurrency("CAD");
+          setDetectedRegion("NORTH AMERICA // TORONTO HQ");
+        }
+      } catch {
+        // Fallback to CAD
       }
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-      if (tz.includes("Lagos") || tz.includes("Africa/Lagos")) {
-        setCurrency("NGN");
-        setDetectedRegion("WEST AFRICA // LAGOS DETECTED");
-      } else if (tz.includes("Accra")) {
-        setCurrency("GHS");
-        setDetectedRegion("WEST AFRICA // ACCRA DETECTED");
-      } else if (tz.includes("Nairobi")) {
-        setCurrency("KES");
-        setDetectedRegion("EAST AFRICA // NAIROBI DETECTED");
-      } else if (tz.includes("London")) {
-        setCurrency("GBP");
-        setDetectedRegion("UNITED KINGDOM // LONDON DETECTED");
-      } else if (tz.includes("Europe")) {
-        setCurrency("EUR");
-        setDetectedRegion("EUROPE // CONTINENTAL DETECTED");
-      } else if (tz.includes("America/New_York") || tz.includes("Chicago")) {
-        setCurrency("USD");
-        setDetectedRegion("NORTH AMERICA // US DETECTED");
-      } else {
-        setCurrency("CAD");
-        setDetectedRegion("NORTH AMERICA // TORONTO HQ");
-      }
-    } catch {
-      // Fallback to CAD
-    }
+    });
+    return () => window.cancelAnimationFrame(id);
   }, []);
 
   const handleSetCurrency = (c: CurrencyCode) => {

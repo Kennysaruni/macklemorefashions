@@ -128,7 +128,7 @@ const HOME_FILTER_TABS: { value: "ALL" | ShopCategory; label: string }[] = [
 ];
 
 export default function HomePage() {
-  const { products, brands, collections } = usePlatform();
+  const { products, brands } = usePlatform();
   const [activeSlideIdx, setActiveSlideIdx] = useState(0);
   const [homeCategory, setHomeCategory] = useState<"ALL" | ShopCategory>("ALL");
 
