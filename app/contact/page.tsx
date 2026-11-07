@@ -10,50 +10,45 @@ const CHANNELS: {
   code: InquiryChannel;
   label: string;
   deskTitle: string;
-  routingOffice: string;
-  sla: string;
+  office: string;
   email: string;
   description: string;
 }[] = [
   {
     code: "CONCIERGE",
-    label: "01 // CUSTOMER CARE & CONCIERGE",
-    deskTitle: "CLIENT CARE, SIZING & ORDER TRACKING",
-    routingOffice: "LAGOS VI · NAIROBI 254 · TORONTO",
-    sla: "< 4 HOURS RESPONSE",
+    label: "Customer Support",
+    deskTitle: "Client Care, Sizing & Order Assistance",
+    office: "Lagos · Toronto · Nairobi",
     email: "concierge@macklemorefashions.com",
     description:
-      "Personal sizing guidance, bespoke Aso Oke measurements, GIG / Wells Fargo / DHL waybill tracking, and priority allocation requests.",
-  },
-  {
-    code: "WHOLESALE",
-    label: "02 // WHOLESALE ORDERS",
-    deskTitle: "GLOBAL SHOWROOM & MULTI-BRAND BUYING DESK",
-    routingOffice: "TORONTO HUB B · LAGOS HUB A",
-    sla: "< 24 HOURS RESPONSE",
-    email: "wholesale@macklemorefashions.com",
-    description:
-      "Seasonal showroom appointments, MOQ line sheets, and wholesale allocation for luxury department stores and concept boutiques.",
+      "Questions about sizing, garment fabrics, shipping timelines, or personal styling assistance.",
   },
   {
     code: "BRAND_REPRESENTATION",
-    label: "03 // BRAND REPRESENTATION",
-    deskTitle: "AFRICAN & INTERNATIONAL DISTRIBUTION DIRECTORATE",
-    routingOffice: "LAGOS HQ · NAIROBI · ACCRA",
-    sla: "< 24 HOURS EXECUTIVE REVIEW",
+    label: "Brand Partnerships",
+    deskTitle: "Brand Representation & Distribution",
+    office: "Lagos HQ · Toronto HQ",
     email: "partnerships@macklemorefashions.com",
     description:
-      "For international and African fashion houses seeking turnkey distribution, bonded warehousing, and localized Paystack/M-Pesa checkout.",
+      "For international and African fashion brands interested in working with Macklemore Fashion across West and East Africa.",
+  },
+  {
+    code: "WHOLESALE",
+    label: "Wholesale & Distribution",
+    deskTitle: "Showroom & Retail Buying Enquiries",
+    office: "Toronto · Lagos · Accra",
+    email: "wholesale@macklemorefashions.com",
+    description:
+      "For boutiques, retail buyers, and regional distributors seeking seasonal allocations.",
   },
   {
     code: "PRESS",
-    label: "04 // PRESS & EDITORIAL",
-    deskTitle: "GLOBAL COMMUNICATIONS & ARCHIVE PULLS",
-    routingOffice: "LONDON · TORONTO · LAGOS",
-    sla: "< 12 HOURS RESPONSE",
-    email: "press@macklemorefashions.com",
+    label: "General & Press",
+    deskTitle: "General Enquiries, Media & Styling",
+    office: "International Desk",
+    email: "hello@macklemorefashions.com",
     description:
-      "Editorial sample loans, runway accreditation, executive interviews, and cultural features.",
+      "Editorial features, press requests, showroom visits, and general company enquiries.",
   },
 ];
 
@@ -63,14 +58,9 @@ export default function ContactPage() {
     useState<InquiryChannel>("CONCIERGE");
   const [brandOrCompanyName, setBrandOrCompanyName] = useState("");
   const [contactName, setContactName] = useState("");
-  const [contactRole, setContactRole] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [headquartersCountry, setHeadquartersCountry] = useState("Nigeria");
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [annualVolumeTier, setAnnualVolumeTier] = useState(
-    "PRIVATE CLIENT / SINGLE ORDER"
-  );
   const [message, setMessage] = useState("");
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
 
@@ -82,48 +72,44 @@ export default function ContactPage() {
     const record = submitB2BInquiry({
       channel: activeChannel,
       brandOrCompanyName:
-        brandOrCompanyName.trim() || "Private Client / Individual",
+        brandOrCompanyName.trim() || "Individual Enquiry",
       contactName: contactName.trim(),
-      contactRole: contactRole.trim() || activeChannel,
+      contactRole: currentChannelMeta.label,
       email: email.trim(),
       phone: phone.trim(),
       headquartersCountry,
-      websiteUrl: websiteUrl.trim() || "https://macklemorefashions.com",
-      targetRegions: ["WEST_AFRICA", "EAST_AFRICA", "NORTH_AMERICA"],
-      annualVolumeTier,
+      websiteUrl: "https://macklemorefashions.com",
+      targetRegions: ["West Africa", "East Africa", "International"],
+      annualVolumeTier: currentChannelMeta.label,
       message: message.trim(),
     });
     setSubmittedRef(record.referenceCode);
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#111111]">
+    <div className="min-h-screen bg-[#FFFDF9] text-[#1F1A17]">
       {/* Header */}
-      <section className="relative border-b border-[#E5E0D8] bg-white px-4 py-14 md:px-8 md:py-20 overflow-hidden">
-        <TribalCornerWatermark
-          position="top-right"
-          className="text-[#7A491D]"
-          opacity={0.05}
-        />
-        <div className="mx-auto max-w-[1440px]">
-          <div className="font-mono text-[10px] tracking-[0.26em] text-[#7A491D] font-semibold uppercase mb-3">
-            MULTI-CHANNEL INQUIRY ROUTING // SHOWROOMS &amp; CLIENT CARE
-          </div>
+      <section className="relative border-b border-[#EADFD0] bg-[#FAF5EE] px-4 py-12 md:px-8 md:py-16 overflow-hidden">
+        <TribalCornerWatermark position="top-right" opacity={0.05} />
+        <div className="mx-auto max-w-[1440px] space-y-3">
+          <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
+            Get in Touch
+          </span>
           <StaggeredText
-            text="CONCIERGE, SHOWROOMS & PARTNERSHIPS."
+            text="Contact Macklemore Fashion"
             as="h1"
-            className="font-display text-4xl sm:text-6xl font-bold tracking-tight uppercase leading-[0.95] text-[#111111]"
+            className="font-display text-3xl sm:text-5xl font-semibold tracking-tight text-[#1F1A17]"
           />
-          <p className="mt-4 max-w-2xl text-sm sm:text-base text-[#4A4742] leading-relaxed">
-            Select your dedicated department below. All inquiries are routed directly to our Lagos, Nairobi (254), or Toronto desks.
+          <p className="max-w-2xl text-sm sm:text-base text-[#5C5147] leading-relaxed">
+            Whether you are a customer, a fashion brand exploring representation, or a retail partner, choose an option below to connect with our team in Toronto and Lagos.
           </p>
         </div>
       </section>
 
-      {/* Segregated Routing Selector + Form */}
-      <section className="mx-auto max-w-[1440px] px-4 py-14 md:px-8">
-        {/* 4-Channel Tabs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-[#E5E0D8] mb-12 divide-y sm:divide-y-0 sm:divide-x divide-[#E5E0D8] bg-white">
+      {/* Channel Tabs + Contact Form */}
+      <section className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 md:py-16">
+        {/* 4 Contact Option Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {CHANNELS.map((ch) => {
             const isSelected = ch.code === activeChannel;
             return (
@@ -134,107 +120,85 @@ export default function ContactPage() {
                   setActiveChannel(ch.code);
                   setSubmittedRef(null);
                 }}
-                className={`p-6 text-left transition-colors cursor-pointer ${
+                className={`p-5 rounded-lg border text-left transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? "bg-[#111111] text-white"
-                    : "bg-white text-[#111111] hover:bg-[#FAF9F6]"
+                    ? "bg-[#1F1A17] border-[#1F1A17] text-white shadow-md"
+                    : "bg-white border-[#EADFD0] text-[#1F1A17] hover:border-[#7A491D] hover:bg-[#FAF5EE]"
                 }`}
               >
-                <div
-                  className={`font-mono text-[10px] tracking-[0.2em] uppercase mb-2 font-semibold ${
-                    isSelected ? "text-[#E5E0D8]" : "text-[#7A491D]"
+                <span
+                  className={`text-xs font-medium block mb-1 ${
+                    isSelected ? "text-[#D4860B]" : "text-[#7A491D]"
                   }`}
                 >
                   {ch.label}
-                </div>
-                <div className="font-display text-lg font-bold uppercase">
+                </span>
+                <div className="font-display text-base font-semibold">
                   {ch.deskTitle}
-                </div>
-                <div
-                  className={`mt-3 font-mono text-[10px] tracking-[0.16em] uppercase ${
-                    isSelected ? "text-white/80" : "text-[#6E6A63]"
-                  }`}
-                >
-                  SLA: {ch.sla}
                 </div>
               </button>
             );
           })}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 border border-[#E5E0D8] bg-white">
+        <div className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden shadow-xs grid grid-cols-1 lg:grid-cols-12">
           {/* Left Info Column */}
-          <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#E5E0D8] p-8 md:p-10 bg-[#FAF9F6] flex flex-col justify-between">
-            <div className="space-y-6">
-              <div className="font-mono text-[10px] tracking-[0.22em] text-[#E31E24] font-semibold uppercase">
-                ACTIVE ROUTING CHANNEL: {currentChannelMeta.code}
-              </div>
-              <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase leading-tight text-[#111111]">
+          <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#EADFD0] p-6 sm:p-10 bg-[#FAF5EE]/60 flex flex-col justify-between">
+            <div className="space-y-5">
+              <span className="inline-block px-3 py-1 rounded-md bg-[#E31E24]/10 text-[#E31E24] text-xs font-medium">
+                {currentChannelMeta.label}
+              </span>
+              <h2 className="font-display text-2xl font-semibold text-[#1F1A17]">
                 {currentChannelMeta.deskTitle}
               </h2>
-              <p className="text-sm text-[#4A4742] leading-relaxed">
+              <p className="text-sm text-[#5C5147] leading-relaxed">
                 {currentChannelMeta.description}
               </p>
 
-              <div className="border-t border-[#E5E0D8] pt-6 space-y-3 font-mono text-[11px] tracking-[0.16em] uppercase">
+              <div className="border-t border-[#E6DACB] pt-5 space-y-2.5 text-xs text-[#5C5147]">
                 <div className="flex justify-between">
-                  <span className="text-[#6E6A63]">ROUTING HUB:</span>
-                  <span className="text-[#111111] font-semibold">
-                    {currentChannelMeta.routingOffice}
+                  <span>Offices:</span>
+                  <span className="text-[#1F1A17] font-semibold">
+                    {currentChannelMeta.office}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#6E6A63]">DIRECT EMAIL:</span>
+                  <span>Direct Email:</span>
                   <span className="text-[#7A491D] font-semibold">
                     {currentChannelMeta.email}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#6E6A63]">TARGET SLA:</span>
-                  <span className="text-[#2E6B35] font-semibold">
-                    {currentChannelMeta.sla}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Physical Headquarters & Store Directory */}
-            <div className="mt-12 border-t border-[#E5E0D8] pt-8 space-y-5">
-              <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
-                STORE LOCATIONS &amp; DISTRIBUTION HUBS
-              </div>
-              <div className="grid grid-cols-1 gap-4 font-mono text-[11px] tracking-[0.14em] uppercase">
-                <div className="border border-[#E5E0D8] p-4 bg-white">
-                  <div className="text-[#E31E24] font-semibold mb-1">
-                    HUB A // LAGOS FLAGSHIP HQ
+            {/* Locations */}
+            <div className="mt-10 border-t border-[#E6DACB] pt-6 space-y-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] block">
+                Our Offices &amp; Showrooms
+              </span>
+              <div className="space-y-2.5 text-xs">
+                <div className="rounded-md border border-[#EADFD0] p-3.5 bg-white">
+                  <div className="text-[#E31E24] font-semibold">
+                    Lagos Operational HQ
                   </div>
-                  <div className="text-[#111111] font-bold">
-                    VICTORIA ISLAND, LAGOS
-                  </div>
-                  <div className="text-[#6E6A63] mt-1 text-[10px]">
-                    14 Adeola Odeku Corridor, VI, Lagos, Nigeria
+                  <div className="text-[#5C5147] mt-0.5">
+                    14 Adeola Odeku Street, Victoria Island, Lagos, Nigeria
                   </div>
                 </div>
-                <div className="border border-[#E5E0D8] p-4 bg-white">
-                  <div className="text-[#7A491D] font-semibold mb-1">
-                    EAST AFRICA 254 // NAIROBI SHOWROOM
+                <div className="rounded-md border border-[#EADFD0] p-3.5 bg-white">
+                  <div className="text-[#D4860B] font-semibold">
+                    Toronto Corporate HQ
                   </div>
-                  <div className="text-[#111111] font-bold">
-                    WESTLANDS &amp; COLLEGE HOUSE CORRIDOR
-                  </div>
-                  <div className="text-[#6E6A63] mt-1 text-[10px]">
-                    Nairobi, Kenya · Express M-Pesa &amp; Fargo Dispatch
+                  <div className="text-[#5C5147] mt-0.5">
+                    620 King Street West, Toronto, ON, Canada
                   </div>
                 </div>
-                <div className="border border-[#E5E0D8] p-4 bg-white">
-                  <div className="text-[#111111] font-semibold mb-1">
-                    HUB B // TORONTO CORPORATE HQ
+                <div className="rounded-md border border-[#EADFD0] p-3.5 bg-white">
+                  <div className="text-[#E05C1A] font-semibold">
+                    East Africa Hub
                   </div>
-                  <div className="text-[#111111] font-bold">
-                    KING WEST FASHION DISTRICT
-                  </div>
-                  <div className="text-[#6E6A63] mt-1 text-[10px]">
-                    620 King St W, Toronto, ON, Canada
+                  <div className="text-[#5C5147] mt-0.5">
+                    Westlands Corridor, Nairobi, Kenya
                   </div>
                 </div>
               </div>
@@ -242,19 +206,18 @@ export default function ContactPage() {
           </div>
 
           {/* Right Form Column */}
-          <div className="lg:col-span-7 p-8 md:p-12 bg-white">
+          <div className="lg:col-span-7 p-6 sm:p-10 bg-white">
             {submittedRef ? (
-              <div className="border border-[#111111] bg-[#FAF9F6] p-8 space-y-4">
-                <div className="font-mono text-[11px] tracking-[0.22em] text-[#2E6B35] font-semibold uppercase">
-                  ✓ TRANSMISSION CONFIRMED // LOGGED TO ADMIN PIPELINE
+              <div className="rounded-lg border border-[#2E6B4E]/30 bg-[#FAF5EE] p-8 space-y-3">
+                <div className="text-xs text-[#2E6B4E] font-semibold">
+                  ✓ Message Received (Reference: {submittedRef})
                 </div>
-                <h3 className="font-display text-2xl font-bold uppercase text-[#111111]">
-                  DOSSIER REFERENCE: {submittedRef}
+                <h3 className="font-display text-2xl font-semibold text-[#1F1A17]">
+                  Thank You for Contacting Macklemore Fashion
                 </h3>
-                <p className="text-sm text-[#4A4742] leading-relaxed">
-                  Your message has been routed to the{" "}
-                  <strong>{currentChannelMeta.deskTitle}</strong> and is now visible in the{" "}
-                  <code className="font-mono text-[#E31E24] font-bold">/admin</code> B2B &amp; Concierge Desk.
+                <p className="text-sm text-[#5C5147] leading-relaxed">
+                  Your message has been sent to our{" "}
+                  <strong>{currentChannelMeta.label}</strong> team. We will reply shortly.
                 </p>
                 <button
                   type="button"
@@ -262,158 +225,107 @@ export default function ContactPage() {
                     setSubmittedRef(null);
                     setMessage("");
                   }}
-                  className="bg-[#111111] px-5 py-2.5 font-mono text-[10px] tracking-[0.2em] text-white uppercase hover:bg-[#E31E24] cursor-pointer"
+                  className="rounded-md bg-[#1F1A17] px-5 py-2.5 text-xs font-medium text-white hover:bg-[#E31E24] transition-colors cursor-pointer"
                 >
-                  SEND ANOTHER MESSAGE
+                  Send Another Message
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      FULL NAME *
+                    <label className="block text-xs font-medium text-[#5C5147] mb-1.5">
+                      Full Name *
                     </label>
                     <input
                       type="text"
                       required
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
-                      placeholder="e.g., Amara Nwosu"
-                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
+                      placeholder="Your name"
+                      className="w-full rounded-md border border-[#E2D6C5] bg-[#FFFDF9] px-3.5 py-2.5 text-sm text-[#1F1A17] focus:border-[#7A491D] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      ORGANIZATION / BRAND / ORDER REF
+                    <label className="block text-xs font-medium text-[#5C5147] mb-1.5">
+                      Brand / Company / Order # (Optional)
                     </label>
                     <input
                       type="text"
                       value={brandOrCompanyName}
                       onChange={(e) => setBrandOrCompanyName(e.target.value)}
-                      placeholder="e.g., Maison Kora or Order #MKM-2026"
-                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
+                      placeholder="Optional"
+                      className="w-full rounded-md border border-[#E2D6C5] bg-[#FFFDF9] px-3.5 py-2.5 text-sm text-[#1F1A17] focus:border-[#7A491D] outline-none"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      EMAIL ADDRESS *
+                    <label className="block text-xs font-medium text-[#5C5147] mb-1.5">
+                      Email Address *
                     </label>
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="client@domain.com"
-                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
+                      placeholder="you@example.com"
+                      className="w-full rounded-md border border-[#E2D6C5] bg-[#FFFDF9] px-3.5 py-2.5 text-sm text-[#1F1A17] focus:border-[#7A491D] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      PHONE / WHATSAPP *
+                    <label className="block text-xs font-medium text-[#5C5147] mb-1.5">
+                      Phone / WhatsApp
                     </label>
                     <input
                       type="text"
-                      required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+254 / +234 / +1 / +44"
-                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
+                      placeholder="+234 / +1 / +254 / +44"
+                      className="w-full rounded-md border border-[#E2D6C5] bg-[#FFFDF9] px-3.5 py-2.5 text-sm text-[#1F1A17] focus:border-[#7A491D] outline-none"
                     />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      ROLE / TITLE
-                    </label>
-                    <input
-                      type="text"
-                      value={contactRole}
-                      onChange={(e) => setContactRole(e.target.value)}
-                      placeholder="Client / Buyer / Stylist"
-                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      COUNTRY / REGION
-                    </label>
-                    <select
-                      value={headquartersCountry}
-                      onChange={(e) => setHeadquartersCountry(e.target.value)}
-                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
-                    >
-                      <option value="Nigeria">Nigeria (Lagos / Abuja)</option>
-                      <option value="Kenya">Kenya (Nairobi / Mombasa)</option>
-                      <option value="Canada">Canada (Toronto / Montreal)</option>
-                      <option value="Ghana">Ghana (Accra)</option>
-                      <option value="United Kingdom">United Kingdom (London)</option>
-                      <option value="United States">United States (New York / LA)</option>
-                      <option value="Italy / France">Europe (Milan / Paris)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      INQUIRY SCOPE
-                    </label>
-                    <select
-                      value={annualVolumeTier}
-                      onChange={(e) => setAnnualVolumeTier(e.target.value)}
-                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
-                    >
-                      <option value="PRIVATE CLIENT / SINGLE ORDER">
-                        PRIVATE CLIENT / SINGLE ORDER
-                      </option>
-                      <option value="CAD $50K – $250K / SEASON">
-                        CAD $50K – $250K / SEASON
-                      </option>
-                      <option value="CAD $250K – $1M / SEASON">
-                        CAD $250K – $1M / SEASON
-                      </option>
-                      <option value="CAD $1M+ CONTINENTAL">
-                        CAD $1M+ CONTINENTAL ROLLOUT
-                      </option>
-                    </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                    WEBSITE OR PORTFOLIO URL (OPTIONAL)
+                  <label className="block text-xs font-medium text-[#5C5147] mb-1.5">
+                    Country / Region
                   </label>
-                  <input
-                    type="text"
-                    value={websiteUrl}
-                    onChange={(e) => setWebsiteUrl(e.target.value)}
-                    placeholder="https://"
-                    className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
-                  />
+                  <select
+                    value={headquartersCountry}
+                    onChange={(e) => setHeadquartersCountry(e.target.value)}
+                    className="w-full rounded-md border border-[#E2D6C5] bg-[#FFFDF9] px-3.5 py-2.5 text-sm text-[#1F1A17] focus:border-[#7A491D] outline-none"
+                  >
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                    <option value="Europe">Europe</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                    MESSAGE &amp; REQUIREMENTS *
+                  <label className="block text-xs font-medium text-[#5C5147] mb-1.5">
+                    Message *
                   </label>
                   <textarea
                     rows={5}
                     required
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="How can our Concierge, Showroom, or Partnerships team assist you?"
-                    className="w-full border border-[#E5E0D8] bg-[#FAF9F6] p-4 font-mono text-xs text-[#111111] focus:border-[#111111] focus:outline-none"
+                    placeholder="How can our team help you?"
+                    className="w-full rounded-md border border-[#E2D6C5] bg-[#FFFDF9] p-3.5 text-sm text-[#1F1A17] focus:border-[#7A491D] outline-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#111111] py-4 font-mono text-xs font-semibold tracking-[0.22em] text-white uppercase hover:bg-[#E31E24] transition-colors cursor-pointer"
+                  className="w-full rounded-md bg-[#1F1A17] py-3.5 text-xs sm:text-sm font-medium text-white hover:bg-[#E31E24] transition-colors cursor-pointer shadow-xs"
                 >
-                  SEND TO {currentChannelMeta.code} DESK →
+                  Send Message →
                 </button>
               </form>
             )}

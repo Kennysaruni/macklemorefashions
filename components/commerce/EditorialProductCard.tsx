@@ -25,7 +25,7 @@ export function EditorialProductCard({
   const { currency, addToCart } = usePlatform();
   const [selectedSize, setSelectedSize] = useState<
     "XS" | "S" | "M" | "L" | "XL" | "XXL"
-  >(product.variants[1]?.size || product.variants[0]?.size || "M");
+  >(product.variants[0]?.size || "M");
   const [justAdded, setJustAdded] = useState(false);
 
   const stockInfo = getTotalProductStock(product);
@@ -36,6 +36,19 @@ export function EditorialProductCard({
     ? selectedVariant.hubALagos + selectedVariant.hubBToronto
     : 0;
 
+  const isFabric = product.category === "Fabrics";
+
+  // For fabrics: M = 3 Yards (1x base price), L = 6 Yards (2x base price)
+  const effectiveProduct =
+    isFabric && selectedSize === "L"
+      ? { ...product, basePriceCad: product.basePriceCad * 2 }
+      : product;
+
+  const displayPrice = formatCurrencyValue(
+    convertPrice(effectiveProduct, currency),
+    currency
+  );
+
   const aspectClass =
     priorityAspect === "tall"
       ? "aspect-[3/4] sm:aspect-[4/5]"
@@ -43,9 +56,16 @@ export function EditorialProductCard({
       ? "aspect-square"
       : "aspect-[3/4]";
 
+  const formatOptionLabel = (size: string) => {
+    if (isFabric) {
+      return size === "M" ? "3 Yards" : size === "L" ? "6 Yards" : size;
+    }
+    return size;
+  };
+
   const handleAdd = () => {
     if (variantTotalStock <= 0) return;
-    addToCart(product, selectedSize, 1);
+    addToCart(effectiveProduct, selectedSize, 1);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
   };
@@ -61,37 +81,41 @@ export function EditorialProductCard({
           <div
             className={`relative w-full ${aspectClass} overflow-hidden bg-[#FAF5EE]`}
           >
-            {/* Primary Lookbook Image */}
+            {/* Primary Product Image */}
             <img
               src={product.editorialImageUrl}
               alt={product.title}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-100 group-hover:opacity-0"
+              className="absolute inset-0 w-full h-full object-cover object-top scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-100 group-hover:opacity-0"
             />
             {/* Secondary Detail Image on Hover */}
             <img
               src={product.flatlayImageUrl}
               alt={`${product.title} detail`}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 w-full h-full object-cover object-top scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100"
             />
 
-            {/* Subtle Category Tag */}
+            {/* Category Tag */}
             <div className="absolute top-3 left-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-[11px] font-medium text-[#5C5147]">
               {product.category}
             </div>
 
-            {/* Subtle Low Stock Indicator */}
-            {stockInfo.total <= 15 && (
-              <div className="absolute top-3 right-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#E05C1A]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#E05C1A]">
-                Limited Edition
+            {/* Price Range or Limited Badge */}
+            {product.priceRangeLabel && currency === "CAD" ? (
+              <div className="absolute top-3 right-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#D4860B]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#7A491D]">
+                {product.priceRangeLabel}
               </div>
-            )}
+            ) : stockInfo.total <= 18 ? (
+              <div className="absolute top-3 right-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#E05C1A]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#E05C1A]">
+                Custom &amp; Ready-to-Wear
+              </div>
+            ) : null}
           </div>
         </CurtainReveal>
       </div>
 
-      {/* Minimalist Product Details & Size Selector */}
+      {/* Minimalist Product Details & Size / Yard Selector */}
       <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 gap-4 bg-white">
         <div>
           <div className="flex items-center justify-between gap-2 mb-1">
@@ -106,7 +130,7 @@ export function EditorialProductCard({
                 className="w-2.5 h-2.5 rounded-full border border-black/15 inline-block"
                 style={{ backgroundColor: product.colorHex || "#7A491D" }}
               />
-              <span>{product.colorName}</span>
+              <span className="truncate max-w-[120px]">{product.colorName}</span>
             </div>
           </div>
 
@@ -114,19 +138,27 @@ export function EditorialProductCard({
             <h3 className="font-display text-base font-semibold text-[#1F1A17] leading-snug group-hover:text-[#7A491D] transition-colors">
               {product.title}
             </h3>
-            <span className="text-sm font-semibold text-[#1F1A17] shrink-0">
-              {formatCurrencyValue(convertPrice(product, currency), currency)}
+            <span className="text-sm font-semibold text-[#E31E24] shrink-0">
+              {displayPrice}
             </span>
           </div>
 
-          <p className="text-xs text-[#6E6359] mt-1 line-clamp-1">
+          <p className="text-xs text-[#6E6359] mt-1 line-clamp-2 leading-relaxed">
             {product.subtitle}
           </p>
         </div>
 
-        {/* Clean Size Buttons & Add to Bag */}
+        {/* Clean Size / Yard Buttons & Add to Bag */}
         <div className="pt-3 border-t border-[#F2EAE0] space-y-2.5">
-          <div className="grid grid-cols-5 gap-1.5">
+          <div
+            className={`grid gap-1.5 ${
+              isFabric
+                ? "grid-cols-2"
+                : product.variants.length <= 3
+                ? "grid-cols-3"
+                : "grid-cols-5"
+            }`}
+          >
             {product.variants.map((v) => {
               const total = v.hubALagos + v.hubBToronto;
               const isSelected = selectedSize === v.size;
@@ -145,7 +177,7 @@ export function EditorialProductCard({
                       : "border-[#E2D6C5] bg-white hover:border-[#7A491D] hover:bg-[#FAF5EE] text-[#1F1A17]"
                   }`}
                 >
-                  {v.size}
+                  {formatOptionLabel(v.size)}
                 </button>
               );
             })}
@@ -164,10 +196,10 @@ export function EditorialProductCard({
             }`}
           >
             {justAdded
-              ? `Added (${selectedSize}) ✓`
+              ? `Added (${formatOptionLabel(selectedSize)}) ✓`
               : variantTotalStock <= 0
               ? "Out of Stock"
-              : `Add to Bag · ${selectedSize}`}
+              : `Add to Bag · ${formatOptionLabel(selectedSize)} (${displayPrice})`}
           </button>
         </div>
       </div>

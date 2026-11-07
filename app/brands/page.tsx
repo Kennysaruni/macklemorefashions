@@ -13,44 +13,38 @@ export default function BrandsDirectoryPage() {
   const { brands, products } = usePlatform();
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#111111]">
+    <div className="min-h-screen bg-[#FFFDF9] text-[#1F1A17]">
       {/* Header */}
-      <section className="relative border-b border-[#E5E0D8] bg-white px-4 sm:px-8 py-14 sm:py-20 overflow-hidden">
-        <TribalCornerWatermark position="top-right" opacity={0.05} className="text-[#7A491D]" />
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-          <div className="space-y-4">
-            <span className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#7A491D] font-semibold block">
-              THE COLLECTIVE BRAND DIRECTORY // REPRESENTED FASHION HOUSES
+      <section className="relative border-b border-[#EADFD0] bg-[#FAF5EE] px-4 sm:px-8 py-12 sm:py-16 overflow-hidden">
+        <TribalCornerWatermark position="top-right" opacity={0.05} />
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="space-y-3">
+            <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
+              Represented &amp; Partner Houses
             </span>
             <StaggeredText
-              text="THE CONTINENTAL BRAND ROSTER"
+              text="Our Brands"
               as="h1"
-              className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-[0.98] text-[#111111]"
+              className="font-display text-3xl sm:text-5xl font-semibold tracking-tight text-[#1F1A17]"
             />
-            <p className="text-sm sm:text-base text-[#4A4742] max-w-2xl leading-relaxed">
-              Macklemore Fashion operates as both a flagship creative label and the premier distribution &amp; representation house for contemporary luxury and streetwear labels across West Africa, East Africa (254), North America, and Europe.
+            <p className="text-sm sm:text-base text-[#5C5147] max-w-2xl leading-relaxed">
+              Macklemore Fashion represents a curated portfolio of international and African fashion brands, supporting their collections in reaching customers across West Africa, East Africa, and global markets.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
             <Link
               href="/partnerships"
-              className="px-6 py-3.5 bg-[#111111] hover:bg-[#E31E24] text-white font-mono text-xs uppercase tracking-[0.2em] font-bold transition-colors"
+              className="px-6 py-3 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-xs sm:text-sm font-medium transition-colors shadow-xs"
             >
-              APPLY FOR REPRESENTATION →
-            </Link>
-            <Link
-              href="/admin"
-              className="px-5 py-3.5 border border-[#111111] bg-white hover:bg-[#111111] hover:text-white font-mono text-xs uppercase tracking-[0.18em] text-[#111111] transition-colors"
-            >
-              ONBOARD BRAND IN /ADMIN
+              Partner With Us →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Brand Roster Cards */}
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-8 py-14 sm:py-20 space-y-12">
+      {/* Brand Cards */}
+      <section className="max-w-[1440px] mx-auto px-4 sm:px-8 py-12 sm:py-16 space-y-10">
         {brands.map((brand, idx) => {
           const brandProducts = products.filter(
             (p) => p.brandSlug === brand.slug
@@ -59,83 +53,70 @@ export default function BrandsDirectoryPage() {
           return (
             <div
               key={brand.id}
-              className="border border-[#E5E0D8] bg-white grid grid-cols-1 lg:grid-cols-12 overflow-hidden"
+              className="group rounded-lg border border-[#EADFD0] bg-white grid grid-cols-1 lg:grid-cols-12 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-[#D4B895]"
             >
               {/* Left 5 Columns: Lookbook Visual */}
-              <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#E5E0D8] relative bg-[#F3EFEA] min-h-[340px]">
+              <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#EADFD0] relative bg-[#FAF5EE] min-h-[320px] overflow-hidden">
                 <CurtainReveal
-                  delay={idx * 0.06}
-                  duration={1.0}
+                  delay={idx * 0.05}
+                  duration={0.9}
                   className="w-full h-full"
                 >
                   <img
                     src={brand.lookbookBannerUrl}
                     alt={brand.name}
-                    className="w-full h-full object-cover object-center min-h-[340px]"
+                    className="w-full h-full object-cover object-center min-h-[320px] scale-100 group-hover:scale-[1.03] transition-transform duration-700"
                   />
                 </CurtainReveal>
-                <div className="absolute top-4 left-4 px-3 py-1 bg-white/95 border border-[#E5E0D8] font-mono text-[10px] tracking-widest uppercase text-[#7A491D] font-semibold">
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-md bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] text-xs font-medium text-[#7A491D]">
                   {brand.isProprietary
-                    ? "FLAGSHIP PROPRIETARY LABEL"
-                    : "REPRESENTED PARTNER HOUSE"}
+                    ? "Flagship House"
+                    : "Represented Partner Brand"}
                 </div>
               </div>
 
-              {/* Right 7 Columns: Dossier & Microsite Entry */}
+              {/* Right 7 Columns: Brand Story & Link */}
               <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between gap-6">
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E5E0D8] pb-3 font-mono text-[10px] uppercase">
-                    <span className="text-[#7A491D] font-semibold">
-                      ORIGIN: {brand.originCity} ({brand.originCountry})
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#7D7065]">
+                    <span className="text-[#7A491D] font-medium">
+                      {brand.originCity}
                     </span>
-                    <span className="text-[#6E6A63]">
-                      EST. {brand.foundedYear} · {brandProducts.length} ACTIVE SKUS
-                    </span>
-                  </div>
-
-                  <div className="flex items-baseline justify-between gap-4">
-                    <h2 className="font-display text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#111111]">
-                      {brand.name}
-                    </h2>
-                    <span className="font-mono text-xs text-[#E31E24] font-semibold uppercase">
-                      /brands/{brand.slug}
+                    <span>
+                      Est. {brand.foundedYear} · {brandProducts.length} Pieces Available
                     </span>
                   </div>
 
-                  <p className="font-mono text-xs text-[#7A491D] font-semibold uppercase tracking-wider">
+                  <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#1F1A17]">
+                    {brand.name}
+                  </h2>
+
+                  <p className="text-sm font-medium text-[#7A491D]">
                     {brand.tagline}
                   </p>
 
-                  <p className="text-sm text-[#4A4742] leading-relaxed">
+                  <p className="text-sm text-[#5C5147] leading-relaxed">
                     {brand.bio}
-                  </p>
-
-                  <p className="text-xs text-[#6E6A63] leading-relaxed">
-                    {brand.story}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-[#E5E0D8] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="font-mono text-[10px] text-[#6E6A63] uppercase space-y-1">
+                <div className="pt-4 border-t border-[#F2EAE0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="text-xs text-[#6E6359] space-y-1">
                     <div>
-                      CREATIVE DIRECTOR:{" "}
-                      <span className="text-[#111111] font-semibold">
-                        {brand.creativeDirector}
-                      </span>
+                      <strong className="text-[#1F1A17]">Creative Direction:</strong>{" "}
+                      {brand.creativeDirector}
                     </div>
                     <div>
-                      DISTRIBUTION CORRIDORS:{" "}
-                      <span className="text-[#7A491D] font-semibold">
-                        {brand.allocatedRegions.join(" · ")}
-                      </span>
+                      <strong className="text-[#1F1A17]">Markets:</strong>{" "}
+                      {brand.allocatedRegions.join(" · ")}
                     </div>
                   </div>
 
                   <Link
                     href={`/brands/${brand.slug}`}
-                    className="px-6 py-3.5 bg-[#111111] hover:bg-[#E31E24] text-white font-mono text-xs tracking-[0.2em] uppercase font-bold transition-colors text-center shrink-0"
+                    className="px-6 py-3 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-xs font-medium transition-colors text-center shrink-0 shadow-2xs"
                   >
-                    ENTER {brand.name} BOUTIQUE →
+                    Explore {brand.name} →
                   </Link>
                 </div>
               </div>
@@ -143,10 +124,7 @@ export default function BrandsDirectoryPage() {
           );
         })}
 
-        <TribalSectionSeparator
-          label="CONTINENTAL DISTRIBUTION & REPRESENTATION"
-          theme="light"
-        />
+        <TribalSectionSeparator label="International Curation · African Market Reach" />
       </section>
     </div>
   );

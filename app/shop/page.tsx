@@ -2,19 +2,19 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { usePlatform } from "@/lib/platform-context";
-import { GenderTarget, ProductRecord } from "@/lib/store-data";
+import { GenderTarget, ShopCategory } from "@/lib/store-data";
 import { EditorialProductCard } from "@/components/commerce/EditorialProductCard";
 import { StaggeredText } from "@/components/motion/MotionPrimitives";
 import { TribalCornerWatermark } from "@/components/vectors/TribalVectors";
 
-const CATEGORIES: { value: "ALL" | ProductRecord["category"]; label: string }[] = [
+const CATEGORIES: { value: "ALL" | ShopCategory; label: string }[] = [
   { value: "ALL", label: "All Categories" },
-  { value: "OUTERWEAR", label: "Outerwear & Layers" },
-  { value: "KAFTAN_ARCHIVE", label: "Kaftans & Tailoring" },
-  { value: "SHIRTING", label: "Shirts & Tops" },
-  { value: "TROUSERS", label: "Trousers & Bottoms" },
-  { value: "KNITWEAR", label: "Sets & Knitwear" },
-  { value: "ACCESSORIES", label: "Accessories" },
+  { value: "Men Wears", label: "Men Wears" },
+  { value: "Male Accessories", label: "Male Accessories" },
+  { value: "Women Wears", label: "Women Wears" },
+  { value: "Female Accessories", label: "Female Accessories" },
+  { value: "Kids Wears", label: "Kids Wears" },
+  { value: "Fabrics", label: "Prints & Fabrics" },
 ];
 
 const SIZES = ["ALL", "XS", "S", "M", "L", "XL", "XXL"] as const;
@@ -24,24 +24,39 @@ export default function ShopCatalogPage() {
 
   const [selectedGender, setSelectedGender] = useState<"ALL" | GenderTarget>("ALL");
   const [selectedBrand, setSelectedBrand] = useState<string>("ALL");
-  const [selectedCategory, setSelectedCategory] = useState<
-    "ALL" | ProductRecord["category"]
-  >("ALL");
+  const [selectedCategory, setSelectedCategory] = useState<"ALL" | ShopCategory>("ALL");
   const [selectedSize, setSelectedSize] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<
     "FEATURED" | "PRICE_ASC" | "PRICE_DESC"
   >("FEATURED");
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const genderParam = params.get("gender");
-    if (
-      genderParam === "WOMEN" ||
-      genderParam === "MEN" ||
-      genderParam === "UNISEX"
-    ) {
-      setSelectedGender(genderParam);
-    }
+    const syncFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const genderParam = params.get("gender");
+      const categoryParam = params.get("category");
+
+      if (
+        genderParam === "WOMEN" ||
+        genderParam === "MEN" ||
+        genderParam === "KIDS" ||
+        genderParam === "UNISEX"
+      ) {
+        setSelectedGender(genderParam);
+      }
+      if (categoryParam) {
+        const match = CATEGORIES.find(
+          (c) => c.value.toLowerCase() === categoryParam.toLowerCase()
+        );
+        if (match) {
+          setSelectedCategory(match.value);
+        }
+      }
+    };
+
+    syncFromUrl();
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -92,21 +107,25 @@ export default function ShopCatalogPage() {
         <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
-              Macklemore Fashion &amp; Partner Houses
+              Macklemore Fashion · Ready-to-Wear, Accessories &amp; Fabrics
             </span>
             <StaggeredText
-              text="Shop the Collection"
+              text={
+                selectedCategory === "ALL"
+                  ? "Shop the Collection"
+                  : selectedCategory
+              }
               as="h1"
               className="font-display text-3xl sm:text-5xl font-semibold tracking-tight text-[#1F1A17] mt-1"
             />
-            <p className="text-sm sm:text-base text-[#5C5147] mt-2 max-w-xl">
-              Contemporary ready-to-wear, structured outerwear, and signature sets curated from Macklemore Fashion, LUCA, and partner labels.
+            <p className="text-sm sm:text-base text-[#5C5147] mt-2 max-w-2xl">
+              Explore our complete collection of Men Wears, Women Wears, Male &amp; Female Accessories, Kids Wears, African Fabrics, and Partner Brands.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-xs font-medium px-3.5 py-2.5 rounded-md border border-[#E2D6C5] bg-white text-[#5C5147]">
-              Showing {filteredProducts.length} of {products.length} pieces
+              Showing {filteredProducts.length} of {products.length} items
             </span>
             <select
               value={sortBy}
@@ -128,25 +147,44 @@ export default function ShopCatalogPage() {
       {/* Clean Minimalist Filter Bar */}
       <section className="border-b border-[#EADFD0] bg-[#FFFDF9] sticky top-20 z-20">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-4 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            {/* Segment Pills: All / Women / Men / Unisex */}
+          {/* Primary Category Pills (Matching macklemorefashions.com Shop Nav) */}
+          <div className="flex flex-wrap items-center gap-2">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.value}
+                type="button"
+                onClick={() => setSelectedCategory(cat.value)}
+                className={`px-3.5 py-2 rounded-md text-xs font-medium border transition-all duration-200 cursor-pointer ${
+                  selectedCategory === cat.value
+                    ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-2xs"
+                    : "border-[#E2D6C5] bg-[#FAF5EE] text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Secondary Filter Row: Segment, Brand, Size & Clear */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#F2EAE0]">
             <div className="flex flex-wrap items-center gap-1.5">
               {(
                 [
-                  { id: "ALL", label: "All" },
-                  { id: "WOMEN", label: "Women" },
+                  { id: "ALL", label: "All Segments" },
                   { id: "MEN", label: "Men" },
-                  { id: "UNISEX", label: "Unisex" },
+                  { id: "WOMEN", label: "Women" },
+                  { id: "KIDS", label: "Kids" },
+                  { id: "UNISEX", label: "Unisex & Fabrics" },
                 ] as const
               ).map((seg) => (
                 <button
                   key={seg.id}
                   type="button"
                   onClick={() => setSelectedGender(seg.id)}
-                  className={`px-3.5 py-1.5 rounded-md text-xs font-medium border transition-all duration-200 cursor-pointer ${
+                  className={`px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                     selectedGender === seg.id
-                      ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-2xs"
-                      : "border-[#E2D6C5] bg-[#FAF5EE] text-[#5C5147] hover:border-[#7A491D] hover:text-[#1F1A17]"
+                      ? "bg-[#FAF5EE] text-[#E31E24] font-semibold border border-[#E31E24]/30"
+                      : "text-[#5C5147] hover:text-[#1F1A17] hover:bg-[#FAF5EE]/60"
                   }`}
                 >
                   {seg.label}
@@ -154,7 +192,6 @@ export default function ShopCatalogPage() {
               ))}
             </div>
 
-            {/* Brand & Size Filters */}
             <div className="flex flex-wrap items-center gap-2">
               <select
                 value={selectedBrand}
@@ -175,7 +212,7 @@ export default function ShopCatalogPage() {
                     key={sz}
                     type="button"
                     onClick={() => setSelectedSize(sz)}
-                    className={`px-2.5 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
+                    className={`px-2 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
                       selectedSize === sz
                         ? "border-[#7A491D] bg-[#7A491D] text-white"
                         : "border-[#E2D6C5] bg-white text-[#5C5147] hover:border-[#7A491D]"
@@ -193,30 +230,12 @@ export default function ShopCatalogPage() {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="px-3 py-1.5 rounded-md border border-[#E31E24]/40 text-[#E31E24] hover:bg-[#E31E24] hover:text-white text-xs font-medium transition-colors cursor-pointer"
+                  className="px-3 py-1 rounded-md border border-[#E31E24]/40 text-[#E31E24] hover:bg-[#E31E24] hover:text-white text-xs font-medium transition-colors cursor-pointer"
                 >
-                  Clear
+                  Reset
                 </button>
               )}
             </div>
-          </div>
-
-          {/* Category Quick Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[#F2EAE0]">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                type="button"
-                onClick={() => setSelectedCategory(cat.value)}
-                className={`px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                  selectedCategory === cat.value
-                    ? "bg-[#FAF5EE] text-[#E31E24] font-semibold border border-[#E31E24]/30"
-                    : "text-[#5C5147] hover:text-[#1F1A17] hover:bg-[#FAF5EE]/60"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
           </div>
         </div>
       </section>
@@ -226,14 +245,14 @@ export default function ShopCatalogPage() {
         {filteredProducts.length === 0 ? (
           <div className="p-12 rounded-lg border border-[#EADFD0] bg-[#FAF5EE] text-center space-y-4">
             <p className="text-sm text-[#5C5147]">
-              No pieces match your current filter selection.
+              No items match your current filter selection.
             </p>
             <button
               type="button"
               onClick={resetFilters}
               className="px-5 py-2.5 rounded-md bg-[#1F1A17] text-white text-xs font-medium cursor-pointer hover:bg-[#E31E24] transition-colors"
             >
-              Reset Filters
+              Show All {products.length} Items
             </button>
           </div>
         ) : (

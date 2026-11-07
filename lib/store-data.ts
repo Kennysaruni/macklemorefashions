@@ -1,6 +1,6 @@
 export type CurrencyCode = "CAD" | "USD" | "GBP" | "EUR" | "NGN" | "GHS" | "KES";
 
-export type GenderTarget = "MEN" | "WOMEN" | "UNISEX";
+export type GenderTarget = "MEN" | "WOMEN" | "KIDS" | "UNISEX";
 
 export type HubCode = "HUB_A_LAGOS" | "HUB_B_TORONTO";
 
@@ -52,7 +52,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
     code: "CAD",
     symbol: "CAD $",
     label: "Canadian Dollar",
-    regionLabel: "NORTH AMERICA // TORONTO HQ",
+    regionLabel: "Canada · Toronto HQ",
     rateFromCad: 1.0,
     defaultGateway: "STRIPE",
     sampleCountryIso: "CA",
@@ -61,7 +61,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
     code: "USD",
     symbol: "USD $",
     label: "US Dollar",
-    regionLabel: "NORTH AMERICA // GLOBAL",
+    regionLabel: "United States & International",
     rateFromCad: 0.74,
     defaultGateway: "STRIPE",
     sampleCountryIso: "US",
@@ -70,7 +70,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
     code: "GBP",
     symbol: "GBP £",
     label: "British Pound",
-    regionLabel: "UNITED KINGDOM // LONDON",
+    regionLabel: "United Kingdom · London",
     rateFromCad: 0.58,
     defaultGateway: "STRIPE",
     sampleCountryIso: "GB",
@@ -79,7 +79,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
     code: "EUR",
     symbol: "EUR €",
     label: "Euro",
-    regionLabel: "EUROPE // MILAN · PARIS",
+    regionLabel: "Europe · Milan & Paris",
     rateFromCad: 0.68,
     defaultGateway: "STRIPE",
     sampleCountryIso: "FR",
@@ -88,7 +88,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
     code: "NGN",
     symbol: "NGN ₦",
     label: "Nigerian Naira",
-    regionLabel: "WEST AFRICA // LAGOS HQ",
+    regionLabel: "West Africa · Lagos HQ",
     rateFromCad: 1125.0,
     defaultGateway: "PAYSTACK",
     sampleCountryIso: "NG",
@@ -97,7 +97,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
     code: "GHS",
     symbol: "GHS GH₵",
     label: "Ghanaian Cedi",
-    regionLabel: "WEST AFRICA // ACCRA CORRIDOR",
+    regionLabel: "West Africa · Accra",
     rateFromCad: 11.4,
     defaultGateway: "PAYSTACK",
     sampleCountryIso: "GH",
@@ -106,7 +106,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
     code: "KES",
     symbol: "KES KSh",
     label: "Kenyan Shilling",
-    regionLabel: "EAST AFRICA // NAIROBI HUB",
+    regionLabel: "East Africa · Nairobi",
     rateFromCad: 104.1667,
     defaultGateway: "MPESA_DARAJA",
     sampleCountryIso: "KE",
@@ -153,6 +153,20 @@ export interface VariantStock {
   hubBToronto: number;
 }
 
+export type ShopCategory =
+  | "Men Wears"
+  | "Male Accessories"
+  | "Women Wears"
+  | "Female Accessories"
+  | "Kids Wears"
+  | "Fabrics"
+  | "OUTERWEAR"
+  | "SHIRTING"
+  | "TROUSERS"
+  | "KAFTAN_ARCHIVE"
+  | "KNITWEAR"
+  | "ACCESSORIES";
+
 export interface ProductRecord {
   id: string;
   slug: string;
@@ -161,17 +175,12 @@ export interface ProductRecord {
   subtitle: string;
   description: string;
   gender: GenderTarget;
-  category:
-    | "OUTERWEAR"
-    | "SHIRTING"
-    | "TROUSERS"
-    | "KAFTAN_ARCHIVE"
-    | "KNITWEAR"
-    | "ACCESSORIES";
+  category: ShopCategory;
   fabricWeightGsm: number;
   fabricComposition: string;
   originLabel: string;
   basePriceCad: number;
+  priceRangeLabel?: string;
   priceOverrides?: Partial<Record<CurrencyCode, number>>;
   editorialImageUrl: string;
   flatlayImageUrl: string;
@@ -255,41 +264,61 @@ export const INITIAL_BRANDS: BrandRecord[] = [
   {
     id: "brand-macklemore",
     slug: "macklemore",
-    name: "MACKLEMORE FASHION",
-    tagline: "ARCHITECTURAL AFRO-ATLANTIC LUXURY & HEAVYWEIGHT STREETWEAR",
-    bio: "Flagship proprietary label anchored between Toronto and Victoria Island, Lagos. Merging 480–620 GSM heavyweight technical jersey with hand-loomed Nigerian Aso Oke and architectural tailoring.",
+    name: "Macklemore Fashion",
+    tagline: "Authentic African Luxury, Bespoke Tailoring & Ready-to-Wear",
+    bio: "Headquartered in Toronto, Canada with operational roots in Lagos, Nigeria. Founded by creative entrepreneur Micah Elechi, Macklemore Fashion fuses traditional African craftsmanship with modern sophistication.",
     story:
-      "Conceived in Canada and forged in the industrial ateliers of Lagos, Nigeria, Macklemore Fashion operates as both a sovereign luxury house and the premier continental distribution bridge linking North America, Europe, West Africa, and East Africa. Every garment is numbered, specification-stamped, and cut from custom-milled fabrics.",
-    originCity: "LAGOS / TORONTO",
-    originCountry: "Nigeria & Canada",
-    creativeDirector: "Macklemore Design Directorate",
+      "Featured on the runway at Toronto Fashion Week 2024, RAW Toronto 2024, and the Africa International Film Festival (AFRIFF), Macklemore Fashion creates custom and ready-to-wear Agbada sets, Aso-Oke Dashikis, Boubou gowns, children's ceremonial attire, and curated African textiles.",
+    originCity: "Toronto & Lagos",
+    originCountry: "Canada & Nigeria",
+    creativeDirector: "Micah Elechi",
     foundedYear: 2021,
     isProprietary: true,
     lookbookBannerUrl:
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1800&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg",
     secondaryBannerUrl:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/05/Micah-sewing-.jpg",
     commissionRatePct: 0,
     allocatedRegions: [
-      "WEST_AFRICA",
-      "EAST_AFRICA",
-      "NORTH_AMERICA",
-      "EUROPE",
-      "UK",
+      "Canada & North America",
+      "West Africa (Lagos & Accra)",
+      "East Africa (Nairobi)",
+      "UK & Europe",
     ],
+    isActive: true,
+  },
+  {
+    id: "brand-deji-and-kola",
+    slug: "deji-and-kola",
+    name: "Deji & Kola",
+    tagline: "Contemporary Nigerian Senator Kaftans & Bespoke Menswear",
+    bio: "Lagos-born luxury menswear label renowned for precision-tailored Zipline Senator Kaftans, ceremonial Agbadas, and modern African suiting.",
+    story:
+      "Showcased in Macklemore Fashion's Men Wears collection, Deji & Kola brings contemporary Nigerian tailoring and structured 3/4-sleeve Senator silhouettes to clients across West Africa, East Africa, and the global diaspora.",
+    originCity: "Lagos",
+    originCountry: "Nigeria",
+    creativeDirector: "Deji & Kola Atelier",
+    foundedYear: 2018,
+    isProprietary: false,
+    lookbookBannerUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/dejiandkola_africa_1712608765_3341927002288432016_30014923707.jpg",
+    secondaryBannerUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/dejiandkola_africa_1712608765_3341927002557004894_30014923707.jpg",
+    commissionRatePct: 20.0,
+    allocatedRegions: ["West Africa", "East Africa", "North America", "UK"],
     isActive: true,
   },
   {
     id: "brand-luca",
     slug: "luca",
     name: "LUCA",
-    tagline: "MONOLITHIC MILANESE TAILORING & WEST AFRICAN STRUCTURAL DRAPE",
-    bio: "Represented flagship partner house. LUCA synthesizes razor-sharp Italian outerwear engineering with raw unbleached West African cottons and sculptural silhouettes.",
+    tagline: "Contemporary International Tailoring & West African Drape",
+    bio: "Represented partner brand combining modern Italian tailoring with relaxed, breathable silhouettes curated for African and international markets.",
     story:
-      "Represented exclusively across West and East Africa by Macklemore Fashion, LUCA bridges Milanese pattern-making with Lagosian cultural electricity. Distributed directly through Hub A (Victoria Island, Lagos) and Hub B (Toronto) with full customs clearance and mono-brand pop-up activation.",
-    originCity: "MILAN / LAGOS",
+      "Represented across West and East Africa by Macklemore Fashion, LUCA exemplifies our vision of connecting international fashion houses with discerning customers in Lagos, Accra, Nairobi, and Toronto.",
+    originCity: "Milan & Lagos",
     originCountry: "Italy & Nigeria",
-    creativeDirector: "Luca Vance & Tunde Balogun",
+    creativeDirector: "Luca Vance",
     foundedYear: 2022,
     isProprietary: false,
     lookbookBannerUrl:
@@ -297,507 +326,878 @@ export const INITIAL_BRANDS: BrandRecord[] = [
     secondaryBannerUrl:
       "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=1400&q=85",
     commissionRatePct: 24.5,
-    allocatedRegions: ["WEST_AFRICA", "EAST_AFRICA", "NORTH_AMERICA"],
+    allocatedRegions: ["West Africa", "East Africa", "North America"],
     isActive: true,
   },
   {
-    id: "brand-adire-atelier",
-    slug: "adire-atelier",
-    name: "ADIRE ATELIER",
-    tagline: "HERITAGE INDIGO RESIST-DYE & ARCHITECTURAL WORKWEAR",
-    bio: "Artisanal Yoruba indigo fermentation vats applied to 500 GSM Japanese selvedge denim and structured utility outerwear.",
+    id: "brand-aso-oke-heritage",
+    slug: "aso-oke-heritage",
+    name: "Macklemore Textiles & Prints",
+    tagline: "Curated Aso-Oke, Ankara, Kente, Adire & Ceremonial Lace",
+    bio: "Direct textile curation supplying authentic hand-woven Aso-Oke, African wax print Ankara, Kente, Adire tie-dye, and ceremonial lace in 3-yard and 6-yard cuts.",
     story:
-      "Working with fourth-generation indigo dyers in Abeokuta and pattern cutters in Yaba, Lagos, Adire Atelier transforms ancient cassava-paste resist geometry into museum-grade contemporary outerwear.",
-    originCity: "ABEOKUTA / LAGOS",
-    originCountry: "Nigeria",
-    creativeDirector: "Adebisi Ogunlesi",
-    foundedYear: 2020,
-    isProprietary: false,
+      "At Macklemore Fashions, the fabric is the soul of every creation. We source and curate high-quality African fabrics for bespoke tailoring, designers, students, and cultural celebrations across Canada, Nigeria, and worldwide.",
+    originCity: "Lagos & Toronto",
+    originCountry: "Nigeria & Canada",
+    creativeDirector: "Micah Elechi",
+    foundedYear: 2021,
+    isProprietary: true,
     lookbookBannerUrl:
-      "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1800&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/25.jpg",
     secondaryBannerUrl:
-      "https://images.unsplash.com/photo-1507680434567-5739c80be1ac?auto=format&fit=crop&w=1400&q=85",
-    commissionRatePct: 22.0,
-    allocatedRegions: ["NORTH_AMERICA", "EUROPE", "UK", "EAST_AFRICA"],
-    isActive: true,
-  },
-  {
-    id: "brand-kojo-accra",
-    slug: "kojo-accra",
-    name: "KOJO ACCRA",
-    tagline: "GOLD COAST BRUTALISM & HAND-WOVEN KENTE TECHNICAL SHELLS",
-    bio: "Utilitarian menswear and unisex tailoring engineered in Osu, Accra with technical weatherproof membranes and Bonwire Kente selvedge trims.",
-    story:
-      "Kojo Accra reinterprets mid-century West African Tropical Modernist architecture through technical gabardine trench coats, wide-leg pleated trousers, and modular cargo vests.",
-    originCity: "ACCRA / LONDON",
-    originCountry: "Ghana & UK",
-    creativeDirector: "Kojo Mensah-Bonsu",
-    foundedYear: 2023,
-    isProprietary: false,
-    lookbookBannerUrl:
-      "https://images.unsplash.com/photo-1506634572416-48cdfe530110?auto=format&fit=crop&w=1800&q=85",
-    secondaryBannerUrl:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1400&q=85",
-    commissionRatePct: 25.0,
-    allocatedRegions: ["WEST_AFRICA", "NORTH_AMERICA", "EUROPE"],
-    isActive: true,
-  },
-  {
-    id: "brand-savannah-254",
-    slug: "savannah-254",
-    name: "SAVANNAH STUDIO 254",
-    tagline: "NAIROBI DROP-MODEL STREETWEAR & HIGH-ALTITUDE KNITWEAR",
-    bio: "Born in Westlands, Nairobi. High-density 540 GSM fleece, distressed mohair knits, and industrial graphic capsules built on the East African drop model.",
-    story:
-      "Channeling the raw drop energy of Nairobi's underground creative vanguard, Savannah Studio 254 produces strictly limited runs distributed across East Africa via Wells Fargo Courier and globally through Macklemore's Toronto hub.",
-    originCity: "NAIROBI / TORONTO",
-    originCountry: "Kenya & Canada",
-    creativeDirector: "Kamau Njoroge",
-    foundedYear: 2022,
-    isProprietary: false,
-    lookbookBannerUrl:
-      "https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1800&q=85",
-    secondaryBannerUrl:
-      "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1400&q=85",
-    commissionRatePct: 20.0,
-    allocatedRegions: ["EAST_AFRICA", "WEST_AFRICA", "NORTH_AMERICA"],
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/26.jpg",
+    commissionRatePct: 0,
+    allocatedRegions: ["Canada", "Nigeria", "Ghana", "Kenya", "UK"],
     isActive: true,
   },
 ];
 
 export const INITIAL_COLLECTIONS: CollectionRecord[] = [
   {
-    id: "col-drop-04",
-    slug: "drop-04-harmattan-frost",
-    title: "DROP 04 // HARMATTAN & FROST",
-    seasonCode: "[ SEASON: AW26 // TORONTO — LAGOS ]",
+    id: "col-men-wears",
+    slug: "men-wears-collection",
+    title: "Men Wears & Royal Agbada Collection",
+    seasonCode: "Men Wears · Custom & Ready-to-Wear",
     manifesto:
-      "Engineered for the atmospheric collision between the Saharan Harmattan winds over Lagos Island and sub-zero Canadian winters in Toronto. 600 GSM double-faced wool-cotton monoliths, hand-woven Aso Oke storm plackets, and oxidized bronze hardware.",
+      "Champagne gold Aso-Oke Dashikis with hand-woven Yoruba hats and coral beads, sided pagoda-embroidered white Agbadas, and tortilla brown Zipline Senator Kaftans.",
     heroImageUrl:
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1800&q=85",
-    releaseDate: "2026-11-01T00:00:00Z",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/168465240_271856821065695_3354743809372838221_n.jpg",
+    releaseDate: "2026-04-01T00:00:00Z",
     isDropLive: true,
     isVipLocked: false,
     brandId: "brand-macklemore",
-    brandName: "MACKLEMORE FASHION",
+    brandName: "Macklemore Fashion",
   },
   {
-    id: "col-luca-bridge",
-    slug: "luca-continental-bridge",
-    title: "LUCA // MONOLITH CAPSULE 01",
-    seasonCode: "[ EXCLUSIVE PARTNER DROP // MILAN — LAGOS ]",
+    id: "col-women-wears",
+    slug: "women-wears-collection",
+    title: "Women Wears, Aso-Ebi & Boubou Gowns",
+    seasonCode: "Women Wears · Bespoke & Ready-to-Wear",
     manifesto:
-      "The inaugural continental capsule by LUCA, represented and distributed exclusively by Macklemore Fashion. Architectural double-breasted overcoats and raw unbleached bone shirting.",
+      "Regal Green Aso-Ebi gowns, flowing African Aso-Oke Boubou silhouettes, Ankara lace styles, and pre-styled royal gold Gele headties and bridal bead sets.",
     heroImageUrl:
-      "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1800&q=85",
-    releaseDate: "2026-10-15T00:00:00Z",
-    isDropLive: true,
-    isVipLocked: false,
-    brandId: "brand-luca",
-    brandName: "LUCA",
-  },
-  {
-    id: "col-archive-03",
-    slug: "victoria-island-nocturne",
-    title: "ARCHIVE 03 // VICTORIA ISLAND NOCTURNE",
-    seasonCode: "[ CAPSULE: EVENING & KAFTAN TAILORING ]",
-    manifesto:
-      "Nocturnal obsidian tailoring, crimson silk-embroidered agbada over-shirts, and precision-cut wide trousers built for gallery openings from Victoria Island to Mayfair.",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1800&q=85",
-    releaseDate: "2026-09-20T00:00:00Z",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/7.jpg",
+    releaseDate: "2026-04-05T00:00:00Z",
     isDropLive: true,
     isVipLocked: false,
     brandId: "brand-macklemore",
-    brandName: "MACKLEMORE FASHION",
+    brandName: "Macklemore Fashion",
   },
   {
-    id: "col-drop-05",
-    slug: "drop-05-equatorial-monolith",
-    title: "DROP 05 // EQUATORIAL MONOLITH",
-    seasonCode: "[ UPCOMING // VIP LOCKER SCHEDULED ]",
+    id: "col-kids-wears",
+    slug: "kids-wears-collection",
+    title: "Kids Wears · Traditional Aso-Oke Sets",
+    seasonCode: "Children Wears · Cultural Heritage",
     manifesto:
-      "Cross-continental collaborative capsule uniting Macklemore Fashion, Savannah Studio 254 (Nairobi), and Kojo Accra. Heavyweight distressed knitwear and wax-treated ballistic nylon outerwear.",
+      "Handcrafted Yoruba, Hausa, and ceremonial Aso-Oke complete outfits for baby boys and baby girls—celebrating cultural pride across generations.",
     heroImageUrl:
-      "https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1800&q=85",
-    releaseDate: "2026-12-01T18:00:00Z",
-    isDropLive: false,
-    isVipLocked: true,
-    brandId: "brand-savannah-254",
-    brandName: "SAVANNAH STUDIO 254",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/16.jpg",
+    releaseDate: "2026-04-10T00:00:00Z",
+    isDropLive: true,
+    isVipLocked: false,
+    brandId: "brand-macklemore",
+    brandName: "Macklemore Fashion",
+  },
+  {
+    id: "col-prints-and-patterns",
+    slug: "prints-and-patterns-collection",
+    title: "Prints, Patterns & Luxury African Fabrics",
+    seasonCode: "Fabrics · 3 Yards & 6 Yards",
+    manifesto:
+      "Authentic Aso-Oke Oxblood & Pink weaves, Elegant African Lace, and vibrant Ankara wax prints available in 3-yard and 6-yard cuts for custom tailoring or bulk orders.",
+    heroImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/25.jpg",
+    releaseDate: "2026-04-15T00:00:00Z",
+    isDropLive: true,
+    isVipLocked: false,
+    brandId: "brand-aso-oke-heritage",
+    brandName: "Macklemore Textiles & Prints",
   },
 ];
 
+/**
+ * All 21 Official Products from https://macklemorefashions.com/
+ * plus 2 Represented Partner Brand (LUCA) pieces.
+ */
 export const INITIAL_PRODUCTS: ProductRecord[] = [
+  // =========================================================================
+  // 1. MEN WEARS (https://macklemorefashions.com/african-man-wears/)
+  // =========================================================================
   {
-    id: "prod-01",
-    slug: "macklemore-aso-oke-monolith-overcoat",
-    skuPrefix: "MKM-AW26-001",
-    title: "ASO OKE MONOLITH GREATCOAT",
-    subtitle: "Double-Faced Wool & Hand-Loomed Nigerian Aso Oke Storm Placket",
+    id: "mkm-200",
+    slug: "aso-oke-dashiki-with-a-floral-and-ancient-style-shaped-embroidery-design",
+    skuPrefix: "MKM-MEN-200",
+    title:
+      "Aso-Oke Dashiki with Floral Embroidery, Yoruba Hat & Coral Bead",
+    subtitle:
+      "Champagne gold Aso-Oke dashiki set with hand-woven Yoruba hat and extra-length red & gold coral beads",
     description:
-      "Cut in an elongated architectural silhouette with dropped shoulders and concealed horn closure. Features a hand-woven crimson and bronze Aso Oke internal storm placket milled in Iseyin, Nigeria, paired with 620 GSM weather-resistant Canadian virgin wool.",
-    gender: "UNISEX",
-    category: "OUTERWEAR",
-    fabricWeightGsm: 620,
-    fabricComposition: "80% VIRGIN WOOL / 20% HAND-LOOMED ISEYIN ASO OKE COTTON",
-    originLabel: "LAGOS / TORONTO",
-    basePriceCad: 680,
-    priceOverrides: {
-      CAD: 680,
-      NGN: 765000,
-      KES: 70800,
-    },
-    editorialImageUrl:
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=85",
-    flatlayImageUrl:
-      "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1000&q=85",
-    colorName: "RICH OBSIDIAN / BRONZE",
-    colorHex: "#0B0B0C",
-    isFeatured: true,
-    brandId: "brand-macklemore",
-    brandSlug: "macklemore",
-    brandName: "MACKLEMORE FASHION",
-    collectionSlug: "drop-04-harmattan-frost",
-    variants: [
-      { size: "XS", sku: "MKM-001-XS", hubALagos: 2, hubBToronto: 2 },
-      { size: "S", sku: "MKM-001-S", hubALagos: 4, hubBToronto: 3 },
-      { size: "M", sku: "MKM-001-M", hubALagos: 5, hubBToronto: 4 },
-      { size: "L", sku: "MKM-001-L", hubALagos: 3, hubBToronto: 4 },
-      { size: "XL", sku: "MKM-001-XL", hubALagos: 2, hubBToronto: 1 },
-    ],
-  },
-  {
-    id: "prod-02",
-    slug: "luca-architectural-gabardine-trench",
-    skuPrefix: "LCA-AW26-014",
-    title: "LUCA STRUCTURAL GABARDINE TRENCH",
-    subtitle: "Water-Repellent High-Twist Milanese Cotton Trench with Raw Bone Lapel",
-    description:
-      "Engineered by partner house LUCA. Asymmetrical storm flap, gunmetal D-ring belt hardware, and raw unbleached bone under-collar contrast with hand-stitched geometric bar-tacks.",
-    gender: "UNISEX",
-    category: "OUTERWEAR",
-    fabricWeightGsm: 510,
-    fabricComposition: "100% HIGH-TWIST WATER-REPELLENT COTTON GABARDINE",
-    originLabel: "MILAN / LAGOS",
-    basePriceCad: 540,
-    priceOverrides: {
-      CAD: 540,
-      NGN: 607500,
-      KES: 56250,
-    },
-    editorialImageUrl:
-      "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85",
-    flatlayImageUrl:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1000&q=85",
-    colorName: "RAW BONE / OBSIDIAN",
-    colorHex: "#F6F5F1",
-    isFeatured: true,
-    brandId: "brand-luca",
-    brandSlug: "luca",
-    brandName: "LUCA",
-    collectionSlug: "luca-continental-bridge",
-    variants: [
-      { size: "S", sku: "LCA-014-S", hubALagos: 3, hubBToronto: 2 },
-      { size: "M", sku: "LCA-014-M", hubALagos: 4, hubBToronto: 3 },
-      { size: "L", sku: "LCA-014-L", hubALagos: 2, hubBToronto: 3 },
-      { size: "XL", sku: "LCA-014-XL", hubALagos: 1, hubBToronto: 1 },
-    ],
-  },
-  {
-    id: "prod-03",
-    slug: "macklemore-480gsm-tribal-seam-hoodie",
-    skuPrefix: "MKM-AW26-008",
-    title: "480 GSM TRIBAL CHEVRON HEAVY HOODIE",
-    subtitle: "Boxy Drop-Shoulder Terry with Exposed 1px Crimson Geometric Topstitching",
-    description:
-      "The signature Macklemore streetwear staple. Milled from 480 GSM loopwheel organic cotton in custom Rich Obsidian, featuring articulated double-M chevron seam geometry across the back yoke and zero-rib raw hem.",
-    gender: "UNISEX",
-    category: "KNITWEAR",
+      "A champagne gold Aso-Oke dashiki featuring a floral and ancient style shaped embroidery design, paired with a hand-woven Yoruba hat and an extra-length red and gold coral bead. Available in any colour.",
+    gender: "MEN",
+    category: "Men Wears",
     fabricWeightGsm: 480,
-    fabricComposition: "100% COMBED RING-SPUN ORGANIC FRENCH TERRY // 480 GSM",
-    originLabel: "LAGOS / TORONTO",
-    basePriceCad: 120,
-    priceOverrides: {
-      CAD: 120,
-      NGN: 135000,
-      KES: 12500,
-    },
+    fabricComposition: "100% Hand-Woven Nigerian Aso-Oke & Coral Beads",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 300,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/168465240_271856821065695_3354743809372838221_n.jpg",
     flatlayImageUrl:
-      "https://images.unsplash.com/photo-1578681994506-b8f463449011?auto=format&fit=crop&w=1000&q=85",
-    colorName: "RICH OBSIDIAN",
-    colorHex: "#0B0B0C",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/167562703_128763839258414_8121017181478532563_n.jpg",
+    colorName: "Champagne Gold & Red",
+    colorHex: "#D4860B",
     isFeatured: true,
     brandId: "brand-macklemore",
     brandSlug: "macklemore",
-    brandName: "MACKLEMORE FASHION",
-    collectionSlug: "drop-04-harmattan-frost",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "men-wears-collection",
     variants: [
-      { size: "XS", sku: "MKM-008-XS", hubALagos: 2, hubBToronto: 1 },
-      { size: "S", sku: "MKM-008-S", hubALagos: 3, hubBToronto: 2 },
-      { size: "M", sku: "MKM-008-M", hubALagos: 2, hubBToronto: 1 },
-      { size: "L", sku: "MKM-008-L", hubALagos: 1, hubBToronto: 1 },
-      { size: "XL", sku: "MKM-008-XL", hubALagos: 1, hubBToronto: 0 },
+      { size: "S", sku: "MKM-200-S", hubALagos: 4, hubBToronto: 3 },
+      { size: "M", sku: "MKM-200-M", hubALagos: 5, hubBToronto: 4 },
+      { size: "L", sku: "MKM-200-L", hubALagos: 6, hubBToronto: 4 },
+      { size: "XL", sku: "MKM-200-XL", hubALagos: 4, hubBToronto: 3 },
+      { size: "XXL", sku: "MKM-200-XXL", hubALagos: 3, hubBToronto: 2 },
     ],
   },
   {
-    id: "prod-04",
-    slug: "macklemore-victoria-island-kaftan-set",
-    skuPrefix: "MKM-ARC-019",
-    title: "VICTORIA ISLAND ARCHITECTURAL KAFTAN",
-    subtitle: "Structured Tunic & Wide-Leg Trouser Set with Savannah Bronze Geometric Embroidery",
+    id: "mkm-172",
+    slug: "a-white-embroidery-details-agbada",
+    skuPrefix: "MKM-MEN-172",
+    title: "White Embroidery Details Agbada Set",
+    subtitle:
+      "3-piece white sided pagoda embroidery Agbada, 3/4-sleeve Kaftan, and Sokoto trousers",
     description:
-      "Modernist reinterpretation of the West African ceremonial kaftan. Tailored in crisp 340 GSM mercerized cotton-silk twill with concealed placket and geometric bronze linework along the chest pocket and cuff.",
+      "A regal white 3-piece Agbada ensemble featuring intricate sided pagoda embroidery details, a 3/4-sleeve Kaftan tunic, and matching tailored Sokoto trousers. Available in any colour.",
     gender: "MEN",
-    category: "KAFTAN_ARCHIVE",
-    fabricWeightGsm: 340,
-    fabricComposition: "78% MERCERIZED EGYPTIAN COTTON / 22% MULBERRY SILK",
-    originLabel: "LAGOS",
-    basePriceCad: 380,
-    priceOverrides: {
-      CAD: 380,
-      NGN: 427500,
-      KES: 39500,
-    },
+    category: "Men Wears",
+    fabricWeightGsm: 440,
+    fabricComposition: "Premium Polished Cotton & Pagoda Embroidery",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 200,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1507680434567-5739c80be1ac?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/413888847_18015074198003708_3616451493638629856_n.jpg",
     flatlayImageUrl:
-      "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=1000&q=85",
-    colorName: "OBSIDIAN / SAVANNAH GOLD",
-    colorHex: "#1A0A00",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/413815567_18015074219003708_8203886899399243130_n.jpg",
+    colorName: "Crisp White & Gold",
+    colorHex: "#FAF5EE",
     isFeatured: true,
     brandId: "brand-macklemore",
     brandSlug: "macklemore",
-    brandName: "MACKLEMORE FASHION",
-    collectionSlug: "victoria-island-nocturne",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "men-wears-collection",
     variants: [
-      { size: "S", sku: "MKM-019-S", hubALagos: 5, hubBToronto: 2 },
-      { size: "M", sku: "MKM-019-M", hubALagos: 6, hubBToronto: 3 },
-      { size: "L", sku: "MKM-019-L", hubALagos: 4, hubBToronto: 2 },
-      { size: "XL", sku: "MKM-019-XL", hubALagos: 3, hubBToronto: 1 },
+      { size: "S", sku: "MKM-172-S", hubALagos: 4, hubBToronto: 3 },
+      { size: "M", sku: "MKM-172-M", hubALagos: 6, hubBToronto: 4 },
+      { size: "L", sku: "MKM-172-L", hubALagos: 5, hubBToronto: 4 },
+      { size: "XL", sku: "MKM-172-XL", hubALagos: 4, hubBToronto: 2 },
+      { size: "XXL", sku: "MKM-172-XXL", hubALagos: 3, hubBToronto: 2 },
     ],
   },
   {
-    id: "prod-05",
-    slug: "adire-atelier-selvedge-work-jacket",
-    skuPrefix: "ADR-AW26-004",
-    title: "ABEOKUTA INDIGO SELVEDGE WORK JACKET",
-    subtitle: "500 GSM Botanical Indigo Resist-Dyed Boxy Chore Jacket",
+    id: "mkm-191",
+    slug: "tortilla-brown-short-sleeve-kaftan",
+    skuPrefix: "MKM-MEN-191",
+    title: "Tortilla Brown Short Sleeve Kaftan",
+    subtitle:
+      "Tailored tortilla brown Zipline 3/4-sleeve African Senator Kaftan native set",
     description:
-      "Hand-dipped in natural Lonchocarpus cyanescens (Elu) indigo vats in Abeokuta. Each jacket carries unique geometric resist-dyed striations and solid brass tack buttons.",
-    gender: "UNISEX",
-    category: "OUTERWEAR",
-    fabricWeightGsm: 500,
-    fabricComposition: "100% UNSANFORIZED SELVEDGE COTTON DENIM // NATURAL INDIGO",
-    originLabel: "ABEOKUTA / LAGOS",
-    basePriceCad: 410,
-    priceOverrides: {
-      CAD: 410,
-      NGN: 461250,
-      KES: 42700,
-    },
+      "A tortilla brown Zipline 3/4-sleeve African Senator Kaftan native suit crafted with clean architectural lines and matching tailored trousers. Available in any colour.",
+    gender: "MEN",
+    category: "Men Wears",
+    fabricWeightGsm: 380,
+    fabricComposition: "Structured Senator Suiting Wool-Cotton Blend",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 150,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/dejiandkola_africa_1712608765_3341927002288432016_30014923707.jpg",
     flatlayImageUrl:
-      "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1000&q=85",
-    colorName: "BOTANICAL INDIGO",
-    colorHex: "#1A2639",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/dejiandkola_africa_1712608765_3341927002557004894_30014923707.jpg",
+    colorName: "Tortilla Brown",
+    colorHex: "#7A491D",
     isFeatured: true,
-    brandId: "brand-adire-atelier",
-    brandSlug: "adire-atelier",
-    brandName: "ADIRE ATELIER",
-    collectionSlug: "drop-04-harmattan-frost",
+    brandId: "brand-deji-and-kola",
+    brandSlug: "deji-and-kola",
+    brandName: "Deji & Kola",
+    collectionSlug: "men-wears-collection",
     variants: [
-      { size: "S", sku: "ADR-004-S", hubALagos: 4, hubBToronto: 1 },
-      { size: "M", sku: "ADR-004-M", hubALagos: 5, hubBToronto: 2 },
-      { size: "L", sku: "ADR-004-L", hubALagos: 3, hubBToronto: 2 },
+      { size: "S", sku: "MKM-191-S", hubALagos: 5, hubBToronto: 3 },
+      { size: "M", sku: "MKM-191-M", hubALagos: 6, hubBToronto: 4 },
+      { size: "L", sku: "MKM-191-L", hubALagos: 6, hubBToronto: 4 },
+      { size: "XL", sku: "MKM-191-XL", hubALagos: 4, hubBToronto: 3 },
+      { size: "XXL", sku: "MKM-191-XXL", hubALagos: 3, hubBToronto: 2 },
     ],
   },
+
+  // =========================================================================
+  // 2. WOMEN WEARS (https://macklemorefashions.com/african-woman-wears/)
+  // =========================================================================
   {
-    id: "prod-06",
-    slug: "luca-pleated-wide-wool-trouser",
-    skuPrefix: "LCA-AW26-021",
-    title: "LUCA DOUBLE-PLEAT WIDE TROUSER",
-    subtitle: "Architectural Full-Length Drape Trouser in Unbleached Raw Bone",
+    id: "mkm-233",
+    slug: "green-aso-ebi-gown",
+    skuPrefix: "MKM-WOM-233",
+    title: "Green Aso-Ebi Gown",
+    subtitle:
+      "Bespoke emerald green lace and beaded Aso-Ebi evening gown with matching headtie",
     description:
-      "Signature LUCA bottom silhouette. High-waisted construction with deep double front pleats, extended waistband tab, and puddle-length hem.",
+      "An exquisite emerald green Aso-Ebi couture gown tailored with hand-placed lace appliqués, sculpted corset bodice, and regal floor-sweeping train. Available in any colour.",
     gender: "WOMEN",
-    category: "TROUSERS",
+    category: "Women Wears",
     fabricWeightGsm: 360,
-    fabricComposition: "96% COLD-SPUN VIRGIN WOOL / 4% ELASTANE",
-    originLabel: "MILAN / LAGOS",
-    basePriceCad: 320,
-    priceOverrides: {
-      CAD: 320,
-      NGN: 360000,
-      KES: 33300,
-    },
+    fabricComposition: "Hand-Beaded Guipure Lace & Silk Satin Lining",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 250,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/7.jpg",
     flatlayImageUrl:
-      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1000&q=85",
-    colorName: "UNBLEACHED BONE",
-    colorHex: "#F6F5F1",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/8.jpg",
+    colorName: "Emerald Green",
+    colorHex: "#1A7A6E",
     isFeatured: true,
-    brandId: "brand-luca",
-    brandSlug: "luca",
-    brandName: "LUCA",
-    collectionSlug: "luca-continental-bridge",
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "women-wears-collection",
     variants: [
-      { size: "XS", sku: "LCA-021-XS", hubALagos: 3, hubBToronto: 3 },
-      { size: "S", sku: "LCA-021-S", hubALagos: 4, hubBToronto: 4 },
-      { size: "M", sku: "LCA-021-M", hubALagos: 4, hubBToronto: 3 },
-      { size: "L", sku: "LCA-021-L", hubALagos: 2, hubBToronto: 2 },
+      { size: "S", sku: "MKM-233-S", hubALagos: 4, hubBToronto: 3 },
+      { size: "M", sku: "MKM-233-M", hubALagos: 5, hubBToronto: 4 },
+      { size: "L", sku: "MKM-233-L", hubALagos: 4, hubBToronto: 3 },
+      { size: "XL", sku: "MKM-233-XL", hubALagos: 3, hubBToronto: 2 },
+      { size: "XXL", sku: "MKM-233-XXL", hubALagos: 2, hubBToronto: 2 },
     ],
   },
   {
-    id: "prod-07",
-    slug: "kojo-accra-kente-selvedge-cargo-pant",
-    skuPrefix: "KJO-AW26-009",
-    title: "BONWIRE SELVEDGE TECHNICAL CARGO",
-    subtitle: "3-Layer Ripstop Utility Trouser with Hand-Loomed Kente Pocket Gussets",
+    id: "mkm-220",
+    slug: "african-aso-oke-boubou-gown",
+    skuPrefix: "MKM-WOM-220",
+    title: "African Aso Oke Boubou Gown",
+    subtitle:
+      "Flowing luxury Boubou gown with hand-loomed Aso-Oke panels and wide kimono sleeves",
     description:
-      "Designed in Osu, Accra. Articulated knee darts, adjustable ankle storm straps, and concealed Bonwire silk-cotton Kente trim revealed when cargo bellows expand.",
-    gender: "MEN",
-    category: "TROUSERS",
-    fabricWeightGsm: 420,
-    fabricComposition: "85% BALLISTIC COTTON RIPSTOP / 15% BONWIRE HAND-WOVEN KENTE",
-    originLabel: "ACCRA / LONDON",
-    basePriceCad: 290,
-    priceOverrides: {
-      CAD: 290,
-      NGN: 326250,
-      GHS: 3306,
-      KES: 30200,
-    },
+      "Effortlessly regal African Aso-Oke Boubou gown designed for maximum comfort and statement elegance. Features rich woven Aso-Oke trim and a relaxed floor-length drape. Available in any colour.",
+    gender: "WOMEN",
+    category: "Women Wears",
+    fabricWeightGsm: 400,
+    fabricComposition: "Hand-Woven Nigerian Aso-Oke & Silk Crepe",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 150,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1506634572416-48cdfe530110?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/6.jpg",
     flatlayImageUrl:
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=85",
-    colorName: "CHARCOAL / GOLD TRIM",
-    colorHex: "#222222",
-    isFeatured: false,
-    brandId: "brand-kojo-accra",
-    brandSlug: "kojo-accra",
-    brandName: "KOJO ACCRA",
-    collectionSlug: "drop-04-harmattan-frost",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/5.jpg",
+    colorName: "Royal Gold & Wine",
+    colorHex: "#E31E24",
+    isFeatured: true,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "women-wears-collection",
     variants: [
-      { size: "S", sku: "KJO-009-S", hubALagos: 6, hubBToronto: 2 },
-      { size: "M", sku: "KJO-009-M", hubALagos: 7, hubBToronto: 3 },
-      { size: "L", sku: "KJO-009-L", hubALagos: 5, hubBToronto: 2 },
-      { size: "XL", sku: "KJO-009-XL", hubALagos: 3, hubBToronto: 1 },
+      { size: "S", sku: "MKM-220-S", hubALagos: 5, hubBToronto: 4 },
+      { size: "M", sku: "MKM-220-M", hubALagos: 6, hubBToronto: 4 },
+      { size: "L", sku: "MKM-220-L", hubALagos: 5, hubBToronto: 3 },
+      { size: "XL", sku: "MKM-220-XL", hubALagos: 4, hubBToronto: 3 },
+      { size: "XXL", sku: "MKM-220-XXL", hubALagos: 3, hubBToronto: 2 },
     ],
   },
   {
-    id: "prod-08",
-    slug: "savannah-254-rift-mohair-knit",
-    skuPrefix: "SAV-254-011",
-    title: "RIFT VALLEY BRUSHED MOHAIR CREWNECK",
-    subtitle: "540 GSM Intarsia Tribal Linework Sweater in Terracotta & Obsidian",
+    id: "mkm-236",
+    slug: "ankara-lace-style-short-and-long-length",
+    skuPrefix: "MKM-WOM-236",
+    title: "Ankara Lace Style (Short & Long Length)",
+    subtitle:
+      "Vibrant Ankara wax print and lace dress available in short or full-length silhouette",
     description:
-      "Knitted in small batches by Savannah Studio 254 in Nairobi. Heavyweight brushed kid-mohair blend featuring architectural topographic linework inspired by the Great Rift Valley.",
-    gender: "UNISEX",
-    category: "KNITWEAR",
-    fabricWeightGsm: 540,
-    fabricComposition: "55% KID MOHAIR / 30% MERINO WOOL / 15% NYLON",
-    originLabel: "NAIROBI / TORONTO",
-    basePriceCad: 260,
-    priceOverrides: {
-      CAD: 260,
-      NGN: 292500,
-      KES: 27000,
-    },
+      "Contemporary Ankara and lace fusion dress crafted for celebrations and elevated everyday wear. Available in both short and long lengths and customizable in any colour and pattern.",
+    gender: "WOMEN",
+    category: "Women Wears",
+    fabricWeightGsm: 320,
+    fabricComposition: "100% African Wax Print Ankara & Embroidered Lace",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 120,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/9.jpg",
     flatlayImageUrl:
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1000&q=85",
-    colorName: "TERRACOTTA / OBSIDIAN",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/10.jpg",
+    colorName: "Multi-Color Ankara",
     colorHex: "#E05C1A",
     isFeatured: true,
-    brandId: "brand-savannah-254",
-    brandSlug: "savannah-254",
-    brandName: "SAVANNAH STUDIO 254",
-    collectionSlug: "drop-05-equatorial-monolith",
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "women-wears-collection",
     variants: [
-      { size: "S", sku: "SAV-011-S", hubALagos: 3, hubBToronto: 2 },
-      { size: "M", sku: "SAV-011-M", hubALagos: 4, hubBToronto: 3 },
-      { size: "L", sku: "SAV-011-L", hubALagos: 3, hubBToronto: 2 },
+      { size: "S", sku: "MKM-236-S", hubALagos: 5, hubBToronto: 4 },
+      { size: "M", sku: "MKM-236-M", hubALagos: 6, hubBToronto: 5 },
+      { size: "L", sku: "MKM-236-L", hubALagos: 5, hubBToronto: 4 },
+      { size: "XL", sku: "MKM-236-XL", hubALagos: 4, hubBToronto: 3 },
+      { size: "XXL", sku: "MKM-236-XXL", hubALagos: 3, hubBToronto: 2 },
     ],
   },
+
+  // =========================================================================
+  // 3. MALE ACCESSORIES (https://macklemorefashions.com/male-accessories/)
+  // =========================================================================
   {
-    id: "prod-09",
-    slug: "macklemore-ankara-geometric-silk-shirt",
-    skuPrefix: "MKM-ARC-027",
-    title: "ANKARA MONOLITH SILK CAMP SHIRT",
-    subtitle: "310 GSM Heavy Twill Silk Shirt with Extracted Macklemore Geometric Weave",
+    id: "mkm-218",
+    slug: "2-layer-african-coral-beads-jewelry-set-for-men",
+    skuPrefix: "MKM-MACC-218",
+    title: "2-Layer African Coral Beads Jewelry Set for Men",
+    subtitle:
+      "Traditional royal red coral bead double-layered necklace and wrist set for men",
     description:
-      "Printed in Como and finished in Lagos using the signature Macklemore crimson, gold, and teal tribal geometry. Relaxed boxy fit with mother-of-pearl buttons.",
-    gender: "UNISEX",
-    category: "SHIRTING",
-    fabricWeightGsm: 310,
-    fabricComposition: "100% HEAVYWEIGHT MULBERRY SILK TWILL",
-    originLabel: "LAGOS / TORONTO",
-    basePriceCad: 240,
-    priceOverrides: {
-      CAD: 240,
-      NGN: 270000,
-      KES: 25000,
-    },
+      "Authentic 2-layer African royal coral beads jewelry set crafted for grooms, titled chiefs, and ceremonial occasions. Pairs seamlessly with Agbada, Dashiki, and Kaftan attire.",
+    gender: "MEN",
+    category: "Male Accessories",
+    fabricWeightGsm: 300,
+    fabricComposition: "Polished Ceremonial Coral Beads",
+    originLabel: "Lagos & Benin",
+    basePriceCad: 65,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/ac03712a-e69a-4d71-b6d4-d10f50c9cb89.webp",
     flatlayImageUrl:
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=85",
-    colorName: "CRIMSON / IMPERIAL GOLD",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/ac03712a-e69a-4d71-b6d4-d10f50c9cb89.webp",
+    colorName: "Coral Red",
     colorHex: "#E31E24",
     isFeatured: false,
     brandId: "brand-macklemore",
     brandSlug: "macklemore",
-    brandName: "MACKLEMORE FASHION",
-    collectionSlug: "victoria-island-nocturne",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "men-wears-collection",
     variants: [
-      { size: "XS", sku: "MKM-027-XS", hubALagos: 3, hubBToronto: 2 },
-      { size: "S", sku: "MKM-027-S", hubALagos: 5, hubBToronto: 3 },
-      { size: "M", sku: "MKM-027-M", hubALagos: 6, hubBToronto: 4 },
-      { size: "L", sku: "MKM-027-L", hubALagos: 4, hubBToronto: 2 },
+      { size: "S", sku: "MKM-218-S", hubALagos: 8, hubBToronto: 6 },
+      { size: "M", sku: "MKM-218-M", hubALagos: 10, hubBToronto: 8 },
+      { size: "L", sku: "MKM-218-L", hubALagos: 8, hubBToronto: 6 },
+      { size: "XL", sku: "MKM-218-XL", hubALagos: 6, hubBToronto: 4 },
     ],
   },
   {
-    id: "prod-10",
-    slug: "luca-sculpted-shoulder-blazer",
-    skuPrefix: "LCA-AW26-033",
-    title: "LUCA ARCHITECTURAL PEAK-LAPEL BLAZER",
-    subtitle: "Full-Canvas Structured Evening Jacket with Bronze Hairline Piping",
+    id: "mkm-209",
+    slug: "african-igbo-red-royal-traditional-hat-with-gold-and-horn-adornment",
+    skuPrefix: "MKM-MACC-209",
+    title:
+      "African Igbo Red Royal Traditional Hat With Gold & Horn Adornment",
+    subtitle:
+      "Ceremonial red Chieftaincy cap adorned with royal gold and traditional horn crest",
     description:
-      "Hand-canvassed blazer featuring extended architectural shoulders, a single concealed closure, and internal Macklemore x LUCA co-branded woven specification label.",
-    gender: "WOMEN",
-    category: "OUTERWEAR",
-    fabricWeightGsm: 440,
-    fabricComposition: "100% BARATHEA VIRGIN WOOL",
-    originLabel: "MILAN / LAGOS",
-    basePriceCad: 590,
-    priceOverrides: {
-      CAD: 590,
-      NGN: 663750,
-      KES: 61450,
-    },
+      "Handcrafted African Igbo Red Royal Traditional Hat featuring regal gold embroidery and horn adornment. Available across sizes S to XXL.",
+    gender: "MEN",
+    category: "Male Accessories",
+    fabricWeightGsm: 350,
+    fabricComposition: "Wool Felt, Gold Bullion Thread & Ceremonial Adornment",
+    originLabel: "Eastern Nigeria & Lagos",
+    basePriceCad: 60,
     editorialImageUrl:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/119150399_162644002133362_4996665628877405313_n.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/119150399_162644002133362_4996665628877405313_n.jpg",
+    colorName: "Royal Crimson & Gold",
+    colorHex: "#E31E24",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "men-wears-collection",
+    variants: [
+      { size: "S", sku: "MKM-209-S", hubALagos: 6, hubBToronto: 5 },
+      { size: "M", sku: "MKM-209-M", hubALagos: 8, hubBToronto: 6 },
+      { size: "L", sku: "MKM-209-L", hubALagos: 8, hubBToronto: 6 },
+      { size: "XL", sku: "MKM-209-XL", hubALagos: 5, hubBToronto: 4 },
+      { size: "XXL", sku: "MKM-209-XXL", hubALagos: 4, hubBToronto: 3 },
+    ],
+  },
+  {
+    id: "mkm-217",
+    slug: "igbo-traditional-hand-fan",
+    skuPrefix: "MKM-MACC-217",
+    title: "Igbo Traditional Hand Fan",
+    subtitle:
+      "Handcrafted leather and embroidered ceremonial Igbo royal hand fan (Akupe)",
+    description:
+      "Authentic Igbo traditional royal hand fan crafted from durable leather with cultural motifs, ideal for traditional weddings, chieftaincy ceremonies, and grand occasions.",
+    gender: "MEN",
+    category: "Male Accessories",
+    fabricWeightGsm: 320,
+    fabricComposition: "Hand-Tooled Leather & Traditional Emblem",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 50,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/hand-traditional-fan.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/hand-traditional-fan.jpg",
+    colorName: "Savannah Bronze & Red",
+    colorHex: "#7A491D",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "men-wears-collection",
+    variants: [
+      { size: "M", sku: "MKM-217-M", hubALagos: 10, hubBToronto: 8 },
+      { size: "L", sku: "MKM-217-L", hubALagos: 8, hubBToronto: 6 },
+    ],
+  },
+
+  // =========================================================================
+  // 4. FEMALE ACCESSORIES (https://macklemorefashions.com/female-accessories/)
+  // =========================================================================
+  {
+    id: "mkm-247",
+    slug: "green-gold-bead-necklace-bracelet-earrings",
+    skuPrefix: "MKM-FACC-247",
+    title: "Green & Gold Bead Necklace, Bracelet & Earrings",
+    subtitle:
+      "Complete handcrafted emerald green and gold bridal & ceremonial jewelry set",
+    description:
+      "Luxury multi-strand green and gold bead necklace with matching bracelet and drop earrings. Available in any colour and pattern to complement your Aso-Ebi or bridal attire.",
+    gender: "WOMEN",
+    category: "Female Accessories",
+    fabricWeightGsm: 280,
+    fabricComposition: "Hand-Strung Glass, Coral & Gold-Plated Beads",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 120,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/15.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/15.jpg",
+    colorName: "Emerald & Gold",
+    colorHex: "#1A7A6E",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "women-wears-collection",
+    variants: [
+      { size: "S", sku: "MKM-247-S", hubALagos: 6, hubBToronto: 5 },
+      { size: "M", sku: "MKM-247-M", hubALagos: 8, hubBToronto: 6 },
+      { size: "L", sku: "MKM-247-L", hubALagos: 6, hubBToronto: 5 },
+    ],
+  },
+  {
+    id: "mkm-246",
+    slug: "royal-bridal-bead-set",
+    skuPrefix: "MKM-FACC-246",
+    title: "Royal Bridal Bead Set",
+    subtitle:
+      "Traditional Nigerian bridal coral and gold statement necklace, bracelet & earring suite",
+    description:
+      "Regal bridal bead jewelry set crafted for traditional weddings and milestone celebrations. Customizable in any colour and pattern.",
+    gender: "WOMEN",
+    category: "Female Accessories",
+    fabricWeightGsm: 300,
+    fabricComposition: "Ceremonial Bridal Coral & Gold Beads",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 120,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/14.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/14.jpg",
+    colorName: "Royal Gold & Coral",
+    colorHex: "#D4860B",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "women-wears-collection",
+    variants: [
+      { size: "S", sku: "MKM-246-S", hubALagos: 6, hubBToronto: 5 },
+      { size: "M", sku: "MKM-246-M", hubALagos: 8, hubBToronto: 6 },
+      { size: "L", sku: "MKM-246-L", hubALagos: 6, hubBToronto: 4 },
+    ],
+  },
+  {
+    id: "mkm-245",
+    slug: "green-royal-gold-gele",
+    skuPrefix: "MKM-FACC-245",
+    title: "Green & Royal Gold Gele",
+    subtitle:
+      "Pre-pleated luxury green and royal gold auto-Gele headtie with embellished crown",
+    description:
+      "Our high-quality Gele hats are crafted from premium fabrics for a soft, luxurious feel and effortless wear. Available in any colour and pattern.",
+    gender: "WOMEN",
+    category: "Female Accessories",
+    fabricWeightGsm: 320,
+    fabricComposition: "Hand-Pleated Aso-Oke & Segi Gele Fabric",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 100,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/13.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/13.jpg",
+    colorName: "Green & Royal Gold",
+    colorHex: "#1A7A6E",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "women-wears-collection",
+    variants: [
+      { size: "S", sku: "MKM-245-S", hubALagos: 6, hubBToronto: 5 },
+      { size: "M", sku: "MKM-245-M", hubALagos: 8, hubBToronto: 6 },
+      { size: "L", sku: "MKM-245-L", hubALagos: 6, hubBToronto: 5 },
+    ],
+  },
+  {
+    id: "mkm-240",
+    slug: "already-made-african-gold-gele-headtie-hat",
+    skuPrefix: "MKM-FACC-240",
+    title: "Already Made African Gold Gele Headtie Hat",
+    subtitle:
+      "Ready-to-wear pleated champagne gold auto-Gele headtie hat for weddings & events",
+    description:
+      "Pre-styled, ready-to-wear African gold Gele headtie hat designed for instant elegance without complex tying. Available in any colour and pattern.",
+    gender: "WOMEN",
+    category: "Female Accessories",
+    fabricWeightGsm: 320,
+    fabricComposition: "Metallic Gold Aso-Oke & Structured Pleats",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 100,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/12.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/12.jpg",
+    colorName: "Champagne Gold",
+    colorHex: "#D4860B",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "women-wears-collection",
+    variants: [
+      { size: "S", sku: "MKM-240-S", hubALagos: 7, hubBToronto: 6 },
+      { size: "M", sku: "MKM-240-M", hubALagos: 9, hubBToronto: 7 },
+      { size: "L", sku: "MKM-240-L", hubALagos: 7, hubBToronto: 5 },
+    ],
+  },
+
+  // =========================================================================
+  // 5. KIDS WEARS (https://macklemorefashions.com/african-kids-wears/)
+  // =========================================================================
+  {
+    id: "mkm-248",
+    slug: "baby-in-aso-oke",
+    skuPrefix: "MKM-KIDS-248",
+    title: "Baby In Aso-Oke",
+    subtitle:
+      "Hand-woven ceremonial Aso-Oke outfit with matching cap and royal coral beads",
+    description:
+      "Bespoke traditional Aso-Oke ensemble for babies and toddlers, complete with matching cap and ceremonial accessories. Available in any colour and pattern.",
+    gender: "KIDS",
+    category: "Kids Wears",
+    fabricWeightGsm: 360,
+    fabricComposition: "Soft-Lined Hand-Woven Aso-Oke",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 120,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/16.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/18.jpg",
+    colorName: "Royal Gold & Crimson",
+    colorHex: "#E31E24",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "kids-wears-collection",
+    variants: [
+      { size: "XS", sku: "MKM-248-XS", hubALagos: 6, hubBToronto: 5 },
+      { size: "S", sku: "MKM-248-S", hubALagos: 8, hubBToronto: 6 },
+      { size: "M", sku: "MKM-248-M", hubALagos: 6, hubBToronto: 5 },
+    ],
+  },
+  {
+    id: "mkm-259",
+    slug: "complete-set-baby-girl-aso-oke",
+    skuPrefix: "MKM-KIDS-259",
+    title: "Complete Set Baby Girl Aso Oke",
+    subtitle:
+      "Traditional baby girl Aso-Oke iro, buba, headtie & coral bead celebration set",
+    description:
+      "Complete ceremonial Aso-Oke outfit for baby girls, crafted with soft cotton lining for comfort during naming ceremonies, first birthdays, and family celebrations.",
+    gender: "KIDS",
+    category: "Kids Wears",
+    fabricWeightGsm: 340,
+    fabricComposition: "Soft-Lined Nigerian Aso-Oke & Beads",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 100,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/22.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/22.jpg",
+    colorName: "Rose Gold & Coral",
+    colorHex: "#E05C1A",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "kids-wears-collection",
+    variants: [
+      { size: "XS", sku: "MKM-259-XS", hubALagos: 6, hubBToronto: 5 },
+      { size: "S", sku: "MKM-259-S", hubALagos: 7, hubBToronto: 6 },
+      { size: "M", sku: "MKM-259-M", hubALagos: 5, hubBToronto: 4 },
+    ],
+  },
+  {
+    id: "mkm-258",
+    slug: "complete-set-aso-oke-for-baby-boy",
+    skuPrefix: "MKM-KIDS-258",
+    title: "Complete Set Aso Oke For Baby Boy",
+    subtitle:
+      "3-piece baby boy Aso-Oke agbada, tunic, sokoto & matching fila cap",
+    description:
+      "Complete traditional Aso-Oke set for baby boys with embroidered tunic, trousers, and matching Yoruba fila hat. Available in any colour and pattern.",
+    gender: "KIDS",
+    category: "Kids Wears",
+    fabricWeightGsm: 350,
+    fabricComposition: "Soft-Lined Hand-Woven Aso-Oke",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 100,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/19.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/19.jpg",
+    colorName: "Ivory & Gold",
+    colorHex: "#D4860B",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "kids-wears-collection",
+    variants: [
+      { size: "XS", sku: "MKM-258-XS", hubALagos: 6, hubBToronto: 5 },
+      { size: "S", sku: "MKM-258-S", hubALagos: 8, hubBToronto: 6 },
+      { size: "M", sku: "MKM-258-M", hubALagos: 6, hubBToronto: 4 },
+    ],
+  },
+  {
+    id: "mkm-257",
+    slug: "yoruba-baby-boy",
+    skuPrefix: "MKM-KIDS-257",
+    title: "Yoruba Baby Boy Traditional Set",
+    subtitle:
+      "Embroidered Yoruba baby boy celebration agbada set with matching fila cap",
+    description:
+      "Regal Yoruba baby boy traditional attire featuring classic embroidery, comfortable breathable lining, and matching cap. Available in any colour and pattern.",
+    gender: "KIDS",
+    category: "Kids Wears",
+    fabricWeightGsm: 340,
+    fabricComposition: "Hand-Woven Aso-Oke & Cotton Lining",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 100,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/20.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/20.jpg",
+    colorName: "Royal Wine & Gold",
+    colorHex: "#7A491D",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "kids-wears-collection",
+    variants: [
+      { size: "XS", sku: "MKM-257-XS", hubALagos: 5, hubBToronto: 5 },
+      { size: "S", sku: "MKM-257-S", hubALagos: 7, hubBToronto: 6 },
+      { size: "M", sku: "MKM-257-M", hubALagos: 5, hubBToronto: 4 },
+    ],
+  },
+  {
+    id: "mkm-256",
+    slug: "hausa-baby-boy",
+    skuPrefix: "MKM-KIDS-256",
+    title: "Hausa Baby Boy Traditional Set",
+    subtitle:
+      "Northern Nigerian Babban Riga embroidered baby boy tunic and hula cap set",
+    description:
+      "Traditional Hausa baby boy ceremonial outfit featuring classic Northern Nigerian embroidery and matching woven cap. Available in any colour and pattern.",
+    gender: "KIDS",
+    category: "Kids Wears",
+    fabricWeightGsm: 340,
+    fabricComposition: "Embroidered Cotton Brocade",
+    originLabel: "Kano, Lagos & Toronto",
+    basePriceCad: 100,
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/21.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/21.jpg",
+    colorName: "Sky Blue & White",
+    colorHex: "#1A7A6E",
+    isFeatured: false,
+    brandId: "brand-macklemore",
+    brandSlug: "macklemore",
+    brandName: "Macklemore Fashion",
+    collectionSlug: "kids-wears-collection",
+    variants: [
+      { size: "XS", sku: "MKM-256-XS", hubALagos: 6, hubBToronto: 4 },
+      { size: "S", sku: "MKM-256-S", hubALagos: 7, hubBToronto: 5 },
+      { size: "M", sku: "MKM-256-M", hubALagos: 5, hubBToronto: 4 },
+    ],
+  },
+
+  // =========================================================================
+  // 6. FABRICS / PRINTS AND PATTERNS (https://macklemorefashions.com/african-fabric/)
+  // =========================================================================
+  {
+    id: "mkm-267",
+    slug: "aso-oke-oxblood-and-pink-fabric",
+    skuPrefix: "MKM-FAB-267",
+    title: "Aso-Oke Oxblood and Pink Fabric (3 Yards / 6 Yards)",
+    subtitle:
+      "Hand-loomed Nigerian Aso-Oke textile in rich oxblood and pink ($120 – $240)",
+    description:
+      "Authentic hand-woven Aso-Oke fabric in oxblood and pink, ideal for bespoke Agbada, Iro & Buba, Gele, and ceremonial tailoring. Available in 3 Yards ($120) and 6 Yards ($240) bundles.",
+    gender: "UNISEX",
+    category: "Fabrics",
+    fabricWeightGsm: 460,
+    fabricComposition: "100% Hand-Loomed Nigerian Aso-Oke (3 Yards / 6 Yards)",
+    originLabel: "Iseyin, Lagos & Toronto",
+    basePriceCad: 120,
+    priceRangeLabel: "$120.00 – $240.00",
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/25.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/25.jpg",
+    colorName: "Oxblood & Pink",
+    colorHex: "#E31E24",
+    isFeatured: true,
+    brandId: "brand-aso-oke-heritage",
+    brandSlug: "aso-oke-heritage",
+    brandName: "Macklemore Textiles & Prints",
+    collectionSlug: "prints-and-patterns-collection",
+    variants: [
+      { size: "M", sku: "MKM-267-3YDS", hubALagos: 12, hubBToronto: 10 },
+      { size: "L", sku: "MKM-267-6YDS", hubALagos: 10, hubBToronto: 8 },
+    ],
+  },
+  {
+    id: "mkm-270",
+    slug: "elegant-african-lace",
+    skuPrefix: "MKM-FAB-270",
+    title: "Elegant African Lace (3 Yards / 6 Yards)",
+    subtitle:
+      "Luxury embroidered ceremonial African lace fabric ($100 – $200)",
+    description:
+      "Intricately embroidered African ceremonial lace curated for Aso-Ebi gowns, Kaftans, and wedding attire. Available in 3 Yards ($100) and 6 Yards ($200) cuts in any colour and pattern.",
+    gender: "UNISEX",
+    category: "Fabrics",
+    fabricWeightGsm: 320,
+    fabricComposition: "Embroidered Guipure & Tulle African Lace",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 100,
+    priceRangeLabel: "$100.00 – $200.00",
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/23.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/23.jpg",
+    colorName: "Royal Gold Lace",
+    colorHex: "#D4860B",
+    isFeatured: false,
+    brandId: "brand-aso-oke-heritage",
+    brandSlug: "aso-oke-heritage",
+    brandName: "Macklemore Textiles & Prints",
+    collectionSlug: "prints-and-patterns-collection",
+    variants: [
+      { size: "M", sku: "MKM-270-3YDS", hubALagos: 14, hubBToronto: 10 },
+      { size: "L", sku: "MKM-270-6YDS", hubALagos: 12, hubBToronto: 8 },
+    ],
+  },
+  {
+    id: "mkm-260",
+    slug: "ankara-fabric",
+    skuPrefix: "MKM-FAB-260",
+    title: "Ankara Fabric (3 Yards / 6 Yards)",
+    subtitle:
+      "100% cotton African wax print Ankara fabric in vibrant heritage patterns ($50 – $100)",
+    description:
+      "Vibrant, durable 100% cotton African wax print Ankara fabric supplied to fashion lovers, designers, and students across Canada, Nigeria, and worldwide. Available in 3 Yards ($50) and 6 Yards ($100).",
+    gender: "UNISEX",
+    category: "Fabrics",
+    fabricWeightGsm: 280,
+    fabricComposition: "100% Mercerized Cotton Wax Print Ankara",
+    originLabel: "Lagos & Toronto",
+    basePriceCad: 50,
+    priceRangeLabel: "$50.00 – $100.00",
+    editorialImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/26.jpg",
+    flatlayImageUrl:
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/Ankara.jpg",
+    colorName: "Vibrant Wax Print",
+    colorHex: "#E05C1A",
+    isFeatured: false,
+    brandId: "brand-aso-oke-heritage",
+    brandSlug: "aso-oke-heritage",
+    brandName: "Macklemore Textiles & Prints",
+    collectionSlug: "prints-and-patterns-collection",
+    variants: [
+      { size: "M", sku: "MKM-260-3YDS", hubALagos: 20, hubBToronto: 15 },
+      { size: "L", sku: "MKM-260-6YDS", hubALagos: 18, hubBToronto: 12 },
+    ],
+  },
+
+  // =========================================================================
+  // 7. REPRESENTED PARTNER HOUSE: LUCA (/brands/luca)
+  // =========================================================================
+  {
+    id: "luca-01",
+    slug: "luca-architectural-gabardine-trench",
+    skuPrefix: "LCA-AW26-014",
+    title: "LUCA Structural Gabardine Trench",
+    subtitle:
+      "Represented Partner House · Water-repellent cotton gabardine trench coat",
+    description:
+      "Designed by partner brand LUCA and represented across West and East Africa by Macklemore Fashion. Tailored in crisp water-repellent cotton gabardine.",
+    gender: "UNISEX",
+    category: "Men Wears",
+    fabricWeightGsm: 480,
+    fabricComposition: "100% High-Twist Cotton Gabardine",
+    originLabel: "Milan & Lagos",
+    basePriceCad: 340,
+    editorialImageUrl:
+      "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85",
     flatlayImageUrl:
       "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1000&q=85",
-    colorName: "RICH OBSIDIAN",
-    colorHex: "#0B0B0C",
+    colorName: "Warm Sand",
+    colorHex: "#D4B895",
     isFeatured: false,
     brandId: "brand-luca",
     brandSlug: "luca",
     brandName: "LUCA",
-    collectionSlug: "luca-continental-bridge",
+    collectionSlug: "men-wears-collection",
     variants: [
-      { size: "XS", sku: "LCA-033-XS", hubALagos: 2, hubBToronto: 2 },
-      { size: "S", sku: "LCA-033-S", hubALagos: 3, hubBToronto: 3 },
-      { size: "M", sku: "LCA-033-M", hubALagos: 3, hubBToronto: 2 },
-      { size: "L", sku: "LCA-033-L", hubALagos: 1, hubBToronto: 2 },
+      { size: "S", sku: "LCA-014-S", hubALagos: 4, hubBToronto: 3 },
+      { size: "M", sku: "LCA-014-M", hubALagos: 5, hubBToronto: 4 },
+      { size: "L", sku: "LCA-014-L", hubALagos: 4, hubBToronto: 3 },
+      { size: "XL", sku: "LCA-014-XL", hubALagos: 2, hubBToronto: 2 },
+    ],
+  },
+  {
+    id: "luca-02",
+    slug: "luca-pleated-wide-wool-trouser",
+    skuPrefix: "LCA-AW26-021",
+    title: "LUCA Double-Pleat Tailored Suit Set",
+    subtitle:
+      "Represented Partner House · Relaxed double-breasted jacket & wide-leg trouser",
+    description:
+      "Signature LUCA relaxed tailoring represented by Macklemore Fashion across Nigeria, Ghana, Kenya, and Canada.",
+    gender: "WOMEN",
+    category: "Women Wears",
+    fabricWeightGsm: 360,
+    fabricComposition: "96% Virgin Wool / 4% Elastane",
+    originLabel: "Milan & Lagos",
+    basePriceCad: 280,
+    editorialImageUrl:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85",
+    flatlayImageUrl:
+      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1000&q=85",
+    colorName: "Warm Ivory",
+    colorHex: "#FAF5EE",
+    isFeatured: false,
+    brandId: "brand-luca",
+    brandSlug: "luca",
+    brandName: "LUCA",
+    collectionSlug: "women-wears-collection",
+    variants: [
+      { size: "S", sku: "LCA-021-S", hubALagos: 4, hubBToronto: 4 },
+      { size: "M", sku: "LCA-021-M", hubALagos: 5, hubBToronto: 4 },
+      { size: "L", sku: "LCA-021-L", hubALagos: 3, hubBToronto: 3 },
     ],
   },
 ];
@@ -812,10 +1212,10 @@ export const INITIAL_ORDERS: OrderRecord[] = [
     destinationCountry: "NG",
     destinationCity: "Victoria Island, Lagos",
     currency: "NGN",
-    subtotalAmount: 765000,
+    subtotalAmount: 337500,
     shippingAmount: 18500,
     dutiesAmount: 0,
-    totalAmount: 783500,
+    totalAmount: 356000,
     assignedHub: "HUB_A_LAGOS",
     courierPartner: "GIG Logistics Priority",
     waybillNumber: "GIG-LOS-8841209",
@@ -826,116 +1226,13 @@ export const INITIAL_ORDERS: OrderRecord[] = [
     createdAt: "2026-11-06T09:14:00Z",
     items: [
       {
-        productId: "prod-01",
-        productTitle: "ASO OKE MONOLITH GREATCOAT",
-        brandName: "MACKLEMORE FASHION",
+        productId: "mkm-200",
+        productTitle:
+          "Aso-Oke Dashiki with Floral Embroidery, Yoruba Hat & Coral Bead",
+        brandName: "Macklemore Fashion",
         size: "L",
         quantity: 1,
-        unitPrice: 765000,
-      },
-    ],
-  },
-  {
-    id: "ord-02",
-    orderNumber: "MKM-2026-9042",
-    customerName: "Wanjiku Mwangi",
-    customerEmail: "wanjiku@nairobi-atelier.ke",
-    customerPhone: "254712883901",
-    destinationCountry: "KE",
-    destinationCity: "Westlands, Nairobi",
-    currency: "KES",
-    subtotalAmount: 39500,
-    shippingAmount: 3200,
-    dutiesAmount: 1800,
-    totalAmount: 44500,
-    assignedHub: "HUB_A_LAGOS",
-    courierPartner: "Wells Fargo / Fargo Courier Kenya",
-    status: "PENDING_PAYMENT",
-    paymentProvider: "MPESA_DARAJA",
-    paymentReference: "ws_CO_06112026142209182",
-    mpesaReceiptNumber: undefined,
-    paymentStatus: "STK_PUSH_SENT",
-    createdAt: "2026-11-06T12:22:00Z",
-    items: [
-      {
-        productId: "prod-04",
-        productTitle: "VICTORIA ISLAND ARCHITECTURAL KAFTAN",
-        brandName: "MACKLEMORE FASHION",
-        size: "M",
-        quantity: 1,
-        unitPrice: 39500,
-      },
-    ],
-  },
-  {
-    id: "ord-03",
-    orderNumber: "MKM-2026-9043",
-    customerName: "Marcus Vance-Sterling",
-    customerEmail: "m.sterling@yorkville-arch.ca",
-    customerPhone: "+1 416 892 4410",
-    destinationCountry: "CA",
-    destinationCity: "Toronto, ON",
-    currency: "CAD",
-    subtotalAmount: 660,
-    shippingAmount: 25,
-    dutiesAmount: 0,
-    totalAmount: 685,
-    assignedHub: "HUB_B_TORONTO",
-    courierPartner: "DHL Express Domestic Air",
-    waybillNumber: "DHL-YYZ-44109822",
-    status: "PAID",
-    paymentProvider: "STRIPE",
-    paymentReference: "pi_3QKm89LkdIwHu7ix0881",
-    paymentStatus: "SUCCEEDED",
-    createdAt: "2026-11-06T13:05:00Z",
-    items: [
-      {
-        productId: "prod-02",
-        productTitle: "LUCA STRUCTURAL GABARDINE TRENCH",
-        brandName: "LUCA",
-        size: "M",
-        quantity: 1,
-        unitPrice: 540,
-      },
-      {
-        productId: "prod-03",
-        productTitle: "480 GSM TRIBAL CHEVRON HEAVY HOODIE",
-        brandName: "MACKLEMORE FASHION",
-        size: "L",
-        quantity: 1,
-        unitPrice: 120,
-      },
-    ],
-  },
-  {
-    id: "ord-04",
-    orderNumber: "MKM-2026-9044",
-    customerName: "Kwame Boateng",
-    customerEmail: "k.boateng@osu-holdings.gh",
-    customerPhone: "+233 24 891 0023",
-    destinationCountry: "GH",
-    destinationCity: "Airport Residential, Accra",
-    currency: "GHS",
-    subtotalAmount: 3306,
-    shippingAmount: 240,
-    dutiesAmount: 0,
-    totalAmount: 3546,
-    assignedHub: "HUB_A_LAGOS",
-    courierPartner: "GIG Logistics ECOWAS Corridor",
-    waybillNumber: "GIG-ACC-771029",
-    status: "ALLOCATED_TO_HUB",
-    paymentProvider: "PAYSTACK",
-    paymentReference: "PSK_GH_77291044",
-    paymentStatus: "SUCCEEDED",
-    createdAt: "2026-11-06T14:10:00Z",
-    items: [
-      {
-        productId: "prod-07",
-        productTitle: "BONWIRE SELVEDGE TECHNICAL CARGO",
-        brandName: "KOJO ACCRA",
-        size: "M",
-        quantity: 1,
-        unitPrice: 3306,
+        unitPrice: 337500,
       },
     ],
   },
@@ -946,76 +1243,19 @@ export const INITIAL_B2B_INQUIRIES: B2BInquiryRecord[] = [
     id: "b2b-01",
     referenceCode: "B2B-MKM-0412",
     channel: "BRAND_REPRESENTATION",
-    brandOrCompanyName: "VALENTINO ROSSO STUDIO MILANO",
-    contactName: "Matteo Conti",
-    contactRole: "VP International Commercial Expansion",
-    email: "m.conti@rossostudio.it",
-    phone: "+39 02 9182 7731",
-    headquartersCountry: "Italy",
-    websiteUrl: "https://rossostudio.it",
-    targetRegions: ["WEST_AFRICA", "EAST_AFRICA"],
-    annualVolumeTier: "$1M - $5M",
-    message:
-      "Seeking turn-key West African (Lagos/Accra) and East African (Nairobi) distribution, bonded customs warehousing in Victoria Island, and VIP trunk show representation for AW27.",
-    status: "MEETING_SCHEDULED",
-    assignedExecutive: "Chidi Okonkwo (Lagos B2B Desk)",
-    createdAt: "2026-11-03T11:30:00Z",
-  },
-  {
-    id: "b2b-02",
-    referenceCode: "B2B-MKM-0415",
-    channel: "WHOLESALE",
-    brandOrCompanyName: "ALARA & TEMPLE CONCEPT CONSORTIUM",
-    contactName: "Zainab Danjuma",
-    contactRole: "Head Buyer — Menswear & Avant-Garde",
-    email: "z.danjuma@concept-consortium.ng",
-    phone: "+234 803 900 1122",
-    headquartersCountry: "Nigeria",
-    websiteUrl: "https://concept-consortium.ng",
-    targetRegions: ["WEST_AFRICA"],
-    annualVolumeTier: "$250K - $1M",
-    message:
-      "Wholesale allocation request for LUCA Monolith Capsule 01 and Macklemore Drop 04 outerwear (45 units across sizes S–XL) for Q4 retail floor installation.",
-    status: "IN_REVIEW",
-    assignedExecutive: "Elena Rostova (Toronto / Global Desk)",
-    createdAt: "2026-11-04T15:45:00Z",
-  },
-  {
-    id: "b2b-03",
-    referenceCode: "B2B-MKM-0419",
-    channel: "BRAND_REPRESENTATION",
-    brandOrCompanyName: "KILIMANJARO TECHNICAL APPAREL",
-    contactName: "David Ochieng",
-    contactRole: "Founder & Creative Director",
-    email: "david@kilimanjaro-tech.ke",
-    phone: "+254 722 991 044",
-    headquartersCountry: "Kenya",
-    websiteUrl: "https://kilimanjaro-tech.ke",
-    targetRegions: ["NORTH_AMERICA", "EUROPE", "WEST_AFRICA"],
-    annualVolumeTier: "$250K - $1M",
-    message:
-      "Applying for Macklemore Fashion representation to export our GORE-TEX East African outerwear line into Toronto, London, and Lagos via Hub B fulfillment.",
-    status: "NEW",
-    assignedExecutive: "Unassigned",
-    createdAt: "2026-11-06T08:20:00Z",
-  },
-  {
-    id: "b2b-04",
-    referenceCode: "B2B-MKM-0388",
-    channel: "BRAND_REPRESENTATION",
-    brandOrCompanyName: "LUCA MILANO SRL",
+    brandOrCompanyName: "LUCA MILANO",
     contactName: "Luca Vance",
     contactRole: "Managing Director",
     email: "luca@lucamilano.it",
     phone: "+39 02 4410 8821",
     headquartersCountry: "Italy",
     websiteUrl: "https://macklemorefashions.com/brands/luca",
-    targetRegions: ["WEST_AFRICA", "EAST_AFRICA", "NORTH_AMERICA"],
-    annualVolumeTier: "$1M - $5M",
+    targetRegions: ["West Africa", "East Africa", "North America"],
+    annualVolumeTier: "Partner Brand",
     message:
-      "Full continental representation agreement executed. Live microsite at /brands/luca with Hub A (Lagos) & Hub B (Toronto) inventory split.",
+      "Continental representation agreement with Macklemore Fashion across Lagos, Accra, Nairobi, and Toronto.",
     status: "PARTNERED",
-    assignedExecutive: "Executive Directorate",
+    assignedExecutive: "Micah Elechi",
     createdAt: "2026-09-12T10:00:00Z",
   },
 ];
@@ -1023,71 +1263,70 @@ export const INITIAL_B2B_INQUIRIES: B2BInquiryRecord[] = [
 export const JOURNAL_ARTICLES: JournalArticle[] = [
   {
     id: "jrn-01",
-    slug: "the-lagos-toronto-axis-redefining-luxury-distribution",
-    issueNumber: "ISSUE 01 // CONTINENTAL ARCHITECTURE",
-    title: "THE TORONTO–LAGOS AXIS: WHY THE FUTURE OF LUXURY DISTRIBUTION RUNS THROUGH VICTORIA ISLAND",
+    slug: "macklemore-fashions-at-toronto-fashion-week-and-afriff",
+    issueNumber: "Feature 01 · Runway & Red Carpet",
+    title:
+      "From Toronto Fashion Week to the AFRIFF Red Carpet: Celebrating Cultural Pride",
     subtitle:
-      "How Macklemore Fashion built a bi-continental supply chain and representation bridge connecting Canadian capital markets with West and East Africa's fastest-growing luxury hubs.",
-    corridor: "[ CORRIDOR: TORONTO // LAGOS // NAIROBI ]",
-    author: "Amara Nwosu & Julian Sterling",
-    readTime: "06 MIN READ",
-    publishedAt: "2026-11-02",
+      "How founder Micah Elechi and Macklemore Fashion are bringing bespoke Nigerian Aso-Oke, Agbada tailoring, and contemporary African design to global stages.",
+    corridor: "Toronto · Lagos · Global",
+    author: "Macklemore Editorial Team",
+    readTime: "4 Min Read",
+    publishedAt: "2026-10-15",
     heroImageUrl:
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1600&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg",
     excerpt:
-      "For decades, global fashion houses treated Africa as an afterthought in their international distribution matrix. Macklemore Fashion's dual-hub infrastructure in Victoria Island and Toronto rewrites the rules of customs clearance, local payment settlement, and editorial authority.",
+      "At Macklemore Fashions, we believe fashion is a bridge—between generations, cultures, and stories. From the runway of Toronto Fashion Week 2024 to the Africa International Film Festival (AFRIFF) in Lagos, every piece is tailored to make a lasting statement.",
     bodyParagraphs: [
-      "From the industrial ateliers of Lagos to the architectural showrooms of King West in Toronto, a new sovereign infrastructure has emerged. Global luxury consumers in Lagos, Accra, and Nairobi no longer accept six-week overseas transit times, opaque customs duties, or declined international credit cards.",
-      "By establishing Hub A in Victoria Island, Lagos—integrated directly with GIG Logistics for ECOWAS road/air freight and Wells Fargo Courier for East African fulfillment—alongside Hub B in Toronto for North American and European dispatch, Macklemore Fashion reduces continental delivery to 24–72 hours.",
-      "Simultaneously, our payment orchestration layer reconciles Stripe for North America and Europe, Paystack for Nigerian Naira (NGN) and Ghanaian Cedi (GHS), and native M-Pesa Daraja 2.0 Express STK Push for Kenyan Shilling (KES) in a single unified ledger.",
+      "Founded by creative entrepreneur Micah Elechi, Macklemore Fashions is rooted in a clear vision: to make luxury African-inspired clothing accessible, empowering, and unforgettable across Canada, Nigeria, and international markets.",
+      "At Toronto Fashion Week 2024 and RAW Toronto 2024, Macklemore Fashions joined professional models on the runway, earning acclaim for bold prints, intricate Aso-Oke weaving, and modern tailoring. Simultaneously, on the red carpet at the Africa International Film Festival (AFRIFF) and the Excellence Awards, actors and public figures such as Kosa Akaraiwe and Emmkab wore custom Macklemore ensembles that celebrated heritage and sophistication.",
+      "As we expand our operational footprint in Lagos alongside our Canadian base in Toronto, Macklemore Fashion is proud to represent partner houses like Deji & Kola and LUCA—connecting global and African fashion labels with customers across West Africa, East Africa, and beyond.",
     ],
   },
   {
     id: "jrn-02",
-    slug: "aso-oke-and-620-gsm-wool-material-alchemy",
-    issueNumber: "ISSUE 02 // TEXTILE ARCHIVE",
-    title: "MATERIAL ALCHEMY: MILLING 620 GSM CANADIAN WOOL WITH ISEYIN HAND-LOOMED ASO OKE",
+    slug: "the-soul-of-creation-aso-oke-ankara-and-ceremonial-lace",
+    issueNumber: "Feature 02 · Textile Heritage",
+    title:
+      "The Soul of Every Creation: Curating Aso-Oke, Ankara, Kente & Ceremonial Lace",
     subtitle:
-      "Inside the textile development of Drop 04: Harmattan & Frost.",
-    corridor: "[ CORRIDOR: ISEYIN // LAGOS // MONTREAL ]",
-    author: "Tunde Balogun",
-    readTime: "05 MIN READ",
-    publishedAt: "2026-10-24",
+      "Inside our textile sourcing across Nigeria and West Africa—for bespoke tailoring, designers, and cultural celebrations.",
+    corridor: "Iseyin · Lagos · Toronto",
+    author: "Micah Elechi",
+    readTime: "5 Min Read",
+    publishedAt: "2026-10-02",
     heroImageUrl:
-      "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1600&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/25.jpg",
     excerpt:
-      "Traditional Yoruba strip-weaving requires mathematical tension and generational rhythm. When bonded to high-density 620 GSM virgin wool, it produces an overcoat silhouette of unprecedented structural permanence.",
+      "At Macklemore Fashions, the fabric is the soul of every creation. We source and curate high-quality African fabrics—including Aso-Oke, Ankara, Kente, Adire, and Lace—that reflect rich heritage and lasting elegance.",
     bodyParagraphs: [
-      "Every strip of Aso Oke used in the Macklemore Monolith Greatcoat is woven on narrow horizontal pedal looms in Iseyin, Oyo State. Rather than treating indigenous textiles as surface decoration, our pattern cutters integrate the dense cotton-silk weave directly into the structural load-bearing storm placket and collar stand.",
-      "The result is a garment engineered for both the dry dust of the December Harmattan in West Africa and the freezing winds of Lake Ontario.",
+      "Whether crafting a three-piece white pagoda-embroidered Agbada, a champagne gold Aso-Oke Dashiki with coral beads, or an emerald green Aso-Ebi gown, the integrity of the textile defines the silhouette.",
+      "In addition to designing custom and ready-to-wear clothing, Macklemore Fashions supplies authentic 3-yard and 6-yard fabric bundles to fashion enthusiasts, independent designers, and tailoring students across Canada, Nigeria, and international markets.",
     ],
   },
   {
     id: "jrn-03",
-    slug: "inside-luca-milan-to-lagos-vanguard",
-    issueNumber: "ISSUE 03 // PARTNER HOUSE DOSSIER",
-    title: "PARTNER DOSSIER: HOW ITALIAN LABEL 'LUCA' ENTERED WEST & EAST AFRICA THROUGH MACKLEMORE",
+    slug: "partnering-with-international-and-african-brands",
+    issueNumber: "Feature 03 · Brand Partnerships",
+    title:
+      "Building the Bridge: Representing International & African Fashion Brands Across the Continent",
     subtitle:
-      "A conversation with Luca Vance on why Lagos and Nairobi are outpacing traditional European capitals in avant-garde tailoring adoption.",
-    corridor: "[ CORRIDOR: MILAN // LAGOS // ACCRA ]",
-    author: "Elena Rostova",
-    readTime: "07 MIN READ",
-    publishedAt: "2026-10-11",
+      "How Macklemore Fashion supports partner labels like LUCA and Deji & Kola in reaching customers across West and East Africa.",
+    corridor: "Milan · Lagos · Accra · Nairobi",
+    author: "Macklemore Partnerships Desk",
+    readTime: "5 Min Read",
+    publishedAt: "2026-09-20",
     heroImageUrl:
-      "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1600&q=85",
+      "https://macklemorefashions.com/wp-content/uploads/2025/04/dejiandkola_africa_1712608765_3341927002288432016_30014923707.jpg",
     excerpt:
-      "When Milanese tailoring label LUCA sought continental representation in Africa, they bypassed traditional European distributors in favor of Macklemore Fashion's Lagos headquarters.",
+      "Our long-term vision is for Macklemore Fashion to serve as a strong platform for fashion retail, brand partnerships, representation, and distribution across West Africa, East Africa, and global markets.",
     bodyParagraphs: [
-      "\"The patronage we see in Victoria Island, Ikoyi, Osu, and Westlands is extraordinary,\" notes founder Luca Vance. \"Through Macklemore Fashion's B2B representation platform, our seasonal collections are pre-positioned in Lagos before the drop goes live, allowing immediate settlement in NGN, GHS, and KES.\"",
+      "By combining Canadian corporate credibility with an active operational presence in Lagos, Nigeria, Macklemore Fashion offers international and African fashion houses a trusted gateway into Africa's fastest-growing consumer hubs.",
+      "Each represented brand receives its own dedicated showcase on our platform alongside regional distribution and client concierge support across Nigeria, Ghana, Kenya, the UK, and North America.",
     ],
   },
 ];
 
-/**
- * Helper to format a CAD base price into any target CurrencyCode
- * or generate the signature bracketed multi-currency string:
- * e.g. [ CAD $120 // NGN 135,000 // KES 12,500 ]
- */
 export function convertPrice(
   product: Pick<ProductRecord, "basePriceCad" | "priceOverrides">,
   currency: CurrencyCode
@@ -1120,11 +1359,11 @@ export function formatCurrencyValue(
     case "EUR":
       return `EUR €${formatted}`;
     case "NGN":
-      return `NGN ${formatted}`;
+      return `NGN ₦${formatted}`;
     case "GHS":
-      return `GHS ${formatted}`;
+      return `GHS GH₵${formatted}`;
     case "KES":
-      return `KES ${formatted}`;
+      return `KES KSh ${formatted}`;
   }
 }
 
@@ -1141,15 +1380,15 @@ export function formatMultiCurrencyBracket(
   const cad = formatCurrencyValue(convertPrice(product, "CAD"), "CAD");
 
   if (activeCurrency === "CAD") {
-    return `[ ${cad} // ${ngn} // ${kes} ]`;
+    return `${cad} · ${ngn} · ${kes}`;
   }
   if (activeCurrency === "NGN") {
-    return `[ ${ngn} // ${cad} // ${kes} ]`;
+    return `${ngn} · ${cad} · ${kes}`;
   }
   if (activeCurrency === "KES") {
-    return `[ ${kes} // ${cad} // ${ngn} ]`;
+    return `${kes} · ${cad} · ${ngn}`;
   }
-  return `[ ${primary} // ${ngn} // ${kes} ]`;
+  return `${primary} · ${ngn} · ${kes}`;
 }
 
 export function getTotalProductStock(product: ProductRecord): {
@@ -1170,10 +1409,6 @@ export function getTotalProductStock(product: ProductRecord): {
   };
 }
 
-/**
- * Multi-Hub Logistics & Shipping Rate Calculator
- * Evaluates destination country and currency to route order to Hub A (Lagos) or Hub B (Toronto).
- */
 export function calculateLogisticsForDestination(
   destinationCountryIso: string,
   currency: CurrencyCode,
@@ -1189,46 +1424,43 @@ export function calculateLogisticsForDestination(
 } {
   const rate = CURRENCIES[currency].rateFromCad;
 
-  // West Africa (Nigeria, Ghana, Ivory Coast, Senegal) -> Hub A Lagos via GIG Logistics
   if (["NG", "GH", "CI", "SN"].includes(destinationCountryIso)) {
     const baseShipCad = destinationCountryIso === "NG" ? 16 : 24;
     return {
       assignedHub: "HUB_A_LAGOS",
-      hubName: "Hub A: Lagos Victoria Island Fulfillment Center",
+      hubName: "Lagos Operational HQ (Victoria Island)",
       courierPartner:
         destinationCountryIso === "NG"
-          ? "GIG Logistics Priority (Same/Next-Day Lagos & Abuja)"
-          : "GIG Logistics ECOWAS Air/Road Corridor",
+          ? "GIG Logistics Priority"
+          : "DHL West Africa Express",
       estimatedTransitDays:
-        destinationCountryIso === "NG" ? "1–2 BUSINESS DAYS" : "2–4 BUSINESS DAYS",
+        destinationCountryIso === "NG" ? "1–2 Business Days" : "2–4 Business Days",
       shippingFee: Math.round(baseShipCad * rate),
-      dutiesFee: 0, // ECOWAS duty-cleared from Lagos HQ
+      dutiesFee: 0,
       recommendedGateway: "PAYSTACK",
     };
   }
 
-  // East Africa (Kenya, Uganda, Tanzania, Rwanda) -> Hub A Lagos / Nairobi Node via Wells Fargo / Fargo Courier
   if (["KE", "UG", "TZ", "RW"].includes(destinationCountryIso)) {
     const baseShipCad = 28;
     return {
       assignedHub: "HUB_A_LAGOS",
-      hubName: "Hub A: Lagos HQ -> Nairobi Westlands Regional Node",
-      courierPartner: "Wells Fargo / Fargo Courier Kenya Express",
-      estimatedTransitDays: "2–3 BUSINESS DAYS",
+      hubName: "East Africa Regional Hub (Nairobi)",
+      courierPartner: "Fargo Courier & DHL Express",
+      estimatedTransitDays: "2–3 Business Days",
       shippingFee: Math.round(baseShipCad * rate),
       dutiesFee: Math.round(subtotalInCurrency * 0.045),
       recommendedGateway: "MPESA_DARAJA",
     };
   }
 
-  // North America, UK, Europe & Rest of World -> Hub B Toronto via DHL Express
   const baseShipCad = destinationCountryIso === "CA" ? 20 : 35;
   return {
     assignedHub: "HUB_B_TORONTO",
-    hubName: "Hub B: Toronto International Distribution Center",
-    courierPartner: "DHL Express International Air",
+    hubName: "Toronto Corporate HQ Distribution",
+    courierPartner: "DHL Express International",
     estimatedTransitDays:
-      destinationCountryIso === "CA" ? "1–2 BUSINESS DAYS" : "2–4 BUSINESS DAYS",
+      destinationCountryIso === "CA" ? "1–2 Business Days" : "2–4 Business Days",
     shippingFee: Math.round(baseShipCad * rate),
     dutiesFee:
       destinationCountryIso === "CA"

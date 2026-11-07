@@ -163,45 +163,45 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        {/* Sub-Bar: Men / Women / Categories Quick Access */}
+        {/* Sub-Bar: Active Shop Categories from macklemorefashions.com */}
         <div className="hidden md:block border-t border-[#F0E6D8] bg-[#FAF5EE]/60">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-2 flex items-center justify-between text-xs text-[#5C5147]">
             <div className="flex items-center gap-6">
               <Link
-                href="/shop?gender=WOMEN"
+                href="/shop?category=Men+Wears"
                 className="hover:text-[#E31E24] transition-colors font-medium text-[#1F1A17]"
               >
-                Women
+                Men Wears
               </Link>
               <Link
-                href="/shop?gender=MEN"
+                href="/shop?category=Male+Accessories"
+                className="hover:text-[#E31E24] transition-colors"
+              >
+                Male Accessories
+              </Link>
+              <Link
+                href="/shop?category=Women+Wears"
                 className="hover:text-[#E31E24] transition-colors font-medium text-[#1F1A17]"
               >
-                Men
+                Women Wears
               </Link>
               <Link
-                href="/collections"
+                href="/shop?category=Female+Accessories"
                 className="hover:text-[#E31E24] transition-colors"
               >
-                New Arrivals
+                Female Accessories
               </Link>
               <Link
-                href="/shop?category=Outerwear"
+                href="/shop?category=Kids+Wears"
                 className="hover:text-[#E31E24] transition-colors"
               >
-                Outerwear &amp; Layers
+                Kids Wears
               </Link>
               <Link
-                href="/shop?category=Tailoring"
+                href="/shop?category=Fabrics"
                 className="hover:text-[#E31E24] transition-colors"
               >
-                Tailoring &amp; Sets
-              </Link>
-              <Link
-                href="/brands"
-                className="hover:text-[#E31E24] transition-colors"
-              >
-                Partner Brands
+                Prints &amp; Fabrics
               </Link>
             </div>
             <Link
@@ -251,40 +251,40 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
               </div>
             </div>
 
-            {/* Shopping & Collections (2 Cols) */}
+            {/* Shopping & Categories (2 Cols) */}
             <div className="lg:col-span-2 space-y-3">
               <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
-                Shop
+                Shop Categories
               </span>
               <ul className="space-y-2.5 text-sm text-[#5C5147]">
                 <li>
-                  <Link href="/shop" className="hover:text-[#E31E24] transition-colors">
-                    All Collections
+                  <Link href="/shop?category=Men+Wears" className="hover:text-[#E31E24] transition-colors">
+                    Men Wears
                   </Link>
                 </li>
                 <li>
-                  <Link href="/shop?gender=WOMEN" className="hover:text-[#E31E24] transition-colors">
-                    Women
+                  <Link href="/shop?category=Male+Accessories" className="hover:text-[#E31E24] transition-colors">
+                    Male Accessories
                   </Link>
                 </li>
                 <li>
-                  <Link href="/shop?gender=MEN" className="hover:text-[#E31E24] transition-colors">
-                    Men
+                  <Link href="/shop?category=Women+Wears" className="hover:text-[#E31E24] transition-colors">
+                    Women Wears
                   </Link>
                 </li>
                 <li>
-                  <Link href="/collections" className="hover:text-[#E31E24] transition-colors">
-                    New Arrivals
+                  <Link href="/shop?category=Female+Accessories" className="hover:text-[#E31E24] transition-colors">
+                    Female Accessories
                   </Link>
                 </li>
                 <li>
-                  <Link href="/brands" className="hover:text-[#E31E24] transition-colors">
-                    Partner Brands
+                  <Link href="/shop?category=Kids+Wears" className="hover:text-[#E31E24] transition-colors">
+                    Kids Wears
                   </Link>
                 </li>
                 <li>
-                  <Link href="/brands/luca" className="hover:text-[#E31E24] font-medium text-[#1F1A17] transition-colors">
-                    LUCA Spotlight
+                  <Link href="/shop?category=Fabrics" className="hover:text-[#E31E24] transition-colors">
+                    Prints &amp; Fabrics
                   </Link>
                 </li>
               </ul>
@@ -493,7 +493,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                           {item.product.title}
                         </h4>
                         <span className="text-xs text-[#7D7065] block mt-0.5">
-                          Size: {item.size} · {item.product.colorway}
+                          Size: {item.size} · {item.product.colorName}
                         </span>
                       </div>
 

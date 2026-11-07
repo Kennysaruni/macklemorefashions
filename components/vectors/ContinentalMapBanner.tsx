@@ -267,16 +267,14 @@ export function ContinentalMapBanner({
                     key={node.id}
                     type="button"
                     onClick={() => setActiveHub(node)}
-                    className={`px-3.5 py-2.5 rounded-md text-left border transition-all duration-200 cursor-pointer ${
-                      isSelected
-                        ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-xs"
-                        : "border-[#EADFD0] bg-[#FAF5EE] text-[#1F1A17] hover:border-[#7A491D] hover:bg-white"
-                    }`}
+                    className={`px-3.5 py-2.5 rounded-md text-left border transition-all duration-200 cursor-pointer ${isSelected
+                      ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-xs"
+                      : "border-[#EADFD0] bg-[#FAF5EE] text-[#1F1A17] hover:border-[#7A491D] hover:bg-white"
+                      }`}
                   >
                     <span
-                      className={`block text-[11px] truncate ${
-                        isSelected ? "text-[#EADFD0]" : "text-[#7A491D]"
-                      }`}
+                      className={`block text-[11px] truncate ${isSelected ? "text-[#EADFD0]" : "text-[#7A491D]"
+                        }`}
                     >
                       {node.country}
                     </span>
