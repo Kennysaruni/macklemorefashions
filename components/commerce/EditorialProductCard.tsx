@@ -6,7 +6,6 @@ import {
   ProductRecord,
   convertPrice,
   formatCurrencyValue,
-  formatMultiCurrencyBracket,
   getTotalProductStock,
 } from "@/lib/store-data";
 import { usePlatform } from "@/lib/platform-context";
@@ -14,7 +13,7 @@ import { CurtainReveal } from "@/components/motion/MotionPrimitives";
 
 export function EditorialProductCard({
   product,
-  theme = "dark",
+  theme = "light",
   index = 0,
   priorityAspect = "portrait",
 }: {
@@ -37,12 +36,6 @@ export function EditorialProductCard({
     ? selectedVariant.hubALagos + selectedVariant.hubBToronto
     : 0;
 
-  const isDark = theme === "dark";
-  const borderClass = isDark ? "border-stone-800" : "border-neutral-300";
-  const bgClass = isDark ? "bg-[#0B0B0C]" : "bg-[#F6F5F1]";
-  const textPrimary = isDark ? "text-[#F6F5F1]" : "text-[#0B0B0C]";
-  const textMuted = isDark ? "text-stone-400" : "text-neutral-600";
-
   const aspectClass =
     priorityAspect === "tall"
       ? "aspect-[3/4] sm:aspect-[4/5]"
@@ -54,112 +47,86 @@ export function EditorialProductCard({
     if (variantTotalStock <= 0) return;
     addToCart(product, selectedSize, 1);
     setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 1600);
+    setTimeout(() => setJustAdded(false), 1500);
   };
 
   return (
     <article
-      className={`group relative flex flex-col justify-between border ${borderClass} ${bgClass} ${textPrimary} transition-colors duration-500`}
+      data-theme={theme}
+      className="group relative flex flex-col justify-between rounded-lg overflow-hidden border border-[#EADFD0] bg-white text-[#1F1A17] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#D4B895]"
     >
-      {/* Top Technical Metadata Rail */}
+      {/* Image Viewport with Soft Hover Zoom & Crossfade */}
       <div>
-        <div
-          className={`px-3.5 py-2 border-b ${borderClass} flex items-center justify-between gap-2 font-mono text-[10px] tracking-wider uppercase`}
-        >
-          <Link
-            href={`/brands/${product.brandSlug}`}
-            className="text-[#D4860B] hover:text-[#E31E24] transition-colors truncate"
+        <CurtainReveal delay={(index % 4) * 0.05} duration={0.85}>
+          <div
+            className={`relative w-full ${aspectClass} overflow-hidden bg-[#FAF5EE]`}
           >
-            [ {product.brandName} ]
-          </Link>
-          <span className={textMuted}>[ {product.fabricWeightGsm} GSM ]</span>
-        </div>
-
-        {/* Editorial Image Viewport with Masked Curtain Reveal & 700ms Hover Crossfade */}
-        <CurtainReveal delay={(index % 4) * 0.08} duration={1.0}>
-          <div className={`relative w-full ${aspectClass} overflow-hidden bg-stone-950`}>
-            {/* Primary Editorial Lookbook Shot */}
+            {/* Primary Lookbook Image */}
             <img
               src={product.editorialImageUrl}
-              alt={`${product.title} — Editorial Lookbook`}
+              alt={product.title}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-[1.03] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-100 group-hover:opacity-0"
+              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-100 group-hover:opacity-0"
             />
-            {/* Secondary Garment Flat-Lay / Detail Shot (Crossfades in on Hover) */}
+            {/* Secondary Detail Image on Hover */}
             <img
               src={product.flatlayImageUrl}
-              alt={`${product.title} — Garment Detail`}
+              alt={`${product.title} detail`}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-[1.03] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 w-full h-full object-cover object-center scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100"
             />
 
-            {/* Subtle Gradient Vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25 pointer-events-none" />
-
-            {/* Top-Left Origin Telemetry */}
-            <div className="absolute top-3 left-3 font-mono text-[10px] tracking-widest uppercase bg-[#0B0B0C]/85 text-[#F6F5F1] px-2 py-1 border border-stone-800">
-              [ ORIGIN: {product.originLabel} ]
+            {/* Subtle Category Tag */}
+            <div className="absolute top-3 left-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#EADFD0] rounded-md px-2.5 py-1 text-[11px] font-medium text-[#5C5147]">
+              {product.category}
             </div>
 
-            {/* Bottom-Left Allocation Scarcity Telemetry */}
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between font-mono text-[10px] tracking-wider uppercase">
-              <span
-                className={`px-2 py-1 border ${
-                  stockInfo.total <= 12
-                    ? "bg-[#0B0B0C]/90 border-[#E05C1A] text-[#E05C1A]"
-                    : "bg-[#0B0B0C]/85 border-stone-800 text-stone-300"
-                }`}
-              >
-                [ ALLOCATION: {stockInfo.total} UNITS REMAINING ]
-              </span>
-              <span className="hidden sm:inline-block bg-[#0B0B0C]/85 border border-stone-800 text-stone-400 px-2 py-1">
-                [ LOS:{stockInfo.hubALagos} // YYZ:{stockInfo.hubBToronto} ]
-              </span>
-            </div>
+            {/* Subtle Low Stock Indicator */}
+            {stockInfo.total <= 15 && (
+              <div className="absolute top-3 right-3 bg-[#FFFDF9]/90 backdrop-blur-xs border border-[#E05C1A]/40 rounded-md px-2.5 py-1 text-[11px] font-medium text-[#E05C1A]">
+                Limited Edition
+              </div>
+            )}
           </div>
         </CurtainReveal>
       </div>
 
-      {/* Product Specification & Commerce Console */}
-      <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 gap-4">
+      {/* Minimalist Product Details & Size Selector */}
+      <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 gap-4 bg-white">
         <div>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <Link
+              href={`/brands/${product.brandSlug}`}
+              className="text-xs font-medium text-[#7A491D] hover:text-[#E31E24] transition-colors"
+            >
+              {product.brandName}
+            </Link>
+            <div className="flex items-center gap-1.5 text-xs text-[#7D7065]">
+              <span
+                className="w-2.5 h-2.5 rounded-full border border-black/15 inline-block"
+                style={{ backgroundColor: product.colorHex || "#7A491D" }}
+              />
+              <span>{product.colorName}</span>
+            </div>
+          </div>
+
           <div className="flex items-start justify-between gap-3">
-            <h3 className="font-display text-base sm:text-lg font-bold tracking-tight uppercase leading-snug">
+            <h3 className="font-display text-base font-semibold text-[#1F1A17] leading-snug group-hover:text-[#7A491D] transition-colors">
               {product.title}
             </h3>
-            <span className="font-mono text-xs sm:text-sm font-semibold text-[#D4860B] shrink-0">
-              {formatCurrencyValue(
-                convertPrice(product, currency),
-                currency
-              )}
+            <span className="text-sm font-semibold text-[#1F1A17] shrink-0">
+              {formatCurrencyValue(convertPrice(product, currency), currency)}
             </span>
           </div>
 
-          <p className={`text-xs ${textMuted} mt-1 line-clamp-2 leading-relaxed`}>
+          <p className="text-xs text-[#6E6359] mt-1 line-clamp-1">
             {product.subtitle}
           </p>
-
-          {/* Raw Multi-Currency Bracket Spec */}
-          <div className="mt-2.5 font-mono text-[10px] tracking-wider text-stone-400 break-words">
-            {formatMultiCurrencyBracket(product, currency)}
-          </div>
         </div>
 
-        {/* Square Size Matrix & Action */}
-        <div className={`pt-3 border-t ${borderClass} space-y-3`}>
-          <div className="flex items-center justify-between gap-2">
-            <span className={`font-mono text-[10px] uppercase ${textMuted}`}>
-              [ SIZE MATRIX ]
-            </span>
-            {selectedVariant && (
-              <span className="font-mono text-[10px] uppercase text-[#D4860B]">
-                [ LAGOS: {selectedVariant.hubALagos} // TORONTO:{" "}
-                {selectedVariant.hubBToronto} ]
-              </span>
-            )}
-          </div>
-
-          <div className="grid grid-cols-5 gap-1">
+        {/* Clean Size Buttons & Add to Bag */}
+        <div className="pt-3 border-t border-[#F2EAE0] space-y-2.5">
+          <div className="grid grid-cols-5 gap-1.5">
             {product.variants.map((v) => {
               const total = v.hubALagos + v.hubBToronto;
               const isSelected = selectedSize === v.size;
@@ -170,12 +137,12 @@ export function EditorialProductCard({
                   type="button"
                   disabled={isOut}
                   onClick={() => setSelectedSize(v.size)}
-                  className={`h-8 font-mono text-[11px] uppercase border transition-colors cursor-pointer ${
+                  className={`h-8 rounded-md text-xs font-medium border transition-all duration-200 cursor-pointer ${
                     isOut
-                      ? "border-stone-800/40 text-stone-600 line-through cursor-not-allowed"
+                      ? "border-[#EFE7DC] bg-[#FAF5EE] text-[#C5B9AC] line-through cursor-not-allowed"
                       : isSelected
-                      ? "border-[#E31E24] bg-[#E31E24] text-white font-bold"
-                      : `${borderClass} hover:border-[#D4860B] ${textPrimary}`
+                      ? "border-[#1F1A17] bg-[#1F1A17] text-white shadow-2xs"
+                      : "border-[#E2D6C5] bg-white hover:border-[#7A491D] hover:bg-[#FAF5EE] text-[#1F1A17]"
                   }`}
                 >
                   {v.size}
@@ -188,25 +155,22 @@ export function EditorialProductCard({
             type="button"
             onClick={handleAdd}
             disabled={variantTotalStock <= 0}
-            className={`w-full py-2.5 px-4 font-mono text-xs tracking-[0.18em] uppercase border transition-all cursor-pointer ${
+            className={`w-full py-2.5 px-4 rounded-md text-xs font-medium tracking-wide border transition-all duration-200 cursor-pointer ${
               justAdded
-                ? "bg-[#D4860B] border-[#D4860B] text-[#0B0B0C] font-bold"
+                ? "bg-[#2E6B4E] border-[#2E6B4E] text-white"
                 : variantTotalStock <= 0
-                ? "border-stone-800 text-stone-600 cursor-not-allowed"
-                : isDark
-                ? "border-stone-700 bg-transparent text-[#F6F5F1] hover:bg-[#E31E24] hover:border-[#E31E24] hover:text-white"
-                : "border-neutral-800 bg-[#0B0B0C] text-[#F6F5F1] hover:bg-[#E31E24] hover:border-[#E31E24]"
+                ? "border-[#EADFD0] bg-[#FAF5EE] text-[#A89B8E] cursor-not-allowed"
+                : "border-[#1F1A17] bg-[#1F1A17] text-white hover:bg-[#E31E24] hover:border-[#E31E24] shadow-2xs hover:shadow-sm"
             }`}
           >
             {justAdded
-              ? `[ ALLOCATED SIZE ${selectedSize} TO BAG ]`
+              ? `Added (${selectedSize}) ✓`
               : variantTotalStock <= 0
-              ? "[ ALLOCATION EXHAUSTED ]"
-              : `[ ACQUIRE // SIZE ${selectedSize} ]`}
+              ? "Out of Stock"
+              : `Add to Bag · ${selectedSize}`}
           </button>
         </div>
       </div>
     </article>
   );
 }
-

@@ -49,7 +49,9 @@ export default function AdminConsolePage() {
   const [brandSlug, setBrandSlug] = useState("");
   const [brandTagline, setBrandTagline] = useState("");
   const [brandOriginCity, setBrandOriginCity] = useState("LAGOS / MILAN");
-  const [brandOriginCountry, setBrandOriginCountry] = useState("Nigeria & Italy");
+  const [brandOriginCountry, setBrandOriginCountry] = useState(
+    "Nigeria & Italy"
+  );
   const [brandDirector, setBrandDirector] = useState("");
   const [brandCommission, setBrandCommission] = useState("24.0");
   const [brandBannerUrl, setBrandBannerUrl] = useState(
@@ -84,7 +86,7 @@ export default function AdminConsolePage() {
       name: brandName.trim().toUpperCase(),
       tagline:
         brandTagline.trim().toUpperCase() ||
-        "REPRESENTED PARTNER HOUSE // CONTINENTAL SYNDICATE",
+        "REPRESENTED PARTNER HOUSE // THE COLLECTIVE ARCHIVE",
       bio: brandBio.trim(),
       story: brandStory.trim() || brandBio.trim(),
       originCity: brandOriginCity.trim().toUpperCase(),
@@ -104,7 +106,7 @@ export default function AdminConsolePage() {
     setBrandBio("");
     setBrandStory("");
     triggerToast(
-      `[ BRAND ONBOARDED ] /brands/${created.slug} MICROSITE IS NOW LIVE.`
+      `✓ BRAND ONBOARDED: /brands/${created.slug} BOUTIQUE MICROSITE IS NOW LIVE.`
     );
   };
 
@@ -150,8 +152,8 @@ export default function AdminConsolePage() {
       basePriceCad: parseInt(newSkuPriceCad, 10) || 550,
       editorialImageUrl: newSkuEditorialImg,
       flatlayImageUrl: newSkuFlatlayImg,
-      colorName: "OBSIDIAN / RAW BONE",
-      colorHex: "#0B0B0C",
+      colorName: "RAW IVORY / BRONZE",
+      colorHex: "#7A491D",
       isFeatured: true,
       brandId: matchedBrand.id,
       brandSlug: matchedBrand.slug,
@@ -167,47 +169,46 @@ export default function AdminConsolePage() {
     setNewSkuTitle("");
     setShowNewSkuForm(false);
     triggerToast(
-      `[ SKU REGISTERED ] ${created.skuPrefix} (${created.title}) ALLOCATED TO HUB A & HUB B.`
+      `✓ SKU REGISTERED: ${created.skuPrefix} (${created.title}) ALLOCATED TO HUB A & HUB B.`
     );
   };
 
-  // --- Summary Telemetry ---
   const totalUnitsAllHubs = products.reduce(
     (acc, p) => acc + getTotalProductStock(p).total,
     0
   );
 
   return (
-    <div className="min-h-screen bg-[#070708] text-[#F6F5F1]">
-      {/* Terminal Top Bar */}
-      <section className="border-b border-stone-800 bg-[#0B0B0C] px-4 py-8 md:px-8">
-        <div className="mx-auto max-w-[1600px]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#111111]">
+      {/* Executive Header */}
+      <section className="border-b border-[#E5E0D8] bg-white px-4 py-10 md:px-8">
+        <div className="mx-auto max-w-[1440px]">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div>
-              <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.26em] text-[#D4860B] uppercase mb-2">
-                <span className="inline-block h-2 w-2 bg-emerald-400" />
+              <div className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.24em] text-[#7A491D] font-semibold uppercase mb-2">
+                <span className="inline-block h-2 w-2 bg-[#2E6B35]" />
                 <span>
-                  [ MACKLEMORE ENTERPRISE COMMAND CONSOLE // SUPERADMIN TERMINAL ]
+                  MACKLEMORE EXECUTIVE COMMAND CONSOLE // SUPERADMIN PORTAL
                 </span>
               </div>
-              <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] uppercase">
-                CONTINENTAL OPERATIONS & CMS
+              <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight uppercase text-[#111111]">
+                RETAIL, WAREHOUSE &amp; B2B MANAGEMENT
               </h1>
             </div>
 
             {/* Quick VIP Teaser Mode Master Switch */}
-            <div className="flex items-center gap-4 border border-stone-800 bg-[#111114] p-4">
+            <div className="flex items-center gap-4 border border-[#E5E0D8] bg-[#FAF9F6] p-4">
               <div>
-                <div className="font-mono text-[10px] tracking-[0.2em] text-stone-400 uppercase">
-                  [ STOREFRONT VAULT STATE ]
+                <div className="font-mono text-[10px] tracking-[0.2em] text-[#6E6A63] uppercase">
+                  STOREFRONT MODE
                 </div>
                 <div className="font-mono text-xs font-bold uppercase mt-0.5">
                   {vipTribalTeaserMode ? (
                     <span className="text-[#E31E24]">
-                      VIP TRIBAL TEASER MODE (LOCKED)
+                      VIP TEASER VAULT (LOCKED)
                     </span>
                   ) : (
-                    <span className="text-emerald-400">
+                    <span className="text-[#2E6B35]">
                       PUBLIC STOREFRONT LIVE
                     </span>
                   )}
@@ -220,62 +221,62 @@ export default function AdminConsolePage() {
                   setVipTribalTeaserMode(next);
                   triggerToast(
                     next
-                      ? "[ VAULT ENGAGED ] STOREFRONT FLIPPED TO 'VIP TRIBAL TEASER MODE'."
-                      : "[ VAULT DISENGAGED ] PUBLIC STOREFRONT UNLOCKED."
+                      ? "VAULT ENGAGED: STOREFRONT FLIPPED TO 'VIP TRIBAL TEASER MODE'."
+                      : "VAULT DISENGAGED: PUBLIC STOREFRONT UNLOCKED."
                   );
                 }}
-                className={`px-4 py-2.5 font-mono text-[10px] font-semibold tracking-[0.2em] uppercase transition-colors ${
+                className={`px-4 py-2.5 font-mono text-[10px] font-semibold tracking-[0.18em] uppercase transition-colors cursor-pointer ${
                   vipTribalTeaserMode
-                    ? "bg-emerald-500 text-black hover:bg-emerald-400"
-                    : "bg-[#E31E24] text-white hover:bg-[#D4860B] hover:text-black"
+                    ? "bg-[#2E6B35] text-white hover:bg-[#111111]"
+                    : "bg-[#111111] text-white hover:bg-[#E31E24]"
                 }`}
               >
                 {vipTribalTeaserMode
                   ? "UNLOCK STOREFRONT"
-                  : "ENGAGE VIP TEASER VAULT"}
+                  : "ENGAGE VIP TEASER"}
               </button>
             </div>
           </div>
 
           {/* Telemetry KPI Strip */}
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-5 border border-stone-800 divide-y sm:divide-y-0 sm:divide-x divide-stone-800 bg-[#0E0E10] font-mono">
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-5 border border-[#E5E0D8] divide-y sm:divide-y-0 sm:divide-x divide-[#E5E0D8] bg-[#FAF9F6] font-mono">
             <div className="p-4">
-              <div className="text-[10px] text-stone-500 uppercase">
+              <div className="text-[10px] text-[#6E6A63] uppercase">
                 REPRESENTED HOUSES
               </div>
-              <div className="text-2xl font-bold text-[#F6F5F1] mt-1">
+              <div className="text-2xl font-bold text-[#111111] mt-1">
                 {brands.length} BRANDS
               </div>
             </div>
             <div className="p-4">
-              <div className="text-[10px] text-stone-500 uppercase">
-                ACTIVE SKUS & UNITS
+              <div className="text-[10px] text-[#6E6A63] uppercase">
+                ACTIVE SKUS &amp; STOCK
               </div>
-              <div className="text-2xl font-bold text-[#D4860B] mt-1">
-                {products.length} SKUS // {totalUnitsAllHubs}U
+              <div className="text-2xl font-bold text-[#7A491D] mt-1">
+                {products.length} SKUS · {totalUnitsAllHubs}U
               </div>
             </div>
             <div className="p-4">
-              <div className="text-[10px] text-stone-500 uppercase">
+              <div className="text-[10px] text-[#6E6A63] uppercase">
                 SEASONAL CAPSULES
               </div>
-              <div className="text-2xl font-bold text-[#F6F5F1] mt-1">
+              <div className="text-2xl font-bold text-[#111111] mt-1">
                 {collections.length} DROPS
               </div>
             </div>
             <div className="p-4">
-              <div className="text-[10px] text-stone-500 uppercase">
+              <div className="text-[10px] text-[#6E6A63] uppercase">
                 B2B PIPELINE LEADS
               </div>
-              <div className="text-2xl font-bold text-emerald-400 mt-1">
+              <div className="text-2xl font-bold text-[#2E6B35] mt-1">
                 {b2bInquiries.length} DOSSIERS
               </div>
             </div>
             <div className="p-4">
-              <div className="text-[10px] text-stone-500 uppercase">
+              <div className="text-[10px] text-[#6E6A63] uppercase">
                 UNIFIED ORDERS
               </div>
-              <div className="text-2xl font-bold text-[#F6F5F1] mt-1">
+              <div className="text-2xl font-bold text-[#111111] mt-1">
                 {orders.length} LEDGER
               </div>
             </div>
@@ -285,23 +286,23 @@ export default function AdminConsolePage() {
 
       {/* Action Toast Notification */}
       {actionToast && (
-        <div className="mx-auto max-w-[1600px] px-4 pt-6 md:px-8">
-          <div className="border border-[#D4860B] bg-[#181209] px-5 py-3.5 font-mono text-xs text-[#D4860B] flex items-center justify-between">
+        <div className="mx-auto max-w-[1440px] px-4 pt-6 md:px-8">
+          <div className="border border-[#111111] bg-white px-5 py-3.5 font-mono text-xs text-[#111111] font-semibold flex items-center justify-between">
             <span>{actionToast}</span>
             <button
               type="button"
               onClick={() => setActionToast(null)}
-              className="text-stone-400 hover:text-white"
+              className="text-[#6E6A63] hover:text-[#111111] cursor-pointer"
             >
-              [ DISMISS ]
+              DISMISS ×
             </button>
           </div>
         </div>
       )}
 
       {/* 5-Module Navigation Rail */}
-      <section className="mx-auto max-w-[1600px] px-4 py-8 md:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-5 border border-stone-800 mb-10 divide-y sm:divide-y-0 sm:divide-x divide-stone-800">
+      <section className="mx-auto max-w-[1440px] px-4 py-8 md:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-5 border border-[#E5E0D8] mb-10 divide-y sm:divide-y-0 sm:divide-x divide-[#E5E0D8] bg-white">
           {(
             [
               {
@@ -337,15 +338,15 @@ export default function AdminConsolePage() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveModule(tab.id)}
-                className={`p-4 text-left transition-colors ${
+                className={`p-4 text-left transition-colors cursor-pointer ${
                   active
-                    ? "bg-[#E31E24] text-white"
-                    : "bg-[#0E0E10] text-stone-400 hover:bg-stone-900 hover:text-white"
+                    ? "bg-[#111111] text-white"
+                    : "bg-white text-[#4A4742] hover:bg-[#FAF9F6] hover:text-[#111111]"
                 }`}
               >
                 <div
-                  className={`font-mono text-[10px] tracking-[0.2em] uppercase ${
-                    active ? "text-white/90" : "text-[#D4860B]"
+                  className={`font-mono text-[10px] tracking-[0.2em] uppercase font-semibold ${
+                    active ? "text-[#E5E0D8]" : "text-[#7A491D]"
                   }`}
                 >
                   {tab.code}
@@ -364,18 +365,18 @@ export default function AdminConsolePage() {
         {activeModule === "BRAND_CMS" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left: Onboard Partner Brand Form */}
-            <div className="lg:col-span-5 border border-stone-800 bg-[#0E0E10] p-6 md:p-8">
-              <div className="font-mono text-[10px] tracking-[0.24em] text-[#D4860B] uppercase mb-2">
-                [ MODULE 01 // ONBOARD PARTNER FASHION HOUSE ]
+            <div className="lg:col-span-5 border border-[#E5E0D8] bg-white p-6 md:p-8">
+              <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase mb-2">
+                MODULE 01 // ONBOARD PARTNER FASHION HOUSE
               </div>
-              <h2 className="font-display text-2xl font-bold uppercase mb-6">
-                GENERATE /BRANDS/[SLUG] MICROSITE
+              <h2 className="font-display text-2xl font-bold uppercase text-[#111111] mb-6">
+                GENERATE /BRANDS/[SLUG] BOUTIQUE
               </h2>
 
               <form onSubmit={handleCreateBrand} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
                       BRAND NAME *
                     </label>
                     <input
@@ -384,11 +385,11 @@ export default function AdminConsolePage() {
                       value={brandName}
                       onChange={(e) => setBrandName(e.target.value)}
                       placeholder="e.g., KORA ATELIER"
-                      className="w-full border border-stone-700 bg-[#141418] px-3.5 py-2.5 font-mono text-xs text-[#F6F5F1]"
+                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-3.5 py-2.5 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
                       URL SLUG (AUTO IF BLANK)
                     </label>
                     <input
@@ -396,13 +397,13 @@ export default function AdminConsolePage() {
                       value={brandSlug}
                       onChange={(e) => setBrandSlug(e.target.value)}
                       placeholder="kora-atelier"
-                      className="w-full border border-stone-700 bg-[#141418] px-3.5 py-2.5 font-mono text-xs text-[#F6F5F1]"
+                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-3.5 py-2.5 font-mono text-xs text-[#111111]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                  <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
                     ARCHITECTURAL TAGLINE *
                   </label>
                   <input
@@ -411,24 +412,24 @@ export default function AdminConsolePage() {
                     value={brandTagline}
                     onChange={(e) => setBrandTagline(e.target.value)}
                     placeholder="SCULPTURAL DAKAR TAILORING & RAW SILK"
-                    className="w-full border border-stone-700 bg-[#141418] px-3.5 py-2.5 font-mono text-xs text-[#F6F5F1]"
+                    className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-3.5 py-2.5 font-mono text-xs text-[#111111]"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
                       ORIGIN CORRIDOR
                     </label>
                     <input
                       type="text"
                       value={brandOriginCity}
                       onChange={(e) => setBrandOriginCity(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3.5 py-2.5 font-mono text-xs text-[#F6F5F1]"
+                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-3.5 py-2.5 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
                       CREATIVE DIRECTOR
                     </label>
                     <input
@@ -436,11 +437,11 @@ export default function AdminConsolePage() {
                       value={brandDirector}
                       onChange={(e) => setBrandDirector(e.target.value)}
                       placeholder="Amadou Diop"
-                      className="w-full border border-stone-700 bg-[#141418] px-3.5 py-2.5 font-mono text-xs text-[#F6F5F1]"
+                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-3.5 py-2.5 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
                       COMMISSION %
                     </label>
                     <input
@@ -448,26 +449,26 @@ export default function AdminConsolePage() {
                       step="0.5"
                       value={brandCommission}
                       onChange={(e) => setBrandCommission(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3.5 py-2.5 font-mono text-xs text-[#F6F5F1]"
+                      className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-3.5 py-2.5 font-mono text-xs text-[#111111]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                  <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
                     LOOKBOOK CAMPAIGN BANNER URL
                   </label>
                   <input
                     type="text"
                     value={brandBannerUrl}
                     onChange={(e) => setBrandBannerUrl(e.target.value)}
-                    className="w-full border border-stone-700 bg-[#141418] px-3.5 py-2.5 font-mono text-xs text-[#F6F5F1]"
+                    className="w-full border border-[#E5E0D8] bg-[#FAF9F6] px-3.5 py-2.5 font-mono text-xs text-[#111111]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
-                    BRAND BIO & MANIFESTO *
+                  <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-1">
+                    BRAND BIO &amp; MANIFESTO *
                   </label>
                   <textarea
                     rows={3}
@@ -475,12 +476,12 @@ export default function AdminConsolePage() {
                     value={brandBio}
                     onChange={(e) => setBrandBio(e.target.value)}
                     placeholder="Enter house positioning, material philosophy, and continental distribution strategy..."
-                    className="w-full border border-stone-700 bg-[#141418] p-3 font-mono text-xs text-[#F6F5F1]"
+                    className="w-full border border-[#E5E0D8] bg-[#FAF9F6] p-3 font-mono text-xs text-[#111111]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-mono text-[10px] text-stone-400 uppercase mb-2">
+                  <label className="block font-mono text-[10px] text-[#4A4742] font-semibold uppercase mb-2">
                     ALLOCATED DISTRIBUTION REGIONS
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -497,10 +498,10 @@ export default function AdminConsolePage() {
                           key={reg}
                           type="button"
                           onClick={() => handleToggleRegion(reg)}
-                          className={`border px-3 py-1.5 font-mono text-[10px] uppercase ${
+                          className={`border px-3 py-1.5 font-mono text-[10px] uppercase cursor-pointer ${
                             active
-                              ? "border-[#D4860B] bg-[#D4860B]/15 text-[#D4860B]"
-                              : "border-stone-700 text-stone-500"
+                              ? "border-[#111111] bg-[#111111] text-white font-bold"
+                              : "border-[#E5E0D8] bg-[#FAF9F6] text-[#4A4742]"
                           }`}
                         >
                           {reg}
@@ -512,61 +513,60 @@ export default function AdminConsolePage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-[#E31E24] py-3.5 font-mono text-xs font-semibold tracking-[0.22em] text-white uppercase hover:bg-[#D4860B] hover:text-black transition-colors"
+                  className="w-full bg-[#111111] py-3.5 font-mono text-xs font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#E31E24] transition-colors cursor-pointer"
                 >
-                  ONBOARD BRAND & DEPLOY MICROSITE →
+                  ONBOARD BRAND &amp; DEPLOY MICROSITE →
                 </button>
               </form>
             </div>
 
             {/* Right: Active Represented Brands Roster */}
-            <div className="lg:col-span-7 border border-stone-800 bg-[#0E0E10] p-6 md:p-8">
-              <div className="flex items-center justify-between border-b border-stone-800 pb-4 mb-6">
+            <div className="lg:col-span-7 border border-[#E5E0D8] bg-white p-6 md:p-8">
+              <div className="flex items-center justify-between border-b border-[#E5E0D8] pb-4 mb-6">
                 <div>
-                  <div className="font-mono text-[10px] tracking-[0.24em] text-[#D4860B] uppercase">
-                    [ ACTIVE REPRESENTATION PORTFOLIO ]
+                  <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
+                    ACTIVE REPRESENTATION PORTFOLIO
                   </div>
-                  <h3 className="font-display text-2xl font-bold uppercase mt-1">
+                  <h3 className="font-display text-2xl font-bold uppercase text-[#111111] mt-1">
                     {brands.length} HOUSES UNDER MANAGEMENT
                   </h3>
                 </div>
                 <Link
                   href="/brands"
-                  className="border border-stone-700 px-4 py-2 font-mono text-[10px] tracking-[0.2em] text-[#F6F5F1] uppercase hover:border-[#D4860B]"
+                  className="border border-[#111111] bg-white px-4 py-2 font-mono text-[10px] tracking-[0.2em] text-[#111111] uppercase hover:bg-[#111111] hover:text-white transition-colors"
                 >
                   VIEW PUBLIC DIRECTORY →
                 </Link>
               </div>
 
-              <div className="divide-y divide-stone-800 border border-stone-800">
+              <div className="divide-y divide-[#E5E0D8] border border-[#E5E0D8]">
                 {brands.map((b) => (
                   <div
                     key={b.id}
-                    className="p-5 bg-[#0B0B0C] flex flex-wrap items-center justify-between gap-4"
+                    className="p-5 bg-[#FAF9F6] flex flex-wrap items-center justify-between gap-4"
                   >
                     <div className="space-y-1 max-w-xl">
                       <div className="flex items-center gap-3">
-                        <span className="font-display text-xl font-bold uppercase text-[#F6F5F1]">
+                        <span className="font-display text-xl font-bold uppercase text-[#111111]">
                           {b.name}
                         </span>
-                        <span className="border border-stone-700 px-2 py-0.5 font-mono text-[10px] text-[#D4860B] uppercase">
+                        <span className="border border-[#E5E0D8] bg-white px-2.5 py-0.5 font-mono text-[10px] text-[#7A491D] font-semibold uppercase">
                           {b.isProprietary
                             ? "PROPRIETARY HOUSE"
                             : `COMMISSION: ${b.commissionRatePct}%`}
                         </span>
                       </div>
-                      <div className="font-mono text-[10px] tracking-[0.18em] text-stone-400 uppercase">
-                        [ ORIGIN: {b.originCity} // DIRECTOR:{" "}
-                        {b.creativeDirector} ]
+                      <div className="font-mono text-[10px] tracking-[0.16em] text-[#6E6A63] uppercase">
+                        ORIGIN: {b.originCity} · DIRECTOR: {b.creativeDirector}
                       </div>
-                      <p className="text-xs text-stone-400 line-clamp-2 mt-1">
+                      <p className="text-xs text-[#4A4742] line-clamp-2 mt-1">
                         {b.bio}
                       </p>
                       <div className="flex flex-wrap gap-1.5 pt-2">
                         {b.allocatedRegions.map((r) => (
                           <span
                             key={r}
-                            className="border border-stone-800 bg-[#141418] px-2 py-0.5 font-mono text-[9px] text-stone-400 uppercase"
+                            className="border border-[#E5E0D8] bg-white px-2 py-0.5 font-mono text-[9px] text-[#4A4742] uppercase"
                           >
                             {r}
                           </span>
@@ -576,7 +576,7 @@ export default function AdminConsolePage() {
 
                     <Link
                       href={`/brands/${b.slug}`}
-                      className="border border-[#D4860B] px-4 py-2.5 font-mono text-[10px] tracking-[0.2em] text-[#D4860B] uppercase hover:bg-[#D4860B] hover:text-black transition-colors"
+                      className="bg-[#111111] px-4 py-2.5 font-mono text-[10px] tracking-[0.18em] text-white uppercase hover:bg-[#E31E24] transition-colors"
                     >
                       OPEN /BRANDS/{b.slug.toUpperCase()} →
                     </Link>
@@ -591,20 +591,20 @@ export default function AdminConsolePage() {
             MODULE 2: PRODUCT & MULTI-WAREHOUSE SKU MATRIX
            ============================================================ */}
         {activeModule === "SKU_MATRIX" && (
-          <div className="border border-stone-800 bg-[#0E0E10] p-6 md:p-8 space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-800 pb-5">
+          <div className="border border-[#E5E0D8] bg-white p-6 md:p-8 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E5E0D8] pb-5">
               <div>
-                <div className="font-mono text-[10px] tracking-[0.24em] text-[#D4860B] uppercase">
-                  [ MODULE 02 // PRODUCT & MULTI-WAREHOUSE SKU MATRIX ]
+                <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
+                  MODULE 02 // PRODUCT &amp; MULTI-WAREHOUSE SKU MATRIX
                 </div>
-                <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase mt-1">
-                  HUB A (LAGOS) & HUB B (TORONTO) STOCK LEDGER
+                <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase text-[#111111] mt-1">
+                  HUB A (LAGOS) &amp; HUB B (TORONTO) STOCK LEDGER
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setShowNewSkuForm(!showNewSkuForm)}
-                className="bg-[#E31E24] px-5 py-3 font-mono text-xs font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#D4860B] hover:text-black transition-colors"
+                className="bg-[#111111] px-5 py-3 font-mono text-xs font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#E31E24] transition-colors cursor-pointer"
               >
                 {showNewSkuForm ? "CLOSE SKU CREATOR" : "+ REGISTER NEW SKU"}
               </button>
@@ -613,14 +613,14 @@ export default function AdminConsolePage() {
             {showNewSkuForm && (
               <form
                 onSubmit={handleCreateProduct}
-                className="border border-[#D4860B] bg-[#0B0B0C] p-6 space-y-4"
+                className="border border-[#111111] bg-[#FAF9F6] p-6 space-y-4"
               >
-                <div className="font-mono text-xs text-[#D4860B] uppercase">
-                  [ REGISTER NEW MULTI-HUB GARMENT SKU ]
+                <div className="font-mono text-xs text-[#7A491D] font-semibold uppercase">
+                  REGISTER NEW MULTI-HUB GARMENT SKU
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
                       GARMENT TITLE *
                     </label>
                     <input
@@ -629,17 +629,17 @@ export default function AdminConsolePage() {
                       value={newSkuTitle}
                       onChange={(e) => setNewSkuTitle(e.target.value)}
                       placeholder="ASO OKE TRENCH MONOLITH"
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
                       BRAND HOUSE
                     </label>
                     <select
                       value={newSkuBrandSlug}
                       onChange={(e) => setNewSkuBrandSlug(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     >
                       {brands.map((b) => (
                         <option key={b.id} value={b.slug}>
@@ -649,7 +649,7 @@ export default function AdminConsolePage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
                       CATEGORY
                     </label>
                     <select
@@ -659,7 +659,7 @@ export default function AdminConsolePage() {
                           e.target.value as ProductRecord["category"]
                         )
                       }
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     >
                       <option value="OUTERWEAR">OUTERWEAR</option>
                       <option value="KAFTAN_ARCHIVE">KAFTAN_ARCHIVE</option>
@@ -670,7 +670,7 @@ export default function AdminConsolePage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
                       GENDER TARGET
                     </label>
                     <select
@@ -678,7 +678,7 @@ export default function AdminConsolePage() {
                       onChange={(e) =>
                         setNewSkuGender(e.target.value as GenderTarget)
                       }
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     >
                       <option value="UNISEX">UNISEX</option>
                       <option value="MEN">MEN</option>
@@ -686,66 +686,66 @@ export default function AdminConsolePage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
                       FABRIC WEIGHT (GSM)
                     </label>
                     <input
                       type="number"
                       value={newSkuGsm}
                       onChange={(e) => setNewSkuGsm(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
                       BASE PRICE (CAD $)
                     </label>
                     <input
                       type="number"
                       value={newSkuPriceCad}
                       onChange={(e) => setNewSkuPriceCad(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
                       ORIGIN STAMP
                     </label>
                     <input
                       type="text"
                       value={newSkuOrigin}
                       onChange={(e) => setNewSkuOrigin(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
-                      EDITORIAL LOOKBOOK IMAGE URL
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
+                      LOOKBOOK IMAGE URL
                     </label>
                     <input
                       type="text"
                       value={newSkuEditorialImg}
                       onChange={(e) => setNewSkuEditorialImg(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] text-stone-400 uppercase mb-1">
-                      FLAT-LAY HOVER IMAGE URL
+                    <label className="block font-mono text-[10px] text-[#4A4742] uppercase mb-1">
+                      DETAIL HOVER IMAGE URL
                     </label>
                     <input
                       type="text"
                       value={newSkuFlatlayImg}
                       onChange={(e) => setNewSkuFlatlayImg(e.target.value)}
-                      className="w-full border border-stone-700 bg-[#141418] px-3 py-2 font-mono text-xs text-white"
+                      className="w-full border border-[#E5E0D8] bg-white px-3 py-2 font-mono text-xs text-[#111111]"
                     />
                   </div>
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#D4860B] px-6 py-3 font-mono text-xs font-bold tracking-[0.2em] text-black uppercase"
+                  className="bg-[#E31E24] px-6 py-3 font-mono text-xs font-bold tracking-[0.2em] text-white uppercase cursor-pointer"
                 >
-                  DEPLOY SKU TO HUB A & HUB B →
+                  DEPLOY SKU TO HUB A &amp; HUB B →
                 </button>
               </form>
             )}
@@ -757,32 +757,30 @@ export default function AdminConsolePage() {
                 return (
                   <div
                     key={prod.id}
-                    className="border border-stone-800 bg-[#0B0B0C] p-5"
+                    className="border border-[#E5E0D8] bg-[#FAF9F6] p-5"
                   >
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-800 pb-4 mb-4">
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E5E0D8] pb-4 mb-4">
                       <div>
-                        <div className="font-mono text-[10px] tracking-[0.2em] text-[#D4860B] uppercase">
-                          [ {prod.skuPrefix} // {prod.brandName} //{" "}
-                          {prod.fabricWeightGsm} GSM // ORIGIN:{" "}
-                          {prod.originLabel} ]
+                        <div className="font-mono text-[10px] tracking-[0.18em] text-[#7A491D] font-semibold uppercase">
+                          {prod.skuPrefix} · {prod.brandName} ·{" "}
+                          {prod.fabricWeightGsm} GSM · ORIGIN:{" "}
+                          {prod.originLabel}
                         </div>
-                        <h3 className="font-display text-xl font-bold uppercase text-[#F6F5F1] mt-1">
+                        <h3 className="font-display text-xl font-bold uppercase text-[#111111] mt-1">
                           {prod.title}
                         </h3>
                       </div>
 
                       <div className="font-mono text-xs text-right">
-                        <div className="text-[#F6F5F1]">
-                          [ CAD ${prod.basePriceCad} //{" "}
+                        <div className="text-[#111111] font-bold">
+                          CAD ${prod.basePriceCad} ·{" "}
                           {formatCurrencyValue(convertPrice(prod, "NGN"), "NGN")}{" "}
-                          //{" "}
-                          {formatCurrencyValue(convertPrice(prod, "KES"), "KES")}{" "}
-                          ]
+                          ·{" "}
+                          {formatCurrencyValue(convertPrice(prod, "KES"), "KES")}
                         </div>
-                        <div className="text-[10px] text-stone-400 mt-1">
-                          TOTAL ALLOCATION: {stock.total} UNITS (HUB A LAGOS:{" "}
-                          {stock.hubALagos} // HUB B TORONTO: {stock.hubBToronto}
-                          )
+                        <div className="text-[10px] text-[#6E6A63] mt-1">
+                          TOTAL STOCK: {stock.total} UNITS (HUB A LAGOS:{" "}
+                          {stock.hubALagos} · HUB B TORONTO: {stock.hubBToronto})
                         </div>
                       </div>
                     </div>
@@ -791,20 +789,20 @@ export default function AdminConsolePage() {
                       {prod.variants.map((v) => (
                         <div
                           key={v.sku}
-                          className="border border-stone-800 bg-[#111114] p-3 font-mono text-xs"
+                          className="border border-[#E5E0D8] bg-white p-3 font-mono text-xs"
                         >
-                          <div className="flex items-center justify-between border-b border-stone-800 pb-2 mb-2">
-                            <span className="font-bold text-[#F6F5F1]">
+                          <div className="flex items-center justify-between border-b border-[#E5E0D8] pb-2 mb-2">
+                            <span className="font-bold text-[#111111]">
                               SIZE {v.size}
                             </span>
-                            <span className="text-[10px] text-stone-500">
+                            <span className="text-[10px] text-[#6E6A63]">
                               {v.sku}
                             </span>
                           </div>
 
                           {/* Hub A Lagos Stock Control */}
                           <div className="flex items-center justify-between py-1">
-                            <span className="text-[10px] text-stone-400">
+                            <span className="text-[10px] text-[#4A4742]">
                               HUB A (LAGOS):
                             </span>
                             <div className="flex items-center gap-2">
@@ -818,11 +816,11 @@ export default function AdminConsolePage() {
                                     v.hubALagos - 1
                                   )
                                 }
-                                className="border border-stone-700 px-2 py-0.5 text-stone-300 hover:border-[#D4860B]"
+                                className="border border-[#E5E0D8] bg-[#FAF9F6] px-2 py-0.5 text-[#111111] hover:border-[#111111] cursor-pointer"
                               >
                                 -
                               </button>
-                              <span className="w-6 text-center text-[#D4860B] font-bold">
+                              <span className="w-6 text-center text-[#7A491D] font-bold">
                                 {v.hubALagos}
                               </span>
                               <button
@@ -835,7 +833,7 @@ export default function AdminConsolePage() {
                                     v.hubALagos + 1
                                   )
                                 }
-                                className="border border-stone-700 px-2 py-0.5 text-stone-300 hover:border-[#D4860B]"
+                                className="border border-[#E5E0D8] bg-[#FAF9F6] px-2 py-0.5 text-[#111111] hover:border-[#111111] cursor-pointer"
                               >
                                 +
                               </button>
@@ -844,7 +842,7 @@ export default function AdminConsolePage() {
 
                           {/* Hub B Toronto Stock Control */}
                           <div className="flex items-center justify-between py-1">
-                            <span className="text-[10px] text-stone-400">
+                            <span className="text-[10px] text-[#4A4742]">
                               HUB B (TORONTO):
                             </span>
                             <div className="flex items-center gap-2">
@@ -858,11 +856,11 @@ export default function AdminConsolePage() {
                                     v.hubBToronto - 1
                                   )
                                 }
-                                className="border border-stone-700 px-2 py-0.5 text-stone-300 hover:border-[#D4860B]"
+                                className="border border-[#E5E0D8] bg-[#FAF9F6] px-2 py-0.5 text-[#111111] hover:border-[#111111] cursor-pointer"
                               >
                                 -
                               </button>
-                              <span className="w-6 text-center text-emerald-400 font-bold">
+                              <span className="w-6 text-center text-[#2E6B35] font-bold">
                                 {v.hubBToronto}
                               </span>
                               <button
@@ -875,7 +873,7 @@ export default function AdminConsolePage() {
                                     v.hubBToronto + 1
                                   )
                                 }
-                                className="border border-stone-700 px-2 py-0.5 text-stone-300 hover:border-[#D4860B]"
+                                className="border border-[#E5E0D8] bg-[#FAF9F6] px-2 py-0.5 text-[#111111] hover:border-[#111111] cursor-pointer"
                               >
                                 +
                               </button>
@@ -896,35 +894,35 @@ export default function AdminConsolePage() {
            ============================================================ */}
         {activeModule === "DROP_ENGINE" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-5 border border-stone-800 bg-[#0E0E10] p-6 md:p-8 space-y-6">
-              <div className="font-mono text-[10px] tracking-[0.24em] text-[#D4860B] uppercase">
-                [ MODULE 03 // MASTER STORE MODE & VAULT GATE ]
+            <div className="lg:col-span-5 border border-[#E5E0D8] bg-white p-6 md:p-8 space-y-6">
+              <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
+                MODULE 03 // MASTER STORE MODE &amp; VAULT GATE
               </div>
-              <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase">
+              <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase text-[#111111]">
                 VIP TRIBAL TEASER MODE (&ldquo;PREPARING SOMETHING GOOD&rdquo; EVOLUTION)
               </h2>
-              <p className="text-sm text-stone-400 leading-relaxed">
-                Activating the Master Vault Gate replaces the public storefront with the high-fashion evolution of Macklemore Fashion&apos;s geometric tribal teaser page—featuring animated 1px hairline tribal vectors, live drop countdown, and SMS/Email VIP Drop-Locker capture.
+              <p className="text-sm text-[#4A4742] leading-relaxed">
+                Activating the Master Vault Gate switches the public storefront into our warm cream &amp; bronze VIP Drop-Locker teaser page—featuring 1px hairline geometric vectors, countdown timer, and SMS/Email VIP registration.
               </p>
 
-              <div className="border border-stone-800 bg-[#0B0B0C] p-6 space-y-4 font-mono text-xs">
+              <div className="border border-[#E5E0D8] bg-[#FAF9F6] p-6 space-y-4 font-mono text-xs">
                 <div className="flex justify-between">
-                  <span className="text-stone-400">CURRENT VAULT STATUS:</span>
+                  <span className="text-[#6E6A63]">CURRENT VAULT STATUS:</span>
                   <span
                     className={
                       vipTribalTeaserMode
                         ? "text-[#E31E24] font-bold"
-                        : "text-emerald-400 font-bold"
+                        : "text-[#2E6B35] font-bold"
                     }
                   >
                     {vipTribalTeaserMode
-                      ? "[ LOCKED // VIP TEASER ACTIVE ]"
-                      : "[ UNLOCKED // PUBLIC CATALOG LIVE ]"}
+                      ? "LOCKED // VIP TEASER ACTIVE"
+                      : "UNLOCKED // PUBLIC CATALOG LIVE"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-stone-400">DEMO VIP PASSCODE:</span>
-                  <span className="text-[#D4860B]">LAGOS2026</span>
+                  <span className="text-[#6E6A63]">DEMO VIP PASSCODE:</span>
+                  <span className="text-[#7A491D] font-bold">LAGOS2026</span>
                 </div>
               </div>
 
@@ -935,11 +933,11 @@ export default function AdminConsolePage() {
                   setVipTribalTeaserMode(next);
                   triggerToast(
                     next
-                      ? "[ MASTER VAULT ENGAGED ] VISIT / OR /SHOP TO EXPERIENCE THE VIP TRIBAL TEASER OVERLAY."
-                      : "[ MASTER VAULT UNLOCKED ] STOREFRONT RESTORED TO PUBLIC ACCESS."
+                      ? "MASTER VAULT ENGAGED: VISIT / OR /SHOP TO EXPERIENCE THE VIP TEASER OVERLAY."
+                      : "MASTER VAULT UNLOCKED: STOREFRONT RESTORED TO PUBLIC ACCESS."
                   );
                 }}
-                className="w-full bg-[#E31E24] py-4 font-mono text-xs font-semibold tracking-[0.24em] text-white uppercase hover:bg-[#D4860B] hover:text-black transition-colors"
+                className="w-full bg-[#111111] py-4 font-mono text-xs font-semibold tracking-[0.22em] text-white uppercase hover:bg-[#E31E24] transition-colors cursor-pointer"
               >
                 {vipTribalTeaserMode
                   ? "DEACTIVATE VIP TEASER VAULT →"
@@ -947,53 +945,51 @@ export default function AdminConsolePage() {
               </button>
             </div>
 
-            <div className="lg:col-span-7 border border-stone-800 bg-[#0E0E10] p-6 md:p-8 space-y-6">
-              <div className="font-mono text-[10px] tracking-[0.24em] text-[#D4860B] uppercase">
-                [ SEASONAL CAPSULE DROP SCHEDULER ]
+            <div className="lg:col-span-7 border border-[#E5E0D8] bg-white p-6 md:p-8 space-y-6">
+              <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
+                SEASONAL CAPSULE DROP SCHEDULER
               </div>
-              <h3 className="font-display text-2xl font-bold uppercase">
+              <h3 className="font-display text-2xl font-bold uppercase text-[#111111]">
                 COLLECTION RELEASE GATES
               </h3>
 
-              <div className="divide-y divide-stone-800 border border-stone-800">
+              <div className="divide-y divide-[#E5E0D8] border border-[#E5E0D8]">
                 {collections.map((col) => (
                   <div
                     key={col.id}
-                    className="p-5 bg-[#0B0B0C] flex flex-wrap items-center justify-between gap-4"
+                    className="p-5 bg-[#FAF9F6] flex flex-wrap items-center justify-between gap-4"
                   >
                     <div>
-                      <div className="font-mono text-[10px] tracking-[0.2em] text-[#D4860B] uppercase">
-                        {col.seasonCode} // {col.brandName}
+                      <div className="font-mono text-[10px] tracking-[0.18em] text-[#7A491D] font-semibold uppercase">
+                        {col.seasonCode} · {col.brandName}
                       </div>
-                      <div className="font-display text-xl font-bold uppercase text-[#F6F5F1] mt-1">
+                      <div className="font-display text-xl font-bold uppercase text-[#111111] mt-1">
                         {col.title}
                       </div>
-                      <div className="font-mono text-[10px] text-stone-400 mt-1">
-                        RELEASE TIMESTAMP: {col.releaseDate}
+                      <div className="font-mono text-[10px] text-[#6E6A63] mt-1">
+                        RELEASE DATE: {col.releaseDate}
                       </div>
                     </div>
 
                     <div className="flex items-center gap-4">
                       <span
-                        className={`border px-3 py-1 font-mono text-[10px] uppercase ${
+                        className={`border px-3 py-1 font-mono text-[10px] font-semibold uppercase ${
                           col.isDropLive
-                            ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
-                            : "border-[#D4860B] bg-[#D4860B]/10 text-[#D4860B]"
+                            ? "border-[#2E6B35] bg-white text-[#2E6B35]"
+                            : "border-[#E31E24] bg-white text-[#E31E24]"
                         }`}
                       >
-                        {col.isDropLive
-                          ? "[ DROP LIVE ]"
-                          : "[ COUNTDOWN LOCKED ]"}
+                        {col.isDropLive ? "DROP LIVE" : "COUNTDOWN LOCKED"}
                       </span>
                       <button
                         type="button"
                         onClick={() => {
                           toggleCollectionLive(col.id);
                           triggerToast(
-                            `[ DROP ENGINE ] UPDATED RELEASE STATE FOR ${col.title}.`
+                            `DROP ENGINE: UPDATED RELEASE STATE FOR ${col.title}.`
                           );
                         }}
-                        className="border border-stone-700 px-4 py-2 font-mono text-[10px] tracking-[0.2em] text-[#F6F5F1] uppercase hover:border-[#D4860B]"
+                        className="border border-[#111111] bg-white px-4 py-2 font-mono text-[10px] tracking-[0.18em] text-[#111111] uppercase hover:bg-[#111111] hover:text-white transition-colors cursor-pointer"
                       >
                         {col.isDropLive ? "LOCK CAPSULE" : "UNLOCK DROP NOW"}
                       </button>
@@ -1009,69 +1005,69 @@ export default function AdminConsolePage() {
             MODULE 4: B2B LEAD MANAGEMENT & WHOLESALE DESK
            ============================================================ */}
         {activeModule === "B2B_DESK" && (
-          <div className="border border-stone-800 bg-[#0E0E10] p-6 md:p-8 space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-800 pb-4">
+          <div className="border border-[#E5E0D8] bg-white p-6 md:p-8 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E5E0D8] pb-4">
               <div>
-                <div className="font-mono text-[10px] tracking-[0.24em] text-[#D4860B] uppercase">
-                  [ MODULE 04 // B2B BRAND REPRESENTATION & WHOLESALE DESK ]
+                <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
+                  MODULE 04 // B2B BRAND REPRESENTATION &amp; WHOLESALE DESK
                 </div>
-                <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase mt-1">
-                  INCOMING REPRESENTATION & WHOLESALE PIPELINE
+                <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase text-[#111111] mt-1">
+                  INCOMING REPRESENTATION &amp; WHOLESALE PIPELINE
                 </h2>
               </div>
               <Link
                 href="/partnerships"
-                className="border border-stone-700 px-4 py-2.5 font-mono text-[10px] tracking-[0.2em] text-[#F6F5F1] uppercase hover:border-[#D4860B]"
+                className="border border-[#111111] bg-white px-4 py-2.5 font-mono text-[10px] tracking-[0.2em] text-[#111111] uppercase hover:bg-[#111111] hover:text-white transition-colors"
               >
                 OPEN PUBLIC /PARTNERSHIPS PORTAL →
               </Link>
             </div>
 
-            <div className="divide-y divide-stone-800 border border-stone-800">
+            <div className="divide-y divide-[#E5E0D8] border border-[#E5E0D8]">
               {b2bInquiries.map((inq) => (
-                <div key={inq.id} className="p-6 bg-[#0B0B0C] space-y-4">
+                <div key={inq.id} className="p-6 bg-[#FAF9F6] space-y-4">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-3">
-                        <span className="font-mono text-xs font-bold text-[#D4860B]">
-                          [{inq.referenceCode}]
+                        <span className="font-mono text-xs font-bold text-[#7A491D]">
+                          {inq.referenceCode}
                         </span>
-                        <span className="border border-stone-700 px-2.5 py-0.5 font-mono text-[10px] text-stone-300 uppercase">
+                        <span className="border border-[#E5E0D8] bg-white px-2.5 py-0.5 font-mono text-[10px] text-[#4A4742] uppercase">
                           {inq.channel}
                         </span>
-                        <span className="border border-[#E31E24] bg-[#E31E24]/10 px-2.5 py-0.5 font-mono text-[10px] text-[#E31E24] uppercase">
+                        <span className="border border-[#E31E24] bg-white px-2.5 py-0.5 font-mono text-[10px] text-[#E31E24] font-semibold uppercase">
                           STATUS: {inq.status}
                         </span>
                       </div>
-                      <h3 className="font-display text-2xl font-bold uppercase text-[#F6F5F1] mt-2">
+                      <h3 className="font-display text-2xl font-bold uppercase text-[#111111] mt-2">
                         {inq.brandOrCompanyName} — {inq.headquartersCountry}
                       </h3>
-                      <div className="font-mono text-xs text-stone-400 mt-1">
-                        CONTACT: {inq.contactName} ({inq.contactRole}) //{" "}
-                        {inq.email} // {inq.phone}
+                      <div className="font-mono text-xs text-[#4A4742] mt-1">
+                        CONTACT: {inq.contactName} ({inq.contactRole}) ·{" "}
+                        {inq.email} · {inq.phone}
                       </div>
                     </div>
 
                     <div className="font-mono text-right text-xs">
-                      <div className="text-[#D4860B]">
+                      <div className="text-[#7A491D] font-semibold">
                         TIER: {inq.annualVolumeTier}
                       </div>
-                      <div className="text-stone-400 text-[11px] mt-1">
+                      <div className="text-[#6E6A63] text-[11px] mt-1">
                         DESK: {inq.assignedExecutive}
                       </div>
                     </div>
                   </div>
 
-                  <p className="text-xs text-stone-300 leading-relaxed border-l-2 border-stone-700 pl-4 py-1">
+                  <p className="text-xs text-[#111111] leading-relaxed border-l-2 border-[#7A491D] pl-4 py-1 bg-white">
                     {inq.message}
                   </p>
 
-                  <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-stone-800/80">
+                  <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[#E5E0D8]">
                     <div className="flex flex-wrap gap-1.5">
                       {inq.targetRegions.map((reg) => (
                         <span
                           key={reg}
-                          className="border border-stone-800 bg-[#141418] px-2.5 py-1 font-mono text-[10px] text-stone-400 uppercase"
+                          className="border border-[#E5E0D8] bg-white px-2.5 py-1 font-mono text-[10px] text-[#4A4742] uppercase"
                         >
                           TARGET: {reg}
                         </span>
@@ -1079,8 +1075,8 @@ export default function AdminConsolePage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-[10px] text-stone-500 uppercase mr-1">
-                        ADVANCE PIPELINE STAGE:
+                      <span className="font-mono text-[10px] text-[#6E6A63] uppercase mr-1">
+                        ADVANCE STAGE:
                       </span>
                       {(
                         [
@@ -1096,13 +1092,13 @@ export default function AdminConsolePage() {
                           onClick={() => {
                             updateB2BStatus(inq.id, st);
                             triggerToast(
-                              `[ B2B PIPELINE ] ${inq.referenceCode} (${inq.brandOrCompanyName}) UPDATED TO ${st}.`
+                              `B2B PIPELINE: ${inq.referenceCode} (${inq.brandOrCompanyName}) UPDATED TO ${st}.`
                             );
                           }}
-                          className={`border px-3 py-1.5 font-mono text-[10px] uppercase transition-colors ${
+                          className={`border px-3 py-1.5 font-mono text-[10px] uppercase transition-colors cursor-pointer ${
                             inq.status === st
-                              ? "border-[#D4860B] bg-[#D4860B] text-black font-bold"
-                              : "border-stone-700 text-stone-300 hover:border-[#D4860B]"
+                              ? "border-[#111111] bg-[#111111] text-white font-bold"
+                              : "border-[#E5E0D8] bg-white text-[#4A4742] hover:border-[#111111]"
                           }`}
                         >
                           {st}
@@ -1120,77 +1116,79 @@ export default function AdminConsolePage() {
             MODULE 5: UNIFIED ORDER & PAYMENT RECONCILIATION
            ============================================================ */}
         {activeModule === "ORDER_RECONCILIATION" && (
-          <div className="border border-stone-800 bg-[#0E0E10] p-6 md:p-8 space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-800 pb-4">
+          <div className="border border-[#E5E0D8] bg-white p-6 md:p-8 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E5E0D8] pb-4">
               <div>
-                <div className="font-mono text-[10px] tracking-[0.24em] text-[#D4860B] uppercase">
-                  [ MODULE 05 // UNIFIED ORDER & MULTI-GATEWAY RECONCILIATION ]
+                <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
+                  MODULE 05 // UNIFIED ORDER &amp; MULTI-GATEWAY RECONCILIATION
                 </div>
-                <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase mt-1">
+                <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase text-[#111111] mt-1">
                   STRIPE · PAYSTACK · M-PESA DARAJA 2.0 AUDIT LEDGER
                 </h2>
               </div>
               <Link
                 href="/checkout"
-                className="bg-[#E31E24] px-4 py-2.5 font-mono text-[10px] font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#D4860B] hover:text-black"
+                className="bg-[#111111] px-4 py-2.5 font-mono text-[10px] font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#E31E24]"
               >
                 SIMULATE NEW CHECKOUT →
               </Link>
             </div>
 
-            <div className="divide-y divide-stone-800 border border-stone-800">
+            <div className="divide-y divide-[#E5E0D8] border border-[#E5E0D8]">
               {orders.map((ord) => (
-                <div key={ord.id} className="p-6 bg-[#0B0B0C] space-y-4">
+                <div key={ord.id} className="p-6 bg-[#FAF9F6] space-y-4">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <span className="font-mono text-sm font-bold text-[#F6F5F1]">
+                        <span className="font-mono text-sm font-bold text-[#111111]">
                           {ord.orderNumber}
                         </span>
-                        <span className="border border-stone-700 px-2.5 py-0.5 font-mono text-[10px] text-[#D4860B] uppercase">
+                        <span className="border border-[#E5E0D8] bg-white px-2.5 py-0.5 font-mono text-[10px] text-[#7A491D] font-semibold uppercase">
                           {ord.paymentProvider}
                         </span>
                         <span
-                          className={`border px-2.5 py-0.5 font-mono text-[10px] uppercase ${
+                          className={`border px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase bg-white ${
                             ord.paymentStatus === "SUCCEEDED" ||
                             ord.paymentStatus === "RECONCILED_MANUALLY"
-                              ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
-                              : "border-amber-500/40 bg-amber-500/10 text-amber-300"
+                              ? "border-[#2E6B35] text-[#2E6B35]"
+                              : "border-[#E05C1A] text-[#E05C1A]"
                           }`}
                         >
                           PAYMENT: {ord.paymentStatus}
                         </span>
-                        <span className="border border-stone-700 px-2.5 py-0.5 font-mono text-[10px] text-stone-300 uppercase">
+                        <span className="border border-[#E5E0D8] bg-white px-2.5 py-0.5 font-mono text-[10px] text-[#4A4742] uppercase">
                           ORDER: {ord.status}
                         </span>
                       </div>
 
-                      <div className="font-mono text-xs text-stone-300 mt-2">
+                      <div className="font-mono text-xs text-[#111111] mt-2">
                         CLIENT: <strong>{ord.customerName}</strong> (
-                        {ord.customerEmail} // {ord.customerPhone})
+                        {ord.customerEmail} · {ord.customerPhone})
                       </div>
-                      <div className="font-mono text-[11px] text-stone-400 mt-0.5">
+                      <div className="font-mono text-[11px] text-[#4A4742] mt-0.5">
                         DESTINATION: {ord.destinationCity},{" "}
-                        {ord.destinationCountry} // ASSIGNED HUB:{" "}
-                        <span className="text-[#D4860B]">{ord.assignedHub}</span>{" "}
+                        {ord.destinationCountry} · ASSIGNED HUB:{" "}
+                        <span className="text-[#7A491D] font-semibold">
+                          {ord.assignedHub}
+                        </span>{" "}
                         ({ord.courierPartner})
                       </div>
                     </div>
 
                     <div className="text-right font-mono">
-                      <div className="text-lg font-bold text-[#D4860B]">
-                        [ {formatCurrencyValue(ord.totalAmount, ord.currency)} ]
+                      <div className="text-lg font-bold text-[#111111]">
+                        {formatCurrencyValue(ord.totalAmount, ord.currency)}
                       </div>
-                      <div className="text-[10px] text-stone-400 mt-1">
+                      <div className="text-[10px] text-[#6E6A63] mt-1">
                         REF: {ord.paymentReference}
                       </div>
                       {ord.mpesaReceiptNumber && (
-                        <div className="text-[10px] text-emerald-400">
+                        <div className="text-[10px] text-[#2E6B35] font-semibold">
                           M-PESA RECEIPT: {ord.mpesaReceiptNumber}
                         </div>
                       )}
                       {ord.waybillNumber && (
-                        <div className="text-[10px] text-[#F6F5F1] mt-0.5">
+                        <div className="text-[10px] text-[#111111] font-semibold mt-0.5">
                           WAYBILL: {ord.waybillNumber}
                         </div>
                       )}
@@ -1198,17 +1196,17 @@ export default function AdminConsolePage() {
                   </div>
 
                   {/* Line Items */}
-                  <div className="border border-stone-800 bg-[#111114] p-3 font-mono text-xs divide-y divide-stone-800">
+                  <div className="border border-[#E5E0D8] bg-white p-3 font-mono text-xs divide-y divide-[#E5E0D8]">
                     {ord.items.map((item, i) => (
                       <div
                         key={i}
-                        className="py-1.5 flex items-center justify-between"
+                        className="py-1.5 flex items-center justify-between text-[#111111]"
                       >
                         <span>
                           [{item.brandName}] {item.productTitle} — SIZE:{" "}
                           {item.size} × {item.quantity}
                         </span>
-                        <span>
+                        <span className="font-semibold">
                           {formatCurrencyValue(
                             item.unitPrice * item.quantity,
                             ord.currency
@@ -1236,10 +1234,10 @@ export default function AdminConsolePage() {
                               receipt
                             );
                             triggerToast(
-                              `[ DARAJA 2.0 STK PUSH RETRY ] CALLBACK VERIFIED FOR ${ord.orderNumber}. RECEIPT: ${receipt}`
+                              `DARAJA 2.0 STK PUSH RETRY: CALLBACK VERIFIED FOR ${ord.orderNumber}. RECEIPT: ${receipt}`
                             );
                           }}
-                          className="border border-emerald-500/60 bg-emerald-500/10 px-3.5 py-2 font-mono text-[10px] tracking-[0.18em] text-emerald-300 uppercase hover:bg-emerald-500 hover:text-black"
+                          className="border border-[#2E6B35] bg-white px-3.5 py-2 font-mono text-[10px] font-semibold tracking-[0.16em] text-[#2E6B35] uppercase hover:bg-[#2E6B35] hover:text-white cursor-pointer"
                         >
                           TRIGGER M-PESA STK PUSH RETRY / RECONCILE
                         </button>
@@ -1251,10 +1249,10 @@ export default function AdminConsolePage() {
                           onClick={() => {
                             updateOrderStatus(ord.id, "PAID", "SUCCEEDED");
                             triggerToast(
-                              `[ PAYSTACK WEBHOOK VERIFY ] NGN/GHS SETTLEMENT CONFIRMED FOR ${ord.orderNumber}.`
+                              `PAYSTACK WEBHOOK VERIFY: NGN/GHS SETTLEMENT CONFIRMED FOR ${ord.orderNumber}.`
                             );
                           }}
-                          className="border border-[#D4860B] bg-[#D4860B]/10 px-3.5 py-2 font-mono text-[10px] tracking-[0.18em] text-[#D4860B] uppercase hover:bg-[#D4860B] hover:text-black"
+                          className="border border-[#7A491D] bg-white px-3.5 py-2 font-mono text-[10px] font-semibold tracking-[0.16em] text-[#7A491D] uppercase hover:bg-[#7A491D] hover:text-white cursor-pointer"
                         >
                           VERIFY PAYSTACK WEBHOOK SIGNATURE
                         </button>
@@ -1277,17 +1275,17 @@ export default function AdminConsolePage() {
                             wb
                           );
                           triggerToast(
-                            `[ WAYBILL GENERATED ] ${ord.orderNumber} DISPATCHED VIA ${ord.courierPartner} (WAYBILL: ${wb}).`
+                            `WAYBILL GENERATED: ${ord.orderNumber} DISPATCHED VIA ${ord.courierPartner} (WAYBILL: ${wb}).`
                           );
                         }}
-                        className="border border-stone-700 bg-[#141418] px-3.5 py-2 font-mono text-[10px] tracking-[0.18em] text-[#F6F5F1] uppercase hover:border-[#D4860B]"
+                        className="border border-[#111111] bg-[#111111] px-3.5 py-2 font-mono text-[10px] font-semibold tracking-[0.16em] text-white uppercase hover:bg-[#E31E24] hover:border-[#E31E24] cursor-pointer"
                       >
-                        GENERATE WAYBILL & DISPATCH NOTE
+                        GENERATE WAYBILL &amp; DISPATCH NOTE
                       </button>
                     </div>
 
-                    <div className="font-mono text-[10px] text-stone-500 uppercase">
-                      TIMESTAMP: {ord.createdAt.slice(0, 10)}
+                    <div className="font-mono text-[10px] text-[#6E6A63] uppercase">
+                      DATE: {ord.createdAt.slice(0, 10)}
                     </div>
                   </div>
                 </div>
@@ -1299,4 +1297,3 @@ export default function AdminConsolePage() {
     </div>
   );
 }
-

@@ -11,53 +11,53 @@ import {
 
 export default function OurStoryPage() {
   return (
-    <div className="min-h-screen bg-[#0B0B0C] text-[#F6F5F1]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#111111]">
       {/* Hero Section */}
-      <section className="relative border-b border-stone-800 px-4 py-20 md:px-8 md:py-28 overflow-hidden">
+      <section className="relative border-b border-[#E5E0D8] bg-white px-4 py-16 md:px-8 md:py-24 overflow-hidden">
         <TribalCornerWatermark
           position="top-left"
-          className="text-[#D4860B]"
-          opacity={0.07}
+          className="text-[#7A491D]"
+          opacity={0.05}
         />
         <TribalCornerWatermark
           position="bottom-right"
           className="text-[#E31E24]"
-          opacity={0.07}
+          opacity={0.05}
         />
 
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-[1440px]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
             <div className="lg:col-span-8">
-              <div className="font-mono text-[10px] tracking-[0.28em] text-[#D4860B] uppercase mb-4">
-                [ THE BRAND MANIFESTO // TORONTO — LAGOS — NAIROBI ]
+              <div className="font-mono text-[10px] tracking-[0.26em] text-[#7A491D] font-semibold uppercase mb-4">
+                THE BRAND MANIFESTO // TORONTO — LAGOS — NAIROBI (254)
               </div>
               <StaggeredText
-                text="SOVEREIGNTY IN CLOTH. AUTHORITY IN LOGISTICS."
+                text="A PIECE OF THE CONTINENT WHEREVER YOU GO. YOU BELONG."
                 as="h1"
-                className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.03em] uppercase leading-[0.93]"
+                className="font-display text-4xl sm:text-6xl font-bold tracking-tight uppercase leading-[0.95] text-[#111111]"
               />
-              <p className="mt-8 max-w-2xl text-base text-stone-300 leading-relaxed">
-                Macklemore Fashion is a Canadian-incorporated luxury fashion enterprise with primary operational and creative headquarters in Victoria Island, Lagos, Nigeria. We exist to bridge the creative and logistical divide between the global diaspora and the African continent.
+              <p className="mt-6 max-w-2xl text-base text-[#4A4742] leading-relaxed">
+                Macklemore Fashion is a Canadian-incorporated luxury &amp; streetwear enterprise with primary operational and creative headquarters in Victoria Island, Lagos, Nigeria, and regional presence in Nairobi (254) and Accra. We exist to unite authentic African pride and comfort with multi-brand international luxury curation.
               </p>
             </div>
-            <div className="lg:col-span-4 border border-stone-800 bg-[#111113] p-6">
-              <MacklemoreLogo showSubline className="mb-4" />
-              <div className="border-t border-stone-800 pt-4 space-y-2 font-mono text-[10px] tracking-[0.18em] text-stone-400 uppercase">
+            <div className="lg:col-span-4 border border-[#E5E0D8] bg-[#FAF9F6] p-6">
+              <MacklemoreLogo showSubline theme="light" className="mb-4" />
+              <div className="border-t border-[#E5E0D8] pt-4 space-y-2 font-mono text-[10px] tracking-[0.18em] text-[#6E6A63] uppercase">
                 <div className="flex justify-between">
                   <span>INCORPORATION:</span>
-                  <span className="text-[#F6F5F1]">TORONTO, ONTARIO, CANADA</span>
+                  <span className="text-[#111111] font-semibold">TORONTO, CANADA</span>
                 </div>
                 <div className="flex justify-between">
                   <span>OPERATIONAL HQ:</span>
-                  <span className="text-[#F6F5F1]">VICTORIA ISLAND, LAGOS</span>
+                  <span className="text-[#111111] font-semibold">VICTORIA ISLAND, LAGOS</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>EAST AFRICA NODE:</span>
-                  <span className="text-[#F6F5F1]">WESTLANDS, NAIROBI</span>
+                  <span>EAST AFRICA HUB:</span>
+                  <span className="text-[#111111] font-semibold">WESTLANDS, NAIROBI (254)</span>
                 </div>
                 <div className="flex justify-between">
                   <span>TEXTILE STANDARD:</span>
-                  <span className="text-[#D4860B]">480–620 GSM ARCHIVAL</span>
+                  <span className="text-[#7A491D] font-semibold">480–620 GSM ARCHIVAL</span>
                 </div>
               </div>
             </div>
@@ -65,12 +65,12 @@ export default function OurStoryPage() {
         </div>
       </section>
 
-      {/* Dual Identity Section on Bone Canvas */}
-      <section className="bg-[#F6F5F1] text-[#0B0B0C] border-b border-neutral-300 px-4 py-20 md:px-8">
-        <div className="mx-auto max-w-[1600px]">
+      {/* Dual Identity Section */}
+      <section className="bg-[#FAF9F6] text-[#111111] border-b border-[#E5E0D8] px-4 py-16 md:px-8 md:py-24">
+        <div className="mx-auto max-w-[1440px]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
-              <CurtainReveal className="aspect-[4/5] border border-neutral-300 bg-neutral-900">
+              <CurtainReveal className="aspect-[4/5] border border-[#E5E0D8] bg-[#F3EFEA]">
                 <img
                   src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1400&q=85"
                   alt="Macklemore Atelier Lagos"
@@ -79,39 +79,39 @@ export default function OurStoryPage() {
               </CurtainReveal>
             </div>
             <div className="lg:col-span-6 space-y-6">
-              <div className="font-mono text-[11px] tracking-[0.25em] text-[#7A491D] uppercase">
-                [ PILLAR 01 // THE TORONTO–LAGOS BRIDGE ]
+              <div className="font-mono text-[11px] tracking-[0.24em] text-[#7A491D] font-semibold uppercase">
+                PILLAR 01 // THE TORONTO–LAGOS–NAIROBI BRIDGE
               </div>
-              <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] uppercase leading-[0.98]">
-                TWO HEMISPHERES. ONE UNIFIED STANDARD.
+              <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight uppercase leading-[0.98] text-[#111111]">
+                EVERYDAY COMFORT MEETS MULTI-BRAND LUXURY.
               </h2>
-              <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
-                For decades, African luxury consumers and international fashion houses faced a fractured ecosystem: indigenous craftsmanship was exported without institutional infrastructure, while global luxury houses viewed West and East Africa as unreachable secondary markets due to customs friction and payment fragmentation.
+              <p className="text-sm sm:text-base text-[#4A4742] leading-relaxed">
+                Inspired by the community warmth of East African streetwear and the curated gallery authority of global luxury retail, Macklemore Fashion bridges two worlds: heavyweight everyday staples and museum-grade designer tailoring.
               </p>
-              <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
-                Macklemore Fashion engineered the solution from the ground up. By anchoring our corporate treasury and North American distribution hub in Toronto (Hub B) while operating our primary creative studio, bonded warehouse, and ECOWAS logistics command in Lagos (Hub A), we operate as a true trans-continental bridge.
+              <p className="text-sm sm:text-base text-[#4A4742] leading-relaxed">
+                By anchoring our North American distribution hub in Toronto (Hub B) while operating our primary creative studio, bonded warehouse, and ECOWAS/EAC logistics command in Lagos (Hub A) and Nairobi (254), we deliver across both hemispheres in 24 to 72 hours.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 border border-neutral-300 bg-white divide-y sm:divide-y-0 sm:divide-x divide-neutral-300 pt-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 border border-[#E5E0D8] bg-white divide-y sm:divide-y-0 sm:divide-x divide-[#E5E0D8]">
                 <div className="p-6">
-                  <div className="font-mono text-[10px] tracking-[0.2em] text-[#E31E24] uppercase mb-2">
-                    [ PROPRIETARY ATELIER ]
+                  <div className="font-mono text-[10px] tracking-[0.2em] text-[#E31E24] font-semibold uppercase mb-2">
+                    PROPRIETARY LABEL
                   </div>
-                  <div className="font-display text-xl font-bold uppercase mb-2">
-                    MACKLEMORE LABEL
+                  <div className="font-display text-xl font-bold uppercase text-[#111111] mb-2">
+                    MACKLEMORE ARCHIVE
                   </div>
-                  <p className="text-xs text-neutral-600 leading-relaxed">
-                    Seasonal architectural drops combining 600 GSM Canadian-milled fleece and virgin wool with hand-loomed Nigerian Aso Oke and Abeokuta Adire.
+                  <p className="text-xs text-[#4A4742] leading-relaxed">
+                    Seasonal drops combining 540–620 GSM heavyweight fleece and virgin wool with hand-loomed Nigerian Aso Oke and Abeokuta Adire.
                   </p>
                 </div>
                 <div className="p-6">
-                  <div className="font-mono text-[10px] tracking-[0.2em] text-[#7A491D] uppercase mb-2">
-                    [ CONTINENTAL SYNDICATE ]
+                  <div className="font-mono text-[10px] tracking-[0.2em] text-[#7A491D] font-semibold uppercase mb-2">
+                    THE COLLECTIVE HOUSES
                   </div>
-                  <div className="font-display text-xl font-bold uppercase mb-2">
-                    PARTNER HOUSES
+                  <div className="font-display text-xl font-bold uppercase text-[#111111] mb-2">
+                    PARTNER DESIGNERS
                   </div>
-                  <p className="text-xs text-neutral-600 leading-relaxed">
+                  <p className="text-xs text-[#4A4742] leading-relaxed">
                     Exclusive African representation, bonded warehousing, and localized checkout for partner houses including LUCA, Kojo Accra, and Savannah Studio 254.
                   </p>
                 </div>
@@ -121,76 +121,76 @@ export default function OurStoryPage() {
         </div>
       </section>
 
-      <TribalSectionSeparator />
+      <TribalSectionSeparator theme="light" />
 
       {/* Supply Chain & Sustainability Standards */}
-      <section className="mx-auto max-w-[1600px] px-4 py-20 md:px-8">
+      <section className="mx-auto max-w-[1440px] px-4 py-16 md:px-8 md:py-24">
         <div className="mb-12">
-          <div className="font-mono text-[10px] tracking-[0.26em] text-[#D4860B] uppercase mb-3">
-            [ PILLAR 02 // MATERIAL INTEGRITY & SUPPLY CHAIN ]
+          <div className="font-mono text-[10px] tracking-[0.24em] text-[#7A491D] font-semibold uppercase mb-3">
+            PILLAR 02 // MATERIAL INTEGRITY &amp; COMMUNITY IMPACT
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] uppercase">
-            HERITAGE WEAVING MEETS INDUSTRIAL SPECIFICATION.
+          <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight uppercase text-[#111111]">
+            HERITAGE WEAVING &amp; INTENTIONAL CRAFTSMANSHIP.
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 border border-stone-800 divide-y md:divide-y-0 md:divide-x divide-stone-800">
-          <div className="p-8 bg-[#0E0E10]">
-            <div className="font-mono text-xs text-[#D4860B] mb-3">
-              [ 01 // ISEYIN & ABEOKUTA ARTISAN GUILDS ]
+        <div className="grid grid-cols-1 md:grid-cols-3 border border-[#E5E0D8] divide-y md:divide-y-0 md:divide-x divide-[#E5E0D8] bg-white">
+          <div className="p-8">
+            <div className="font-mono text-xs text-[#7A491D] font-semibold mb-3">
+              01 // ISEYIN &amp; ABEOKUTA ARTISAN GUILDS
             </div>
-            <h3 className="font-display text-2xl font-bold uppercase mb-4">
+            <h3 className="font-display text-2xl font-bold uppercase text-[#111111] mb-4">
               DIRECT ARTISAN EQUITY
             </h3>
-            <p className="text-sm text-stone-400 leading-relaxed">
-              We contract directly with master strip-weavers in Iseyin (Oyo State), indigo fermentation vats in Abeokuta (Ogun State), and Kente looms in Bonwire (Ashanti Region). Every yard carries a provenance serial code and pays 3.4x standard regional artisan wages.
+            <p className="text-sm text-[#4A4742] leading-relaxed">
+              We contract directly with master strip-weavers in Iseyin (Oyo State), indigo fermentation vats in Abeokuta (Ogun State), and Kente looms in Bonwire (Ashanti Region), paying 3.4x regional artisan wages.
             </p>
           </div>
 
-          <div className="p-8 bg-[#0E0E10]">
-            <div className="font-mono text-xs text-[#E31E24] mb-3">
-              [ 02 // HEAVYWEIGHT GSM ARCHITECTURE ]
+          <div className="p-8">
+            <div className="font-mono text-xs text-[#E31E24] font-semibold mb-3">
+              02 // HEAVYWEIGHT GSM COMFORT
             </div>
-            <h3 className="font-display text-2xl font-bold uppercase mb-4">
-              ZERO-DISPOSABILITY MILLING
+            <h3 className="font-display text-2xl font-bold uppercase text-[#111111] mb-4">
+              BUILT TO BELONG &amp; ENDURE
             </h3>
-            <p className="text-sm text-stone-400 leading-relaxed">
-              We reject fast-fashion obsolescence. Our knitwear and jersey programs start at a minimum of 460 GSM up to 620 GSM double-faced wool, engineered for multi-decade structural permanence and numbered allocation runs.
+            <p className="text-sm text-[#4A4742] leading-relaxed">
+              Every hoodie, lounge set, kaftan, and overcoat is milled between 460 GSM and 620 GSM for unmatched drape, everyday comfort, and multi-decade durability.
             </p>
           </div>
 
-          <div className="p-8 bg-[#0E0E10]">
-            <div className="font-mono text-xs text-[#D4860B] mb-3">
-              [ 03 // BI-HEMISPHERE FULFILLMENT ]
+          <div className="p-8">
+            <div className="font-mono text-xs text-[#7A491D] font-semibold mb-3">
+              03 // BI-HEMISPHERE FULFILLMENT
             </div>
-            <h3 className="font-display text-2xl font-bold uppercase mb-4">
-              REDUCED AIR-MILE ROUTING
+            <h3 className="font-display text-2xl font-bold uppercase text-[#111111] mb-4">
+              LOCALIZED AFRICAN LOGISTICS
             </h3>
-            <p className="text-sm text-stone-400 leading-relaxed">
-              By stocking African-manufactured garments directly inside Hub A (Lagos) for West & East African patrons, we eliminate redundant round-trip air freight to Europe or North America before reaching African consumers.
+            <p className="text-sm text-[#4A4742] leading-relaxed">
+              By stocking garments directly inside Hub A (Lagos) and our Nairobi 254 node, African shoppers enjoy local currency checkout (NGN, GHS, KES) and 24–72 hour delivery.
             </p>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap items-center justify-between gap-6 border border-stone-800 bg-[#111113] p-8">
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-6 border border-[#E5E0D8] bg-white p-8">
           <div>
-            <div className="font-mono text-[10px] tracking-[0.22em] text-[#D4860B] uppercase">
-              [ READY TO EXPLORE THE ECOSYSTEM? ]
+            <div className="font-mono text-[10px] tracking-[0.22em] text-[#7A491D] font-semibold uppercase">
+              READY TO EXPLORE THE ECOSYSTEM?
             </div>
-            <div className="font-display text-2xl font-bold uppercase mt-1">
-              SHOP THE ARCHIVE OR APPLY FOR CONTINENTAL REPRESENTATION.
+            <div className="font-display text-2xl font-bold uppercase text-[#111111] mt-1">
+              SHOP THE CATALOG OR APPLY FOR BRAND REPRESENTATION.
             </div>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link
               href="/shop"
-              className="bg-[#E31E24] px-6 py-3.5 font-mono text-xs font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#D4860B] hover:text-black transition-colors"
+              className="bg-[#111111] px-6 py-3.5 font-mono text-xs font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#E31E24] transition-colors"
             >
-              ENTER THE CATALOG →
+              SHOP THE CATALOG →
             </Link>
             <Link
               href="/partnerships"
-              className="border border-stone-700 px-6 py-3.5 font-mono text-xs tracking-[0.2em] text-[#F6F5F1] uppercase hover:border-[#D4860B]"
+              className="border border-[#111111] bg-white px-6 py-3.5 font-mono text-xs tracking-[0.2em] text-[#111111] uppercase hover:bg-[#111111] hover:text-white transition-colors"
             >
               B2B REPRESENTATION PORTAL →
             </Link>
@@ -200,4 +200,3 @@ export default function OurStoryPage() {
     </div>
   );
 }
-

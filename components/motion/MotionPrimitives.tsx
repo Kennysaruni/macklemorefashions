@@ -247,43 +247,45 @@ export function EditorialDrawer({
       style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
       aria-hidden={!isOpen}
     >
-      {/* Obsidian Backdrop Blur */}
+      {/* Warm Soft Backdrop Blur */}
       <div
         onClick={onClose}
-        className="absolute inset-0 backdrop-blur-md bg-black/60"
+        className="absolute inset-0 backdrop-blur-sm bg-[#1F1A17]/30"
       />
 
       {/* Single-Axis Panel */}
       <aside
         data-native-scroll="true"
-        className={`absolute top-0 right-0 bottom-0 w-full ${widthClass} bg-[#0B0B0C] text-[#F6F5F1] border-l border-stone-800 flex flex-col justify-between transition-transform duration-700`}
+        className={`absolute top-0 right-0 bottom-0 w-full ${widthClass} bg-[#FFFDF9] text-[#1F1A17] border-l border-[#EADFD0] sm:rounded-l-lg shadow-2xl flex flex-col justify-between transition-transform duration-500`}
         style={{
           transform: isOpen ? "translate3d(0%, 0, 0)" : "translate3d(100%, 0, 0)",
           transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
         {/* Drawer Header */}
-        <div className="px-6 py-5 border-b border-stone-800 flex items-center justify-between bg-[#0B0B0C]">
+        <div className="px-6 py-5 border-b border-[#EADFD0] flex items-center justify-between bg-[#FAF5EE] sm:rounded-tl-lg">
           <div>
-            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#D4860B] block">
-              {subtitle || "[ MACKLEMORE CONSOLE ]"}
-            </span>
-            <h3 className="font-display text-lg font-bold tracking-wider uppercase mt-0.5">
+            {subtitle && (
+              <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-[#7A491D] block">
+                {subtitle}
+              </span>
+            )}
+            <h3 className="font-display text-lg font-semibold tracking-tight text-[#1F1A17] mt-0.5">
               {title}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="px-3 py-1.5 border border-stone-800 hover:border-[#E31E24] font-mono text-xs uppercase tracking-widest transition-colors cursor-pointer"
+            className="px-3.5 py-1.5 rounded-md border border-[#E2D6C5] bg-white hover:bg-[#1F1A17] hover:text-white hover:border-[#1F1A17] text-[#1F1A17] text-xs font-medium transition-all duration-200 cursor-pointer"
           >
-            [ ESC // CLOSE ]
+            Close
           </button>
         </div>
 
         {/* Drawer Body */}
         <div
           data-native-scroll="true"
-          className="flex-1 overflow-y-auto divide-y divide-stone-900"
+          className="flex-1 overflow-y-auto divide-y divide-[#EADFD0]"
         >
           {children}
         </div>
