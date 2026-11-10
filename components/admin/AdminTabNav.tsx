@@ -24,14 +24,14 @@ interface AdminTabNavProps {
   };
 }
 
-const TABS: { id: AdminTab; label: string; icon: string; countKey?: keyof NonNullable<AdminTabNavProps["counts"]> }[] = [
-  { id: "OVERVIEW", label: "Sales & Activity", icon: "📊" },
-  { id: "PRODUCTS", label: "Clothes & Stock", icon: "✨", countKey: "products" },
-  { id: "ORDERS", label: "Customer Orders", icon: "📦", countKey: "orders" },
-  { id: "BRANDS", label: "Partner Brands", icon: "🏛️", countKey: "brands" },
-  { id: "DROPS", label: "Collections & Drops", icon: "🔥" },
-  { id: "B2B", label: "B2B Enquiries", icon: "🤝", countKey: "b2b" },
-  { id: "MEDIA", label: "Photos & Media", icon: "🖼️", countKey: "media" },
+const TABS: { id: AdminTab; label: string; countKey?: keyof NonNullable<AdminTabNavProps["counts"]> }[] = [
+  { id: "OVERVIEW", label: "Sales & Activity" },
+  { id: "PRODUCTS", label: "Clothes & Stock", countKey: "products" },
+  { id: "ORDERS", label: "Customer Orders", countKey: "orders" },
+  { id: "BRANDS", label: "Partner Brands", countKey: "brands" },
+  { id: "DROPS", label: "Collections & Drops" },
+  { id: "B2B", label: "B2B Enquiries", countKey: "b2b" },
+  { id: "MEDIA", label: "Photos & Media", countKey: "media" },
 ];
 
 export function AdminTabNav({
@@ -40,8 +40,8 @@ export function AdminTabNav({
   counts = {},
 }: AdminTabNavProps) {
   return (
-    <nav className="rounded-2xl border border-[#EADFD0] bg-white p-1.5 shadow-sm mb-6 overflow-x-auto no-scrollbar">
-      <div className="flex items-center gap-1 min-w-max">
+    <nav className="rounded-xl border border-[#EADFD0] bg-white p-1.5 shadow-xs mb-6 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-1.5 min-w-max">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
           const count = tab.countKey ? counts[tab.countKey] : undefined;
@@ -51,7 +51,7 @@ export function AdminTabNav({
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               type="button"
-              className={`relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-medium transition-colors cursor-pointer select-none ${
+              className={`relative flex items-center gap-2 rounded-lg px-4.5 py-3 text-xs font-medium transition-colors cursor-pointer select-none ${
                 isActive
                   ? "text-[#1F1A17] font-semibold"
                   : "text-[#6E6A63] hover:text-[#1F1A17] hover:bg-[#FAF9F6]"
@@ -61,23 +61,20 @@ export function AdminTabNav({
               {isActive && (
                 <motion.div
                   layoutId="activeAdminTab"
-                  className="absolute inset-0 rounded-xl bg-[#FAF5EE] border border-[#EADFD0] shadow-xs"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  className="absolute inset-0 rounded-lg bg-[#FAF5EE] border border-[#EADFD0]"
+                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}
 
-              <span className="relative z-10 text-sm leading-none">{tab.icon}</span>
-              <span className="relative z-10 whitespace-nowrap">{tab.label}</span>
+              <span className="relative z-10 whitespace-nowrap text-sm">{tab.label}</span>
 
               {typeof count === "number" && count > 0 && (
                 <span
-                  className={`relative z-10 ml-0.5 rounded-full px-2 py-0.2 text-[10px] font-mono ${
-                    isActive
-                      ? "bg-[#7A491D] text-white"
-                      : "bg-[#FAF5EE] text-[#7A491D] border border-[#EADFD0]"
+                  className={`relative z-10 text-[11px] font-mono ${
+                    isActive ? "text-[#7A491D] font-bold" : "text-[#8C827A]"
                   }`}
                 >
-                  {count}
+                  ({count})
                 </span>
               )}
             </button>
@@ -87,4 +84,3 @@ export function AdminTabNav({
     </nav>
   );
 }
-

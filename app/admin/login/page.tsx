@@ -4,7 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { MacklemoreLogo, TribalCornerWatermark } from "@/components/vectors/TribalVectors";
+import {
+  MacklemoreLogo,
+  TribalCornerWatermark,
+  TribalPatternRibbon,
+} from "@/components/vectors/TribalVectors";
 import { LuxuryLoadingIndicator } from "@/components/motion/LuxuryLoadingIndicator";
 
 export default function AdminLoginPage() {
@@ -86,6 +90,9 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] flex flex-col justify-between relative overflow-hidden selection:bg-[#EADFD0] selection:text-[#7A491D]">
+      {/* Moving Multi-Color Tribal Geometric Ribbon at Top Border */}
+      <TribalPatternRibbon className="h-2.5 sm:h-3 w-full shrink-0" />
+
       {/* Decorative Warm Tribal Watermarks in Corners */}
       <TribalCornerWatermark position="top-right" opacity={0.06} />
       <TribalCornerWatermark position="bottom-left" opacity={0.06} />
@@ -100,31 +107,26 @@ export default function AdminLoginPage() {
         </Link>
         <Link
           href="/"
-          className="text-xs font-mono tracking-widest text-[#7A491D] hover:text-[#5C3614] transition-colors uppercase flex items-center gap-1.5"
+          className="text-xs font-mono tracking-widest text-[#7A491D] hover:text-[#5C3614] transition-colors uppercase"
         >
-          <span>←</span>
-          <span>Back to Store</span>
+          Back to Store
         </Link>
       </header>
 
       {/* Main Login Card */}
-      <main className="flex-1 flex items-center justify-center px-4 py-8 z-10">
+      <main className="flex-1 flex items-center justify-center px-4 py-10 z-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-md rounded-3xl border border-[#EADFD0] bg-white p-8 sm:p-10 shadow-xl shadow-stone-200/50"
+          className="w-full max-w-lg rounded-xl border border-[#EADFD0] bg-white p-8 sm:p-12 shadow-xl shadow-stone-200/50"
         >
           {/* Header */}
-          <div className="text-center space-y-2 mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF5EE] border border-[#EADFD0] text-[10px] font-mono font-semibold tracking-widest text-[#7A491D] uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2E6B35]" />
-              Staff Studio Access
-            </div>
+          <div className="text-center space-y-2.5 mb-8">
             <h1 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#1F1A17]">
               Admin Studio
             </h1>
-            <p className="text-xs text-[#6E6A63] leading-relaxed">
+            <p className="text-sm text-[#6E6A63] leading-relaxed">
               Sign in to manage collections, live inventory, orders, and partner fashion houses.
             </p>
           </div>
@@ -138,8 +140,8 @@ export default function AdminLoginPage() {
                 exit={{ opacity: 0, height: 0 }}
                 className="mb-6 overflow-hidden"
               >
-                <div className="rounded-xl border border-[#E31E24]/20 bg-[#FDF2F2] p-3.5 text-xs text-[#9E1015] flex items-start gap-2.5">
-                  <span className="text-sm leading-none shrink-0 mt-0.5">⚠️</span>
+                <div className="rounded-lg border border-[#E31E24]/20 bg-[#FDF2F2] p-3.5 text-xs text-[#9E1015] flex items-start gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-[#E31E24] shrink-0 mt-1" />
                   <span>{errorMessage}</span>
                 </div>
               </motion.div>
@@ -163,7 +165,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@macklemorefashions.com"
-                className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-sm text-[#1F1A17] placeholder:text-[#A8A29E] transition-all focus:border-[#7A491D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#7A491D]/20"
+                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-sm text-[#1F1A17] placeholder:text-[#A8A29E] transition-all focus:border-[#7A491D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#7A491D]/20"
               />
             </div>
 
@@ -191,14 +193,14 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-sm text-[#1F1A17] placeholder:text-[#A8A29E] transition-all focus:border-[#7A491D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#7A491D]/20"
+                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-sm text-[#1F1A17] placeholder:text-[#A8A29E] transition-all focus:border-[#7A491D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#7A491D]/20"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-2 rounded-xl bg-[#7A491D] py-3.5 px-6 font-display text-sm font-semibold tracking-widest text-white uppercase shadow-md shadow-[#7A491D]/20 transition-all hover:bg-[#5C3614] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full mt-2 rounded-lg bg-[#7A491D] py-3.5 px-6 font-display text-sm font-semibold tracking-widest text-white uppercase shadow-md shadow-[#7A491D]/20 transition-all hover:bg-[#5C3614] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>

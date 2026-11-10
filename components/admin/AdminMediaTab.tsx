@@ -33,52 +33,53 @@ export function AdminMediaTab({ neonStorage }: AdminMediaTabProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header & Stats */}
-      <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 shadow-sm space-y-4">
+      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
+            <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
               Photos &amp; Cloud Media Vault
             </h2>
-            <p className="text-xs text-[#6E6A63]">
+            <p className="text-xs text-[#6E6A63] mt-0.5">
               High-resolution lookbooks and editorial garment flatlays stored in Neon S3
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="rounded-full bg-[#EBF7EE] border border-[#2E6B35]/20 px-3 py-1 text-xs font-mono text-[#2E6B35]">
+            <span className="text-xs font-mono text-[#2E6B35]">
               Bucket: {neonStorage?.bucket || "macklemore-fashions"}
             </span>
-            <span className="rounded-full bg-[#FAF5EE] border border-[#EADFD0] px-3 py-1 text-xs font-mono text-[#7A491D]">
+            <span className="text-xs text-[#6E6A63]">·</span>
+            <span className="text-xs font-mono text-[#7A491D]">
               {neonStorage?.totalObjects || 44} Assets · {neonStorage?.totalMegabytes || 48} MB
             </span>
           </div>
         </div>
 
         {/* Search */}
-        <div className="pt-2">
+        <div className="pt-1">
           <input
             type="text"
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             placeholder="Search media files by name or key..."
-            className="w-full max-w-md rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2.5 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#7A491D]/20 transition-all"
+            className="w-full max-w-md rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-all"
           />
         </div>
       </div>
 
       {/* Media Grid */}
       {filteredObjects.length === 0 ? (
-        <div className="rounded-3xl border border-[#EADFD0] bg-white p-12 text-center text-xs text-[#6E6A63]">
+        <div className="rounded-xl border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
           No media objects found.
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
           {filteredObjects.map((obj) => (
             <div
               key={obj.key}
-              className="rounded-2xl border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-md transition-all group flex flex-col justify-between"
+              className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
             >
               {/* Thumbnail */}
               <div className="relative aspect-3/4 w-full bg-[#FAF9F6] overflow-hidden">
@@ -94,19 +95,19 @@ export function AdminMediaTab({ neonStorage }: AdminMediaTabProps) {
               </div>
 
               {/* Info & Copy */}
-              <div className="p-3 space-y-2 border-t border-[#EADFD0]/60">
-                <div className="text-[11px] font-medium text-[#1F1A17] truncate" title={obj.key}>
+              <div className="p-3.5 space-y-2 border-t border-[#EADFD0]/60">
+                <div className="text-xs font-medium text-[#1F1A17] truncate" title={obj.key}>
                   {obj.key.replace(/^products\//, "")}
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] text-[#6E6A63]">
+                <div className="flex items-center justify-between text-[11px] text-[#6E6A63]">
                   <span>{(obj.size / 1024).toFixed(0)} KB</span>
                   <button
                     type="button"
                     onClick={() => handleCopy(obj.url, obj.key)}
-                    className="rounded bg-[#FAF5EE] border border-[#EADFD0] px-2 py-0.5 text-[#7A491D] font-medium hover:bg-white transition-colors cursor-pointer"
+                    className="rounded bg-[#FAF5EE] border border-[#EADFD0] px-2.5 py-1 text-[#7A491D] font-medium hover:bg-white transition-colors cursor-pointer"
                   >
-                    {copiedKey === obj.key ? "✓ Copied" : "Copy URL"}
+                    {copiedKey === obj.key ? "Copied" : "Copy URL"}
                   </button>
                 </div>
               </div>
@@ -117,4 +118,3 @@ export function AdminMediaTab({ neonStorage }: AdminMediaTabProps) {
     </div>
   );
 }
-

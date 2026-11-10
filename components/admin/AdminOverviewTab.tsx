@@ -79,21 +79,21 @@ export function AdminOverviewTab({
   const lowStockItems = analytics?.inventory?.lowStockAlerts || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* 4 Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Total Revenue */}
-        <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-[#6E6A63]">Total Sales</span>
+        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-[#6E6A63]">Total Sales</span>
             {/* Currency Switcher */}
-            <div className="flex items-center gap-1 rounded-full bg-[#FAF5EE] border border-[#EADFD0] p-0.5 text-[10px] font-mono">
+            <div className="flex items-center gap-1 bg-[#FAF5EE] border border-[#EADFD0] p-0.5 rounded-md text-[11px] font-mono">
               {(["CAD", "USD", "NGN", "GBP"] as CurrencyCode[]).map((c) => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setCurrency(c)}
-                  className={`rounded-full px-2 py-0.5 transition-colors cursor-pointer ${
+                  className={`px-2 py-0.5 rounded-sm transition-colors cursor-pointer ${
                     currency === c
                       ? "bg-[#7A491D] text-white font-semibold"
                       : "text-[#6E6A63] hover:text-[#1F1A17]"
@@ -104,80 +104,88 @@ export function AdminOverviewTab({
               ))}
             </div>
           </div>
-          <div className="font-display text-3xl font-bold tracking-tight text-[#1F1A17]">
-            {formatCurrencyValue(revenueAmount, currency)}
-          </div>
-          <div className="flex items-center gap-2 mt-2 text-xs text-[#6E6A63]">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#2E6B35]" />
-            <span>
-              {analytics?.revenue?.paidOrdersCount || orders.length} orders settled
-            </span>
+          <div>
+            <div className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#1F1A17]">
+              {formatCurrencyValue(revenueAmount, currency)}
+            </div>
+            <div className="flex items-center gap-2 mt-2 text-xs text-[#6E6A63]">
+              <span className="inline-block w-2 h-2 rounded-full bg-[#2E6B35]" />
+              <span>
+                {analytics?.revenue?.paidOrdersCount || orders.length} orders settled
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Customer Orders */}
-        <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-[#6E6A63]">Customer Orders</span>
-            <span className="rounded-full bg-[#FAF5EE] border border-[#EADFD0] px-2.5 py-0.5 text-[10px] font-mono text-[#7A491D]">
-              All Channels
+        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-[#6E6A63]">Customer Orders</span>
+            <span className="text-xs text-[#7A491D] font-mono">
+              {orders.length} total
             </span>
           </div>
-          <div className="font-display text-3xl font-bold tracking-tight text-[#1F1A17]">
-            {orders.length}
-          </div>
-          <div className="flex items-center justify-between mt-2 text-xs text-[#6E6A63]">
-            <span>
-              Stripe: {analytics?.revenue?.revenueByGateway?.STRIPE?.count || 0}
-            </span>
-            <span>·</span>
-            <span>
-              Paystack: {analytics?.revenue?.revenueByGateway?.PAYSTACK?.count || 0}
-            </span>
+          <div>
+            <div className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#1F1A17]">
+              {orders.length}
+            </div>
+            <div className="flex items-center justify-between mt-2 text-xs text-[#6E6A63]">
+              <span>
+                Stripe: {analytics?.revenue?.revenueByGateway?.STRIPE?.count || 0}
+              </span>
+              <span>·</span>
+              <span>
+                Paystack: {analytics?.revenue?.revenueByGateway?.PAYSTACK?.count || 0}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Clothes & Vault Inventory */}
-        <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-[#6E6A63]">Wardrobe Inventory</span>
-            <span className="rounded-full bg-[#FAF5EE] border border-[#EADFD0] px-2.5 py-0.5 text-[10px] font-mono text-[#7A491D]">
+        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-[#6E6A63]">Wardrobe Inventory</span>
+            <span className="text-xs text-[#7A491D]">
               Dual Hubs
             </span>
           </div>
-          <div className="font-display text-3xl font-bold tracking-tight text-[#1F1A17]">
-            {analytics?.inventory?.totalUnitsAllHubs || 0}{" "}
-            <span className="text-lg font-normal text-[#6E6A63]">units</span>
-          </div>
-          <div className="flex items-center justify-between mt-2 text-xs text-[#6E6A63]">
-            <span>{products.length} unique styles</span>
-            <span>·</span>
-            <button
-              onClick={() => onNavigateToTab("PRODUCTS")}
-              className="text-[#7A491D] font-medium hover:underline cursor-pointer"
-            >
-              Manage →
-            </button>
+          <div>
+            <div className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#1F1A17]">
+              {analytics?.inventory?.totalUnitsAllHubs || 0}{" "}
+              <span className="text-base font-normal text-[#6E6A63]">units</span>
+            </div>
+            <div className="flex items-center justify-between mt-2 text-xs text-[#6E6A63]">
+              <span>{products.length} unique styles</span>
+              <span>·</span>
+              <button
+                onClick={() => onNavigateToTab("PRODUCTS")}
+                className="text-[#7A491D] font-medium hover:underline cursor-pointer"
+              >
+                Manage Stock →
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Cloud Media Vault (Neon S3) */}
-        <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-[#6E6A63]">S3 Media Storage</span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#EBF7EE] border border-[#2E6B35]/20 px-2 py-0.5 text-[10px] font-mono text-[#2E6B35]">
+        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-[#6E6A63]">Media Storage</span>
+            <span className="flex items-center gap-1.5 text-xs text-[#2E6B35]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#2E6B35]" />
               Online
             </span>
           </div>
-          <div className="font-display text-3xl font-bold tracking-tight text-[#1F1A17]">
-            {analytics?.neonObjectStorage?.totalObjects || 44}{" "}
-            <span className="text-lg font-normal text-[#6E6A63]">photos</span>
-          </div>
-          <div className="flex items-center justify-between mt-2 text-xs text-[#6E6A63]">
-            <span>{analytics?.neonObjectStorage?.totalMegabytes || 48} MB stored</span>
-            <span>·</span>
-            <span className="text-[#2E6B35]">Direct CDN</span>
+          <div>
+            <div className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#1F1A17]">
+              {analytics?.neonObjectStorage?.totalObjects || 44}{" "}
+              <span className="text-base font-normal text-[#6E6A63]">photos</span>
+            </div>
+            <div className="flex items-center justify-between mt-2 text-xs text-[#6E6A63]">
+              <span>{analytics?.neonObjectStorage?.totalMegabytes || 48} MB stored</span>
+              <span>·</span>
+              <span className="text-[#2E6B35]">Neon CDN</span>
+            </div>
           </div>
         </div>
       </div>
@@ -185,58 +193,57 @@ export function AdminOverviewTab({
       {/* Distribution Hub Status & Low Stock Watchlist */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Dual Hub Overview Card */}
-        <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 sm:p-8 shadow-sm">
+        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="font-display text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
+              <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
                 Fulfillment Hubs
               </h2>
-              <p className="text-xs text-[#6E6A63]">
-                Live stock allocated across continental distribution centers
+              <p className="text-xs text-[#6E6A63] mt-0.5">
+                Live inventory allocated across international fulfillment centers
               </p>
             </div>
-            <span className="text-2xl">🌍</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Lagos Hub */}
-            <div className="rounded-2xl border border-[#EADFD0] bg-[#FAF9F6] p-5 space-y-2">
+            <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-6 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#1F1A17]">
+                <span className="text-sm font-semibold text-[#1F1A17]">
                   Lagos Hub (Nigeria)
                 </span>
-                <span className="text-[10px] font-mono rounded-full bg-white px-2 py-0.5 border border-[#EADFD0] text-[#7A491D]">
+                <span className="text-xs text-[#7A491D]">
                   West Africa
                 </span>
               </div>
               <div className="text-2xl font-display font-bold text-[#1F1A17]">
                 {analytics?.inventory?.totalUnitsNigeria ?? 0}
-                <span className="text-xs font-normal text-[#6E6A63] ml-1.5">
+                <span className="text-xs font-normal text-[#6E6A63] ml-2">
                   units in stock
                 </span>
               </div>
-              <p className="text-[11px] text-[#6E6A63]">
+              <p className="text-xs text-[#6E6A63] pt-1">
                 Couriers: GIG Express · ECOWAS Road Corridor
               </p>
             </div>
 
             {/* Toronto Hub */}
-            <div className="rounded-2xl border border-[#EADFD0] bg-[#FAF9F6] p-5 space-y-2">
+            <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-6 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#1F1A17]">
+                <span className="text-sm font-semibold text-[#1F1A17]">
                   Toronto HQ (Canada)
                 </span>
-                <span className="text-[10px] font-mono rounded-full bg-white px-2 py-0.5 border border-[#EADFD0] text-[#7A491D]">
+                <span className="text-xs text-[#7A491D]">
                   North America
                 </span>
               </div>
               <div className="text-2xl font-display font-bold text-[#1F1A17]">
                 {analytics?.inventory?.totalUnitsToronto ?? 0}
-                <span className="text-xs font-normal text-[#6E6A63] ml-1.5">
+                <span className="text-xs font-normal text-[#6E6A63] ml-2">
                   units in stock
                 </span>
               </div>
-              <p className="text-[11px] text-[#6E6A63]">
+              <p className="text-xs text-[#6E6A63] pt-1">
                 Couriers: DHL Express · Canada Post Direct
               </p>
             </div>
@@ -244,44 +251,44 @@ export function AdminOverviewTab({
         </div>
 
         {/* Low Stock Watchlist */}
-        <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 sm:p-8 shadow-sm flex flex-col justify-between">
+        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="font-display text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
+                <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
                   Stock Watchlist
                 </h2>
-                <p className="text-xs text-[#6E6A63]">
-                  Sizes with 2 or fewer units remaining
+                <p className="text-xs text-[#6E6A63] mt-0.5">
+                  Garments and sizes with 2 or fewer units remaining
                 </p>
               </div>
-              <span className="rounded-full bg-[#FAF5EE] border border-[#EADFD0] px-2.5 py-1 text-xs font-mono font-semibold text-[#7A491D]">
-                {lowStockItems.length} alerts
+              <span className="text-xs font-mono text-[#7A491D]">
+                {lowStockItems.length} items low
               </span>
             </div>
 
             {lowStockItems.length === 0 ? (
-              <div className="py-8 text-center text-xs text-[#6E6A63]">
-                ✓ All garments and sizes have ample inventory across both hubs.
+              <div className="py-10 text-center text-xs text-[#6E6A63]">
+                All garments and sizes have ample inventory across both hubs.
               </div>
             ) : (
-              <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                 {lowStockItems.slice(0, 4).map((alert) => (
                   <div
                     key={`${alert.sku}-${alert.size}`}
-                    className="flex items-center justify-between rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2.5 text-xs"
+                    className="flex items-center justify-between rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs"
                   >
                     <div>
                       <div className="font-medium text-[#1F1A17]">
                         {alert.productTitle}
                       </div>
-                      <div className="text-[11px] text-[#6E6A63]">
+                      <div className="text-[11px] text-[#6E6A63] mt-0.5">
                         Size: <span className="font-semibold text-[#1F1A17]">{alert.size}</span> · Lagos: {alert.hubALagos} · Toronto: {alert.hubBToronto}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-[#FDF2F2] border border-[#E31E24]/20 px-2 py-0.5 text-[10px] font-mono text-[#9E1015]">
-                        {alert.total} left
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-medium text-[#9E1015]">
+                        {alert.total} remaining
                       </span>
                       {onRestockVariant && (
                         <button
@@ -292,7 +299,7 @@ export function AdminOverviewTab({
                               onRestockVariant(prod.id, alert.size, "hubALagos", alert.hubALagos + 5);
                             }
                           }}
-                          className="rounded-lg bg-white border border-[#EADFD0] px-2.5 py-1 text-[11px] font-medium text-[#7A491D] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
+                          className="rounded-md bg-white border border-[#EADFD0] px-3 py-1 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
                         >
                           +5 Stock
                         </button>
@@ -304,8 +311,8 @@ export function AdminOverviewTab({
             )}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-[#EADFD0]/60 flex items-center justify-between text-xs">
-            <span className="text-[#6E6A63]">Instant 1-click auto-save to cloud</span>
+          <div className="mt-5 pt-4 border-t border-[#EADFD0]/60 flex items-center justify-between text-xs">
+            <span className="text-[#6E6A63]">Changes auto-save directly to vault</span>
             <button
               onClick={() => onNavigateToTab("PRODUCTS")}
               className="text-[#7A491D] font-medium hover:underline cursor-pointer"
@@ -317,19 +324,19 @@ export function AdminOverviewTab({
       </div>
 
       {/* Recent Orders Preview */}
-      <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 sm:p-8 shadow-sm">
+      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="font-display text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
+            <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
               Recent Orders
             </h2>
-            <p className="text-xs text-[#6E6A63]">
+            <p className="text-xs text-[#6E6A63] mt-0.5">
               Latest purchases across international storefronts
             </p>
           </div>
           <button
             onClick={() => onNavigateToTab("ORDERS")}
-            className="rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-colors cursor-pointer"
+            className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-colors cursor-pointer"
           >
             All Orders ({orders.length}) →
           </button>
@@ -337,50 +344,48 @@ export function AdminOverviewTab({
 
         {orders.length === 0 ? (
           <div className="py-12 text-center text-xs text-[#6E6A63]">
-            No customer orders recorded yet. Place a test checkout to see it live!
+            No customer orders recorded yet.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EADFD0] text-[#6E6A63] font-medium uppercase tracking-wider text-[10px]">
-                  <th className="pb-3 font-semibold">Order</th>
-                  <th className="pb-3 font-semibold">Client</th>
-                  <th className="pb-3 font-semibold">Destination</th>
-                  <th className="pb-3 font-semibold">Total Paid</th>
-                  <th className="pb-3 font-semibold">Gateway</th>
-                  <th className="pb-3 font-semibold">Status</th>
-                  <th className="pb-3 font-semibold text-right">Waybill</th>
+                <tr className="border-b border-[#EADFD0] text-[#6E6A63] font-medium text-xs">
+                  <th className="pb-3.5 font-semibold">Order</th>
+                  <th className="pb-3.5 font-semibold">Client</th>
+                  <th className="pb-3.5 font-semibold">Destination</th>
+                  <th className="pb-3.5 font-semibold">Total Paid</th>
+                  <th className="pb-3.5 font-semibold">Gateway</th>
+                  <th className="pb-3.5 font-semibold">Status</th>
+                  <th className="pb-3.5 font-semibold text-right">Waybill</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#EADFD0]/60">
                 {orders.slice(0, 5).map((order) => (
                   <tr key={order.id} className="hover:bg-[#FAF9F6] transition-colors">
-                    <td className="py-3.5 font-semibold text-[#1F1A17]">
+                    <td className="py-4 font-semibold text-[#1F1A17]">
                       {order.orderNumber}
                     </td>
-                    <td className="py-3.5">
+                    <td className="py-4">
                       <div className="font-medium text-[#1F1A17]">{order.customerName}</div>
                       <div className="text-[11px] text-[#6E6A63]">{order.customerEmail}</div>
                     </td>
-                    <td className="py-3.5 text-[#6E6A63]">
+                    <td className="py-4 text-[#6E6A63]">
                       {order.destinationCity}, {order.destinationCountry}
                     </td>
-                    <td className="py-3.5 font-semibold text-[#1F1A17]">
+                    <td className="py-4 font-semibold text-[#1F1A17]">
                       {formatCurrencyValue(order.totalAmount, order.currency)}
                     </td>
-                    <td className="py-3.5">
-                      <span className="rounded-full bg-[#FAF5EE] border border-[#EADFD0] px-2 py-0.5 text-[10px] font-mono text-[#7A491D]">
-                        {order.paymentProvider}
-                      </span>
+                    <td className="py-4 text-[#7A491D]">
+                      {order.paymentProvider}
                     </td>
-                    <td className="py-3.5">
-                      <span className="rounded-full bg-[#EBF7EE] border border-[#2E6B35]/20 px-2 py-0.5 text-[10px] font-medium text-[#2E6B35]">
+                    <td className="py-4">
+                      <span className="text-[#2E6B35] font-medium">
                         {order.status.replace(/_/g, " ")}
                       </span>
                     </td>
-                    <td className="py-3.5 text-right font-mono text-[11px] text-[#7A491D]">
-                      {order.waybillNumber}
+                    <td className="py-4 text-right font-mono text-[11px] text-[#7A491D]">
+                      {order.waybillNumber || "Pending"}
                     </td>
                   </tr>
                 ))}
@@ -392,4 +397,3 @@ export function AdminOverviewTab({
     </div>
   );
 }
-

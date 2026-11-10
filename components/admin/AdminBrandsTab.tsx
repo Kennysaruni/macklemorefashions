@@ -16,14 +16,14 @@ export function AdminBrandsTab({
   onEditBrand,
 }: AdminBrandsTabProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header & Action */}
-      <div className="rounded-3xl border border-[#EADFD0] bg-white p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
+          <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
             Partner Fashion Houses
           </h2>
-          <p className="text-xs text-[#6E6A63]">
+          <p className="text-xs text-[#6E6A63] mt-0.5">
             Curated African luxury ateliers and commission settlement parameters
           </p>
         </div>
@@ -31,9 +31,9 @@ export function AdminBrandsTab({
         <button
           onClick={onAddNewBrand}
           type="button"
-          className="rounded-xl bg-[#7A491D] px-5 py-3 text-xs font-semibold tracking-wider text-white uppercase shadow-sm hover:bg-[#5C3614] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer flex items-center gap-2"
+          className="rounded-lg bg-[#7A491D] px-6 py-3 text-xs font-semibold tracking-wider text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer flex items-center gap-2"
         >
-          <span className="text-base leading-none">+</span>
+          <span>+</span>
           <span>Add Partner House</span>
         </button>
       </div>
@@ -43,10 +43,10 @@ export function AdminBrandsTab({
         {brands.map((brand) => (
           <div
             key={brand.id}
-            className="rounded-3xl border border-[#EADFD0] bg-white overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+            className="rounded-xl border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
           >
             <div>
-              {/* Brand Cover / Logo */}
+              {/* Brand Cover / Banner */}
               <div className="relative aspect-16/9 w-full bg-[#FAF9F6] overflow-hidden border-b border-[#EADFD0]/60">
                 <img
                   src={brand.lookbookBannerUrl}
@@ -59,10 +59,10 @@ export function AdminBrandsTab({
                 />
                 <div className="absolute top-3 left-3">
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-mono font-semibold tracking-wider uppercase ${
+                    className={`rounded-md px-2.5 py-1 text-xs font-medium uppercase ${
                       brand.isProprietary
                         ? "bg-[#7A491D] text-white"
-                        : "bg-white/90 backdrop-blur-xs text-[#7A491D] border border-[#EADFD0]"
+                        : "bg-white/95 text-[#7A491D] border border-[#EADFD0]"
                     }`}
                   >
                     {brand.isProprietary ? "Proprietary Label" : "Partner Atelier"}
@@ -71,12 +71,12 @@ export function AdminBrandsTab({
               </div>
 
               {/* Brand Details */}
-              <div className="p-6 space-y-3">
+              <div className="p-6 space-y-3.5">
                 <div className="flex items-center justify-between">
                   <h3 className="font-display text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
                     {brand.name}
                   </h3>
-                  <span className="rounded-full bg-[#FAF5EE] border border-[#EADFD0] px-2.5 py-0.5 text-[10px] font-mono text-[#7A491D]">
+                  <span className="text-xs font-mono text-[#7A491D]">
                     {brand.commissionRatePct}% Commission
                   </span>
                 </div>
@@ -90,21 +90,21 @@ export function AdminBrandsTab({
                     Origin: <span className="font-medium text-[#1F1A17]">{brand.originCountry}</span>
                   </div>
                   <div>
-                    Slug: <span className="font-mono text-[11px] text-[#7A491D]">/{brand.slug}</span>
+                    Slug: <span className="font-mono text-xs text-[#7A491D]">/{brand.slug}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Actions Footer */}
-            <div className="px-6 py-3 border-t border-[#EADFD0]/60 bg-[#FAF9F6]/50 flex items-center justify-between text-xs">
+            <div className="px-6 py-4 border-t border-[#EADFD0]/60 bg-[#FAF9F6]/50 flex items-center justify-between text-xs">
               <Link
                 href={`/brands/${brand.slug}`}
                 target="_blank"
                 className="text-[#7A491D] font-medium hover:underline flex items-center gap-1"
               >
                 <span>View Atelier Page</span>
-                <span>↗</span>
+                <span>→</span>
               </Link>
 
               {onEditBrand && (
@@ -123,4 +123,3 @@ export function AdminBrandsTab({
     </div>
   );
 }
-

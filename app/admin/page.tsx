@@ -10,6 +10,7 @@ import {
   ProductRecord,
 } from "@/lib/store-data";
 import { LuxuryLoadingIndicator } from "@/components/motion/LuxuryLoadingIndicator";
+import { TribalPatternRibbon } from "@/components/vectors/TribalVectors";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { AdminTab, AdminTabNav } from "@/components/admin/AdminTabNav";
 import { AdminOverviewTab } from "@/components/admin/AdminOverviewTab";
@@ -174,19 +175,19 @@ export default function AdminConsolePage() {
   const handleSaveProduct = async (productData: Partial<ProductRecord>) => {
     if (productData.id) {
       await updateProduct(productData.id, productData);
-      showToast("✓ Garment details updated in vault.");
+      showToast("Garment details updated in vault.");
     } else {
       await addProduct(
         productData as Omit<ProductRecord, "id">
       );
-      showToast("✓ New piece published to vault.");
+      showToast("New piece published to vault.");
     }
     fetchAnalytics();
   };
 
   const handleDeleteProduct = async (productId: string) => {
     await deleteProduct(productId);
-    showToast("✓ Piece removed from vault.");
+    showToast("Piece removed from vault.");
     fetchAnalytics();
   };
 
@@ -197,25 +198,25 @@ export default function AdminConsolePage() {
     newQty: number
   ) => {
     updateVariantStock(productId, size, hub, newQty);
-    showToast(`✓ Stock updated: Size ${size} (${newQty} units)`);
+    showToast(`Stock updated: Size ${size} (${newQty} units)`);
     fetchAnalytics();
   };
 
   const handleSaveBrand = async (brandData: Partial<BrandRecord>) => {
     await addBrand(brandData as Omit<BrandRecord, "id">);
-    showToast("✓ Partner house saved.");
+    showToast("Partner house saved.");
     fetchAnalytics();
   };
 
   const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
     await updateOrderStatus(orderId, newStatus as OrderRecord["status"]);
-    showToast(`✓ Order status updated: ${newStatus.replace(/_/g, " ")}`);
+    showToast(`Order status updated: ${newStatus.replace(/_/g, " ")}`);
     fetchAnalytics();
   };
 
   const handleUpdateB2BStatus = async (inquiryId: string, newStatus: B2BLeadStatus) => {
     updateB2BStatus(inquiryId, newStatus);
-    showToast(`✓ B2B status updated: ${newStatus.replace(/_/g, " ")}`);
+    showToast(`B2B inquiry status updated: ${newStatus.replace(/_/g, " ")}`);
     fetchAnalytics();
   };
 
@@ -233,8 +234,11 @@ export default function AdminConsolePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] p-4 sm:p-6 lg:p-8 selection:bg-[#EADFD0] selection:text-[#7A491D]">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] flex flex-col selection:bg-[#EADFD0] selection:text-[#7A491D]">
+      {/* Moving Multi-Color Tribal Geometric Ribbon at Top Border */}
+      <TribalPatternRibbon className="h-2.5 sm:h-3 w-full shrink-0" />
+
+      <div className="w-full max-w-[1720px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 flex-1 flex flex-col">
         {/* Boutique Studio Header */}
         <AdminHeader
           userName={adminUser?.name || "Executive Admin"}
@@ -255,7 +259,7 @@ export default function AdminConsolePage() {
         />
 
         {/* Tab Views */}
-        <main>
+        <main className="flex-1">
           {activeTab === "OVERVIEW" && (
             <AdminOverviewTab
               analytics={analytics}
@@ -308,7 +312,7 @@ export default function AdminConsolePage() {
               collections={collections}
               onToggleLive={(id) => {
                 toggleCollectionLive(id);
-                showToast("✓ Storefront collection visibility toggled.");
+                showToast("Storefront collection visibility toggled.");
               }}
             />
           )}
@@ -349,7 +353,7 @@ export default function AdminConsolePage() {
 
         {/* Instant Toast Notification */}
         {toastMessage && (
-          <div className="fixed bottom-6 right-6 z-50 rounded-2xl border border-[#EADFD0] bg-white px-5 py-3 text-xs font-semibold text-[#1F1A17] shadow-xl shadow-stone-300/40 animate-fade-in flex items-center gap-2">
+          <div className="fixed bottom-6 right-6 z-50 rounded-lg border border-[#EADFD0] bg-white px-5 py-3 text-xs font-semibold text-[#1F1A17] shadow-xl shadow-stone-300/40 animate-fade-in flex items-center gap-2.5">
             <span className="w-2 h-2 rounded-full bg-[#2E6B35]" />
             <span>{toastMessage}</span>
           </div>
