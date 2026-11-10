@@ -179,13 +179,6 @@ export default function AdminLoginPage() {
               )}
             </button>
           </form>
-
-          {/* Footer note */}
-          <div className="mt-7 pt-5 border-t border-[#EADFD0]/60 text-center">
-            <p className="text-[11px] text-[#8C827A]">
-              Protected Afro-Luxury Hub · Encrypted via Neon DB &amp; JWT
-            </p>
-          </div>
         </div>
       </div>
 
