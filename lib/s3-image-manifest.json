@@ -1,0 +1,259 @@
+{
+  "migratedAt": "2026-11-10T11:14:25.532Z",
+  "bucket": "uploads",
+  "totalImagesMigrated": 42,
+  "urlMapping": {
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/dejiandkola_africa_1712608765_3341927002557004894_30014923707.jpg": {
+      "s3Key": "macklemore/2025/04/dejiandkola_africa_1712608765_3341927002557004894_30014923707.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/dejiandkola_africa_1712608765_3341927002557004894_30014923707.jpg",
+      "bytes": 447859,
+      "contentType": "image/jpeg"
+    },
+    "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1800&q=85": {
+      "s3Key": "partner/photo-1539109136881-3be0616acf4b.jpg",
+      "storageUrl": "/api/storage/uploads/partner/photo-1539109136881-3be0616acf4b.jpg",
+      "bytes": 822148,
+      "contentType": "image/jpeg"
+    },
+    "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=1400&q=85": {
+      "s3Key": "partner/photo-1487222477894-8943e31ef7b2.jpg",
+      "storageUrl": "/api/storage/uploads/partner/photo-1487222477894-8943e31ef7b2.jpg",
+      "bytes": 380656,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/25.jpg": {
+      "s3Key": "macklemore/2025/04/25.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/25.jpg",
+      "bytes": 1200045,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/26.jpg": {
+      "s3Key": "macklemore/2025/04/26.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/26.jpg",
+      "bytes": 1109445,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/168465240_271856821065695_3354743809372838221_n.jpg": {
+      "s3Key": "macklemore/2025/04/168465240_271856821065695_3354743809372838221_n.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/168465240_271856821065695_3354743809372838221_n.jpg",
+      "bytes": 257750,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/7.jpg": {
+      "s3Key": "macklemore/2025/04/7.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/7.jpg",
+      "bytes": 432029,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/16.jpg": {
+      "s3Key": "macklemore/2025/04/16.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/16.jpg",
+      "bytes": 805772,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/167562703_128763839258414_8121017181478532563_n.jpg": {
+      "s3Key": "macklemore/2025/04/167562703_128763839258414_8121017181478532563_n.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/167562703_128763839258414_8121017181478532563_n.jpg",
+      "bytes": 402799,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/413888847_18015074198003708_3616451493638629856_n.jpg": {
+      "s3Key": "macklemore/2025/04/413888847_18015074198003708_3616451493638629856_n.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/413888847_18015074198003708_3616451493638629856_n.jpg",
+      "bytes": 150600,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/413815567_18015074219003708_8203886899399243130_n.jpg": {
+      "s3Key": "macklemore/2025/04/413815567_18015074219003708_8203886899399243130_n.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/413815567_18015074219003708_8203886899399243130_n.jpg",
+      "bytes": 124493,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/8.jpg": {
+      "s3Key": "macklemore/2025/04/8.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/8.jpg",
+      "bytes": 395654,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/6.jpg": {
+      "s3Key": "macklemore/2025/04/6.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/6.jpg",
+      "bytes": 874281,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/5.jpg": {
+      "s3Key": "macklemore/2025/04/5.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/5.jpg",
+      "bytes": 635770,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/9.jpg": {
+      "s3Key": "macklemore/2025/04/9.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/9.jpg",
+      "bytes": 504258,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/10.jpg": {
+      "s3Key": "macklemore/2025/04/10.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/10.jpg",
+      "bytes": 509756,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/ac03712a-e69a-4d71-b6d4-d10f50c9cb89.webp": {
+      "s3Key": "macklemore/2025/04/ac03712a-e69a-4d71-b6d4-d10f50c9cb89.webp",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/ac03712a-e69a-4d71-b6d4-d10f50c9cb89.webp",
+      "bytes": 43996,
+      "contentType": "image/webp"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/119150399_162644002133362_4996665628877405313_n.jpg": {
+      "s3Key": "macklemore/2025/04/119150399_162644002133362_4996665628877405313_n.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/119150399_162644002133362_4996665628877405313_n.jpg",
+      "bytes": 137640,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/hand-traditional-fan.jpg": {
+      "s3Key": "macklemore/2025/04/hand-traditional-fan.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/hand-traditional-fan.jpg",
+      "bytes": 825858,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/15.jpg": {
+      "s3Key": "macklemore/2025/04/15.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/15.jpg",
+      "bytes": 659443,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/14.jpg": {
+      "s3Key": "macklemore/2025/04/14.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/14.jpg",
+      "bytes": 794295,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/13.jpg": {
+      "s3Key": "macklemore/2025/04/13.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/13.jpg",
+      "bytes": 937062,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/12.jpg": {
+      "s3Key": "macklemore/2025/04/12.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/12.jpg",
+      "bytes": 966873,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/18.jpg": {
+      "s3Key": "macklemore/2025/04/18.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/18.jpg",
+      "bytes": 787963,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/22.jpg": {
+      "s3Key": "macklemore/2025/04/22.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/22.jpg",
+      "bytes": 1118010,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/19.jpg": {
+      "s3Key": "macklemore/2025/04/19.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/19.jpg",
+      "bytes": 701719,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/20.jpg": {
+      "s3Key": "macklemore/2025/04/20.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/20.jpg",
+      "bytes": 506925,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/21.jpg": {
+      "s3Key": "macklemore/2025/04/21.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/21.jpg",
+      "bytes": 777532,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/23.jpg": {
+      "s3Key": "macklemore/2025/04/23.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/23.jpg",
+      "bytes": 1224279,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/Ankara.jpg": {
+      "s3Key": "macklemore/2025/04/Ankara.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/Ankara.jpg",
+      "bytes": 215354,
+      "contentType": "image/jpeg"
+    },
+    "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85": {
+      "s3Key": "partner/photo-1539109136881-3be0616acf4b.jpg",
+      "storageUrl": "/api/storage/uploads/partner/photo-1539109136881-3be0616acf4b.jpg",
+      "bytes": 293350,
+      "contentType": "image/jpeg"
+    },
+    "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1000&q=85": {
+      "s3Key": "partner/photo-1591047139829-d91aecb6caea.jpg",
+      "storageUrl": "/api/storage/uploads/partner/photo-1591047139829-d91aecb6caea.jpg",
+      "bytes": 221191,
+      "contentType": "image/jpeg"
+    },
+    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85": {
+      "s3Key": "partner/photo-1515886657613-9f3515b0c78f.jpg",
+      "storageUrl": "/api/storage/uploads/partner/photo-1515886657613-9f3515b0c78f.jpg",
+      "bytes": 169172,
+      "contentType": "image/jpeg"
+    },
+    "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1000&q=85": {
+      "s3Key": "partner/photo-1594633312681-425c7b97ccd1.jpg",
+      "storageUrl": "/api/storage/uploads/partner/photo-1594633312681-425c7b97ccd1.jpg",
+      "bytes": 89061,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/Mencategory1.jpg": {
+      "s3Key": "macklemore/2025/04/Mencategory1.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/Mencategory1.jpg",
+      "bytes": 118270,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/womancategory11.jpg": {
+      "s3Key": "macklemore/2025/04/womancategory11.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/womancategory11.jpg",
+      "bytes": 199086,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/maleaccessories.jpg": {
+      "s3Key": "macklemore/2025/04/maleaccessories.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/maleaccessories.jpg",
+      "bytes": 91848,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/femaleaccessories.jpg": {
+      "s3Key": "macklemore/2025/04/femaleaccessories.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/femaleaccessories.jpg",
+      "bytes": 119718,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/child-baby.jpg": {
+      "s3Key": "macklemore/2025/04/child-baby.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/child-baby.jpg",
+      "bytes": 134288,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg": {
+      "s3Key": "macklemore/2025/05/Torontofw1.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/05/Torontofw1.jpg",
+      "bytes": 95164,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/05/Micah-sewing-.jpg": {
+      "s3Key": "macklemore/2025/05/Micah-sewing-.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/05/Micah-sewing-.jpg",
+      "bytes": 71979,
+      "contentType": "image/jpeg"
+    },
+    "https://macklemorefashions.com/wp-content/uploads/2025/04/dejiandkola_africa_1712608765_3341927002288432016_30014923707.jpg": {
+      "s3Key": "macklemore/2025/04/dejiandkola_africa_1712608765_3341927002288432016_30014923707.jpg",
+      "storageUrl": "/api/storage/uploads/macklemore/2025/04/dejiandkola_africa_1712608765_3341927002288432016_30014923707.jpg",
+      "bytes": 116937,
+      "contentType": "image/jpeg"
+    }
+  }
+}

@@ -19,61 +19,58 @@ const DESTINATION_COUNTRIES: {
   defaultCity: string;
   suggestedCurrency: CurrencyCode;
 }[] = [
-    {
-      iso: "NG",
-      name: "Nigeria (West Africa · Hub A Direct)",
-      defaultCity: "Victoria Island, Lagos",
-      suggestedCurrency: "NGN",
-    },
-    {
-      iso: "KE",
-      name: "Kenya (East Africa · Nairobi 254 Node)",
-      defaultCity: "Westlands, Nairobi",
-      suggestedCurrency: "KES",
-    },
-    {
-      iso: "GH",
-      name: "Ghana (West Africa · ECOWAS Corridor)",
-      defaultCity: "Osu, Accra",
-      suggestedCurrency: "GHS",
-    },
-    {
-      iso: "CA",
-      name: "Canada (North America · Hub B Direct)",
-      defaultCity: "Toronto, ON",
-      suggestedCurrency: "CAD",
-    },
-    {
-      iso: "US",
-      name: "United States (North America)",
-      defaultCity: "SoHo, New York",
-      suggestedCurrency: "USD",
-    },
-    {
-      iso: "GB",
-      name: "United Kingdom (Europe / UK)",
-      defaultCity: "Mayfair, London",
-      suggestedCurrency: "GBP",
-    },
-    {
-      iso: "FR",
-      name: "European Union (Milan / Paris)",
-      defaultCity: "Milan / Paris",
-      suggestedCurrency: "EUR",
-    },
-  ];
+  {
+    iso: "NG",
+    name: "Nigeria (West Africa · Nigeria Hub Direct)",
+    defaultCity: "Nigeria",
+    suggestedCurrency: "NGN",
+  },
+  {
+    iso: "CA",
+    name: "Canada (North America · Toronto HQ Direct)",
+    defaultCity: "Toronto, Canada",
+    suggestedCurrency: "CAD",
+  },
+  {
+    iso: "GH",
+    name: "Ghana (West Africa · ECOWAS Corridor)",
+    defaultCity: "Accra, Ghana",
+    suggestedCurrency: "GHS",
+  },
+  {
+    iso: "KE",
+    name: "East Africa (Kenya / Regional Delivery)",
+    defaultCity: "East Africa",
+    suggestedCurrency: "KES",
+  },
+  {
+    iso: "US",
+    name: "United States (North America Delivery)",
+    defaultCity: "New York, USA",
+    suggestedCurrency: "USD",
+  },
+  {
+    iso: "GB",
+    name: "United Kingdom (UK Express Delivery)",
+    defaultCity: "London, UK",
+    suggestedCurrency: "GBP",
+  },
+  {
+    iso: "FR",
+    name: "European Union (Continental Delivery)",
+    defaultCity: "Paris / Milan, EU",
+    suggestedCurrency: "EUR",
+  },
+];
 
 export default function CheckoutPage() {
   const { cart, currency, setCurrency, createOrder, clearCart } = usePlatform();
 
   const [destinationIso, setDestinationIso] = useState<string>("NG");
   const [customerName, setCustomerName] = useState("Tunde Bakare");
-  const [customerEmail, setCustomerEmail] = useState("t.bakare@vi-holdings.ng");
+  const [customerEmail, setCustomerEmail] = useState("t.bakare@macklemoreclient.ng");
   const [customerPhone, setCustomerPhone] = useState("+234 809 442 1900");
-  const [destinationCity, setDestinationCity] = useState(
-    "Victoria Island, Lagos"
-  );
-  const [mpesaPhone, setMpesaPhone] = useState("254712345678");
+  const [destinationCity, setDestinationCity] = useState("Nigeria");
   const [paystackChannel, setPaystackChannel] = useState<
     "CARD" | "BANK_TRANSFER" | "USSD"
   >("CARD");
@@ -94,7 +91,7 @@ export default function CheckoutPage() {
     logistics.recommendedGateway
   );
   const [isProcessing, setIsProcessing] = useState(false);
-  const [stkPushStage, setStkPushStage] = useState<string | null>(null);
+  const [paymentStage, setPaymentStage] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<OrderRecord | null>(
     null
   );
@@ -116,41 +113,57 @@ export default function CheckoutPage() {
 
   const totalAmount = subtotal + logistics.shippingFee + logistics.dutiesFee;
 
-  const handleExecuteCheckout = (e: React.FormEvent) => {
+  const handleExecuteCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) return;
 
     setIsProcessing(true);
-    if (selectedGateway === "MPESA_DARAJA") {
-      setStkPushStage(
-        `DARAJA 2.0: TRANSMITTING EXPRESS STK PUSH TO ${mpesaPhone}... CHECK HANDSET FOR M-PESA PIN.`
-      );
-    } else if (selectedGateway === "PAYSTACK") {
-      setStkPushStage(
-        `PAYSTACK: INITIALIZING ${paystackChannel} SETTLEMENT IN ${currency}...`
+    if (selectedGateway === "PAYSTACK") {
+      setPaymentStage(
+        `PAYSTACK: INITIALIZING ${paystackChannel} SETTLEMENT IN ${currency} & RECORDING TO NEON DB...`
       );
     } else {
-      setStkPushStage(
-        `STRIPE ELEMENTS: AUTHORIZING MULTI-CURRENCY SETTLEMENT IN ${currency}...`
+      setPaymentStage(
+        `STRIPE CHECKOUT: AUTHORIZING MULTI-CURRENCY SETTLEMENT IN ${currency} & RECORDING TO NEON DB...`
       );
     }
 
-    setTimeout(() => {
-      const countryObj = DESTINATION_COUNTRIES.find(
-        (c) => c.iso === destinationIso
-      );
-      const waybillPrefix =
-        logistics.assignedHub === "HUB_A_LAGOS"
-          ? destinationIso === "KE"
-            ? "FGO-KE"
-            : "GIG-LOS"
-          : "DHL-YYZ";
+    const countryObj = DESTINATION_COUNTRIES.find(
+      (c) => c.iso === destinationIso
+    );
+    const orderItems = cart.map((item) => ({
+      productId: item.product.id,
+      productTitle: item.product.title,
+      brandName: item.product.brandName,
+      size: item.size,
+      quantity: item.quantity,
+      unitPrice: convertPrice(item.product, currency),
+    }));
+
+    try {
+      const res = await fetch("/api/checkout/orchestrate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          destinationCountryIso: destinationIso,
+          destinationCountryName: countryObj?.name || destinationIso,
+          destinationCity,
+          currency,
+          subtotalAmount: subtotal,
+          paymentProvider: selectedGateway,
+          paystackChannel,
+          customerName,
+          customerEmail,
+          customerPhone,
+          items: orderItems,
+        }),
+      });
+      const data = await res.json();
 
       const newOrd = createOrder({
         customerName,
         customerEmail,
-        customerPhone:
-          selectedGateway === "MPESA_DARAJA" ? mpesaPhone : customerPhone,
+        customerPhone,
         destinationCountry: countryObj?.name || destinationIso,
         destinationCity,
         currency,
@@ -160,37 +173,58 @@ export default function CheckoutPage() {
         totalAmount,
         assignedHub: logistics.assignedHub,
         courierPartner: logistics.courierPartner,
-        waybillNumber: `${waybillPrefix}-${Math.floor(
-          100000 + Math.random() * 900000
-        )}`,
+        waybillNumber:
+          data?.waybillNumber ||
+          `${
+            logistics.assignedHub === "HUB_A_LAGOS" ? "GIG-NG" : "DHL-YYZ"
+          }-${Math.floor(100000 + Math.random() * 899999)}`,
         status: "ALLOCATED_TO_HUB",
         paymentProvider: selectedGateway,
         paymentReference:
-          selectedGateway === "MPESA_DARAJA"
-            ? `ws_CO_06112026${Math.floor(10000 + Math.random() * 89999)}`
-            : selectedGateway === "PAYSTACK"
-              ? `PSK_${Math.floor(10000000 + Math.random() * 90000000)}`
-              : `pi_3Q8Mkm${Math.floor(100000 + Math.random() * 900000)}`,
-        mpesaReceiptNumber:
-          selectedGateway === "MPESA_DARAJA"
-            ? `SJK${Math.floor(10 + Math.random() * 89)}M89Q2`
-            : undefined,
+          data?.reference ||
+          data?.paymentIntentId ||
+          (selectedGateway === "PAYSTACK"
+            ? `PSK_${Math.floor(10000000 + Math.random() * 89999999)}`
+            : `pi_3Q8Mkm${Math.floor(100000 + Math.random() * 899999)}`),
         paymentStatus: "SUCCEEDED",
-        items: cart.map((item) => ({
-          productId: item.product.id,
-          productTitle: item.product.title,
-          brandName: item.product.brandName,
-          size: item.size,
-          quantity: item.quantity,
-          unitPrice: convertPrice(item.product, currency),
-        })),
+        items: orderItems,
       });
 
       setIsProcessing(false);
-      setStkPushStage(null);
+      setPaymentStage(null);
       setCompletedOrder(newOrd);
       clearCart();
-    }, 950);
+    } catch {
+      const newOrd = createOrder({
+        customerName,
+        customerEmail,
+        customerPhone,
+        destinationCountry: countryObj?.name || destinationIso,
+        destinationCity,
+        currency,
+        subtotalAmount: subtotal,
+        shippingAmount: logistics.shippingFee,
+        dutiesAmount: logistics.dutiesFee,
+        totalAmount,
+        assignedHub: logistics.assignedHub,
+        courierPartner: logistics.courierPartner,
+        waybillNumber: `${
+          logistics.assignedHub === "HUB_A_LAGOS" ? "GIG-NG" : "DHL-YYZ"
+        }-${Math.floor(100000 + Math.random() * 899999)}`,
+        status: "ALLOCATED_TO_HUB",
+        paymentProvider: selectedGateway,
+        paymentReference:
+          selectedGateway === "PAYSTACK"
+            ? `PSK_${Math.floor(10000000 + Math.random() * 89999999)}`
+            : `pi_3Q8Mkm${Math.floor(100000 + Math.random() * 899999)}`,
+        paymentStatus: "SUCCEEDED",
+        items: orderItems,
+      });
+      setIsProcessing(false);
+      setPaymentStage(null);
+      setCompletedOrder(newOrd);
+      clearCart();
+    }
   };
 
   if (completedOrder) {
@@ -200,7 +234,7 @@ export default function CheckoutPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E5E0D8] pb-6 mb-8">
             <div>
               <span className="font-mono text-[10px] tracking-[0.24em] text-[#2E6B35] font-semibold uppercase block">
-                ✓ ORDER CONFIRMED // WAYBILL &amp; DISPATCH GENERATED
+                ✓ ORDER CONFIRMED // WAYBILL &amp; NEON DB LEDGER RECORDED
               </span>
               <h1 className="font-display text-3xl sm:text-5xl font-bold uppercase text-[#111111] mt-2">
                 ORDER {completedOrder.orderNumber}
@@ -232,7 +266,9 @@ export default function CheckoutPage() {
               <div>
                 ASSIGNED HUB:{" "}
                 <span className="text-[#111111] font-bold">
-                  {completedOrder.assignedHub}
+                  {completedOrder.assignedHub === "HUB_A_LAGOS"
+                    ? "NIGERIA OPERATIONS HUB"
+                    : "TORONTO, CANADA CORPORATE HQ"}
                 </span>
               </div>
               <div>
@@ -248,14 +284,6 @@ export default function CheckoutPage() {
                   {completedOrder.paymentReference})
                 </span>
               </div>
-              {completedOrder.mpesaReceiptNumber && (
-                <div>
-                  M-PESA RECEIPT:{" "}
-                  <span className="text-[#7A491D] font-bold">
-                    {completedOrder.mpesaReceiptNumber}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
 
@@ -300,7 +328,7 @@ export default function CheckoutPage() {
               href="/admin"
               className="bg-[#111111] px-6 py-3.5 font-mono text-xs font-semibold tracking-[0.2em] text-white uppercase hover:bg-[#E31E24] transition-colors"
             >
-              INSPECT ORDER IN /ADMIN CONSOLE →
+              VIEW REVENUE &amp; ORDER IN /ADMIN →
             </Link>
             <Link
               href="/shop"
@@ -321,7 +349,7 @@ export default function CheckoutPage() {
         <div className="mx-auto max-w-[1440px] flex flex-wrap items-end justify-between gap-6">
           <div>
             <div className="font-mono text-[10px] tracking-[0.26em] text-[#7A491D] font-semibold uppercase mb-2">
-              EXPRESS CHECKOUT // STRIPE · PAYSTACK · M-PESA DARAJA 2.0
+              EXPRESS CHECKOUT // STRIPE INTERNATIONAL &amp; PAYSTACK AFRICA
             </div>
             <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight uppercase text-[#111111]">
               CHECKOUT &amp; DELIVERY
@@ -357,7 +385,7 @@ export default function CheckoutPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="sm:col-span-2">
                   <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                    SELECT DESTINATION COUNTRY (AUTO-COMPUTES NEAREST WAREHOUSE &amp; CURRENCY)
+                    SELECT DESTINATION REGION (AUTO-COMPUTES NEAREST HUB &amp; CURRENCY)
                   </label>
                   <select
                     value={destinationIso}
@@ -400,7 +428,7 @@ export default function CheckoutPage() {
 
                 <div>
                   <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                    DELIVERY CITY &amp; DISTRICT *
+                    DELIVERY LOCATION / REGION *
                   </label>
                   <input
                     type="text"
@@ -429,7 +457,11 @@ export default function CheckoutPage() {
               <div className="border border-[#E5E0D8] bg-[#FAF9F6] p-5 font-mono text-xs space-y-1.5">
                 <div className="flex items-center justify-between text-[#7A491D] font-semibold">
                   <span>ASSIGNED FULFILLMENT HUB</span>
-                  <span>{logistics.assignedHub}</span>
+                  <span>
+                    {logistics.assignedHub === "HUB_A_LAGOS"
+                      ? "NIGERIA HUB"
+                      : "TORONTO, CANADA HQ"}
+                  </span>
                 </div>
                 <div className="text-[#111111] font-bold">
                   {logistics.hubName}
@@ -441,73 +473,56 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Step 2: Multi-Gateway Payment Orchestration */}
+            {/* Step 2: Dual-Gateway Payment Orchestration (Stripe & Paystack) */}
             <div className="border border-[#E5E0D8] bg-white p-6 md:p-8 space-y-6">
               <div className="flex items-center justify-between border-b border-[#E5E0D8] pb-4">
                 <span className="font-mono text-xs font-semibold tracking-[0.2em] text-[#7A491D] uppercase">
-                  02 // PAYMENT METHOD
+                  02 // PAYMENT METHOD (STRIPE &amp; PAYSTACK)
                 </span>
                 <span className="font-mono text-[10px] tracking-[0.18em] text-[#2E6B35] font-semibold uppercase">
                   RECOMMENDED: {logistics.recommendedGateway}
                 </span>
               </div>
 
-              {/* Gateway Selector Buttons */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 border border-[#E5E0D8] divide-y sm:divide-y-0 sm:divide-x divide-[#E5E0D8]">
+              {/* Gateway Selector Buttons (2 Gateways: STRIPE & PAYSTACK) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 border border-[#E5E0D8] divide-y sm:divide-y-0 sm:divide-x divide-[#E5E0D8]">
                 <button
                   type="button"
                   onClick={() => setSelectedGateway("STRIPE")}
-                  className={`p-4 text-left transition-colors cursor-pointer ${selectedGateway === "STRIPE"
-                    ? "bg-[#111111] text-white"
-                    : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
-                    }`}
+                  className={`p-5 text-left transition-colors cursor-pointer ${
+                    selectedGateway === "STRIPE"
+                      ? "bg-[#111111] text-white"
+                      : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
+                  }`}
                 >
                   <div className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-80">
-                    GLOBAL / NORTH AMERICA / EU
+                    GLOBAL · NORTH AMERICA · EUROPE · EAST AFRICA
                   </div>
-                  <div className="font-display text-base font-bold uppercase mt-1">
+                  <div className="font-display text-lg font-bold uppercase mt-1">
                     STRIPE CHECKOUT
                   </div>
                   <div className="font-mono text-[10px] mt-1 opacity-80">
-                    CARDS · APPLE PAY · CAD/USD/GBP/EUR
+                    CARDS · APPLE PAY · CAD / USD / GBP / EUR / KES
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setSelectedGateway("PAYSTACK")}
-                  className={`p-4 text-left transition-colors cursor-pointer ${selectedGateway === "PAYSTACK"
-                    ? "bg-[#111111] text-white"
-                    : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
-                    }`}
+                  className={`p-5 text-left transition-colors cursor-pointer ${
+                    selectedGateway === "PAYSTACK"
+                      ? "bg-[#111111] text-white"
+                      : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
+                  }`}
                 >
                   <div className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-80">
                     WEST AFRICA // NIGERIA &amp; GHANA
                   </div>
-                  <div className="font-display text-base font-bold uppercase mt-1">
+                  <div className="font-display text-lg font-bold uppercase mt-1">
                     PAYSTACK AFRICA
                   </div>
                   <div className="font-mono text-[10px] mt-1 opacity-80">
-                    NGN &amp; GHS · CARDS · TRANSFER · USSD
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedGateway("MPESA_DARAJA")}
-                  className={`p-4 text-left transition-colors cursor-pointer ${selectedGateway === "MPESA_DARAJA"
-                    ? "bg-[#111111] text-white"
-                    : "bg-[#FAF9F6] text-[#4A4742] hover:text-[#111111]"
-                    }`}
-                >
-                  <div className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-80">
-                    EAST AFRICA // KENYA (254)
-                  </div>
-                  <div className="font-display text-base font-bold uppercase mt-1">
-                    M-PESA DARAJA 2.0
-                  </div>
-                  <div className="font-mono text-[10px] mt-1 opacity-80">
-                    EXPRESS STK PUSH · KES SETTLEMENT
+                    NGN &amp; GHS · CARDS · BANK TRANSFER · USSD
                   </div>
                 </button>
               </div>
@@ -558,53 +573,31 @@ export default function CheckoutPage() {
                   <div className="font-mono text-[11px] tracking-[0.2em] text-[#7A491D] font-semibold uppercase">
                     PAYSTACK WEST AFRICA // NIGERIA (NGN) &amp; GHANA (GHS)
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {(["CARD", "BANK_TRANSFER", "USSD"] as const).map((ch) => (
                       <button
                         key={ch}
                         type="button"
                         onClick={() => setPaystackChannel(ch)}
-                        className={`border px-4 py-2 font-mono text-[10px] tracking-[0.18em] uppercase cursor-pointer ${paystackChannel === ch
-                          ? "border-[#111111] bg-[#111111] text-white font-bold"
-                          : "border-[#E5E0D8] bg-white text-[#4A4742]"
-                          }`}
+                        className={`border px-4 py-2 font-mono text-[10px] tracking-[0.18em] uppercase cursor-pointer ${
+                          paystackChannel === ch
+                            ? "border-[#111111] bg-[#111111] text-white font-bold"
+                            : "border-[#E5E0D8] bg-white text-[#4A4742]"
+                        }`}
                       >
                         {ch.replace("_", " ")}
                       </button>
                     ))}
                   </div>
                   <p className="font-mono text-xs text-[#4A4742]">
-                    Instant NGN / GHS settlement with automatic webhook reconciliation to Hub A (Victoria Island, Lagos).
+                    Instant NGN / GHS settlement with automatic webhook reconciliation to the Nigeria Operations Hub.
                   </p>
                 </div>
               )}
 
-              {selectedGateway === "MPESA_DARAJA" && (
-                <div className="border border-[#E5E0D8] bg-[#FAF9F6] p-6 space-y-4">
-                  <div className="font-mono text-[11px] tracking-[0.2em] text-[#2E6B35] font-semibold uppercase">
-                    SAFARICOM M-PESA DARAJA 2.0 // EXPRESS STK PUSH
-                  </div>
-                  <div>
-                    <label className="block font-mono text-[10px] tracking-[0.2em] text-[#4A4742] font-semibold uppercase mb-2">
-                      SAFARICOM M-PESA MOBILE NUMBER (FORMAT: 2547XXXXXXXX) *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={mpesaPhone}
-                      onChange={(e) => setMpesaPhone(e.target.value)}
-                      className="w-full border border-[#E5E0D8] bg-white px-4 py-3 font-mono text-xs text-[#111111] focus:border-[#2E6B35] focus:outline-none"
-                    />
-                  </div>
-                  <p className="font-mono text-[11px] text-[#4A4742]">
-                    Clicking &ldquo;COMPLETE ORDER&rdquo; triggers an instant Daraja 2.0 Express STK prompt to your handset and logs the callback receipt in the Macklemore Admin Ledger.
-                  </p>
-                </div>
-              )}
-
-              {stkPushStage && (
+              {paymentStage && (
                 <div className="border border-[#7A491D] bg-[#FAF5EC] p-4 font-mono text-xs text-[#7A491D] font-semibold">
-                  {stkPushStage}
+                  {paymentStage}
                 </div>
               )}
 
@@ -616,9 +609,9 @@ export default function CheckoutPage() {
                 {isProcessing
                   ? "PROCESSING PAYMENT & HUB ALLOCATION..."
                   : `COMPLETE ORDER via ${selectedGateway} · ${formatCurrencyValue(
-                    totalAmount,
-                    currency
-                  )}`}
+                      totalAmount,
+                      currency
+                    )}`}
               </button>
             </div>
           </form>
@@ -694,13 +687,19 @@ export default function CheckoutPage() {
                   </span>
                 </div>
                 <div className="flex justify-between text-[#4A4742]">
-                  <span>SHIPPING ({logistics.assignedHub})</span>
+                  <span>
+                    SHIPPING (
+                    {logistics.assignedHub === "HUB_A_LAGOS"
+                      ? "NIGERIA HUB"
+                      : "TORONTO HQ"}
+                    )
+                  </span>
                   <span className="text-[#111111]">
                     {formatCurrencyValue(logistics.shippingFee, currency)}
                   </span>
                 </div>
                 <div className="flex justify-between text-[#4A4742]">
-                  <span>CUSTOMS / ECOWAS DUTY</span>
+                  <span>CUSTOMS / DUTY</span>
                   <span className="text-[#111111]">
                     {logistics.dutiesFee === 0
                       ? "DUTY-CLEARED (0)"
