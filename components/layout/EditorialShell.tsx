@@ -175,6 +175,11 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
   const circleCircumference = 2 * Math.PI * 25.5; // r = 25.5 inside 60x60 viewBox
   const strokeDashoffset = circleCircumference * (1 - scrollProgress);
 
+  // For Admin studio & login routes, bypass customer storefront shell to prevent duplicate navbars & footers
+  if (pathname?.startsWith("/admin")) {
+    return <div className="min-h-screen w-full bg-[#FFFDF9] text-[#1F1A17]">{children}</div>;
+  }
+
   return (
     <div className="min-h-screen w-full max-w-[100vw] overflow-x-clip flex flex-col bg-[#FFFDF9] text-[#1F1A17]">
       {/* Multi-color Tribal Ribbon Accent (Infinite Left-to-Right Motion) */}

@@ -83,11 +83,11 @@ export function AdminOverviewTab({
       {/* 4 Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Total Revenue */}
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm font-medium text-[#6E6A63]">Total Sales</span>
             {/* Currency Switcher */}
-            <div className="flex items-center gap-1 bg-[#FAF5EE] border border-[#EADFD0] p-0.5 rounded-md text-[11px] font-mono">
+            <div className="flex items-center gap-1 bg-[#FAF5EE] border border-[#EADFD0] p-0.5 rounded-sm text-[11px] font-mono">
               {(["CAD", "USD", "NGN", "GBP"] as CurrencyCode[]).map((c) => (
                 <button
                   key={c}
@@ -118,7 +118,7 @@ export function AdminOverviewTab({
         </div>
 
         {/* Customer Orders */}
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm font-medium text-[#6E6A63]">Customer Orders</span>
             <span className="text-xs text-[#7A491D] font-mono">
@@ -142,7 +142,7 @@ export function AdminOverviewTab({
         </div>
 
         {/* Clothes & Vault Inventory */}
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm font-medium text-[#6E6A63]">Wardrobe Inventory</span>
             <span className="text-xs text-[#7A491D]">
@@ -168,7 +168,7 @@ export function AdminOverviewTab({
         </div>
 
         {/* Cloud Media Vault (Neon S3) */}
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-col justify-between min-h-[170px]">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm font-medium text-[#6E6A63]">Media Storage</span>
             <span className="flex items-center gap-1.5 text-xs text-[#2E6B35]">
@@ -193,7 +193,7 @@ export function AdminOverviewTab({
       {/* Distribution Hub Status & Low Stock Watchlist */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Dual Hub Overview Card */}
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
@@ -207,7 +207,7 @@ export function AdminOverviewTab({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Lagos Hub */}
-            <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-6 space-y-2">
+            <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-6 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-[#1F1A17]">
                   Lagos Hub (Nigeria)
@@ -228,7 +228,7 @@ export function AdminOverviewTab({
             </div>
 
             {/* Toronto Hub */}
-            <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-6 space-y-2">
+            <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-6 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-[#1F1A17]">
                   Toronto HQ (Canada)
@@ -251,7 +251,7 @@ export function AdminOverviewTab({
         </div>
 
         {/* Low Stock Watchlist */}
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs flex flex-col justify-between">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-5">
               <div>
@@ -276,7 +276,7 @@ export function AdminOverviewTab({
                 {lowStockItems.slice(0, 4).map((alert) => (
                   <div
                     key={`${alert.sku}-${alert.size}`}
-                    className="flex items-center justify-between rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs"
+                    className="flex items-center justify-between rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs"
                   >
                     <div>
                       <div className="font-medium text-[#1F1A17]">
@@ -299,7 +299,7 @@ export function AdminOverviewTab({
                               onRestockVariant(prod.id, alert.size, "hubALagos", alert.hubALagos + 5);
                             }
                           }}
-                          className="rounded-md bg-white border border-[#EADFD0] px-3 py-1 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
+                          className="rounded-sm bg-white border border-[#EADFD0] px-3 py-1 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
                         >
                           +5 Stock
                         </button>
@@ -324,7 +324,7 @@ export function AdminOverviewTab({
       </div>
 
       {/* Recent Orders Preview */}
-      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs">
+      <div className="rounded-sm border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-xs">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
@@ -336,7 +336,7 @@ export function AdminOverviewTab({
           </div>
           <button
             onClick={() => onNavigateToTab("ORDERS")}
-            className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-colors cursor-pointer"
+            className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-colors cursor-pointer"
           >
             All Orders ({orders.length}) →
           </button>

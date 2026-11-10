@@ -30,7 +30,7 @@ export function AdminB2BTab({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
             B2B Wholesale &amp; Stockist Desk
@@ -47,7 +47,7 @@ export function AdminB2BTab({
               key={st}
               type="button"
               onClick={() => setSelectedStatus(st)}
-              className={`rounded-lg px-3.5 py-2 text-xs font-medium transition-all whitespace-nowrap cursor-pointer select-none ${
+              className={`rounded-sm px-3.5 py-2 text-xs font-medium transition-all whitespace-nowrap cursor-pointer select-none ${
                 selectedStatus === st
                   ? "bg-[#7A491D] text-white shadow-xs"
                   : "bg-[#FAF9F6] border border-[#EADFD0] text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white"
@@ -61,7 +61,7 @@ export function AdminB2BTab({
 
       {/* Inquiries List */}
       {filteredInquiries.length === 0 ? (
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
           No B2B wholesale enquiries in this view.
         </div>
       ) : (
@@ -69,7 +69,7 @@ export function AdminB2BTab({
           {filteredInquiries.map((inq) => (
             <div
               key={inq.id}
-              className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs hover:shadow-sm transition-all space-y-5"
+              className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs hover:shadow-sm transition-all space-y-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#EADFD0]/60 pb-4">
                 <div>
@@ -87,7 +87,7 @@ export function AdminB2BTab({
                     onChange={(e) =>
                       onUpdateStatus(inq.id, e.target.value as B2BLeadStatus)
                     }
-                    className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2 text-xs font-medium text-[#7A491D] cursor-pointer focus:outline-none focus:border-[#7A491D]"
+                    className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2 text-xs font-medium text-[#7A491D] cursor-pointer focus:outline-none focus:border-[#7A491D]"
                   >
                     {STATUS_OPTIONS.map((opt) => (
                       <option key={opt} value={opt}>
@@ -132,7 +132,7 @@ export function AdminB2BTab({
               </div>
 
               {inq.message && (
-                <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-4 text-xs text-[#4A4742] leading-relaxed">
+                <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-4 text-xs text-[#4A4742] leading-relaxed">
                   <span className="font-semibold text-[#1F1A17] block mb-1">
                     Boutique Proposal:
                   </span>

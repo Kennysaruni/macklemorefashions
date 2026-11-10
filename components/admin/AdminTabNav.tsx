@@ -40,7 +40,7 @@ export function AdminTabNav({
   counts = {},
 }: AdminTabNavProps) {
   return (
-    <nav className="rounded-xl border border-[#EADFD0] bg-white p-1.5 shadow-xs mb-6 overflow-x-auto no-scrollbar">
+    <nav className="rounded-sm border border-[#EADFD0] bg-white p-1.5 shadow-xs mb-6 overflow-x-auto no-scrollbar">
       <div className="flex items-center gap-1.5 min-w-max">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -51,7 +51,7 @@ export function AdminTabNav({
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               type="button"
-              className={`relative flex items-center gap-2 rounded-lg px-4.5 py-3 text-xs font-medium transition-colors cursor-pointer select-none ${
+              className={`relative flex items-center gap-2 rounded-sm px-4.5 py-3 text-xs font-medium transition-colors cursor-pointer select-none ${
                 isActive
                   ? "text-[#1F1A17] font-semibold"
                   : "text-[#6E6A63] hover:text-[#1F1A17] hover:bg-[#FAF9F6]"
@@ -61,7 +61,7 @@ export function AdminTabNav({
               {isActive && (
                 <motion.div
                   layoutId="activeAdminTab"
-                  className="absolute inset-0 rounded-lg bg-[#FAF5EE] border border-[#EADFD0]"
+                  className="absolute inset-0 rounded-sm bg-[#FAF5EE] border border-[#EADFD0]"
                   transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}

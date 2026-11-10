@@ -74,7 +74,7 @@ function AdminBrandModalContent({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs overflow-y-auto">
-      <div className="w-full max-w-lg rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-2xl my-8">
+      <div className="w-full max-w-lg rounded-sm border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-2xl my-8">
         <div className="flex items-center justify-between border-b border-[#EADFD0]/60 pb-4 mb-6">
           <div>
             <h3 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
@@ -87,7 +87,7 @@ function AdminBrandModalContent({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg bg-[#FAF9F6] border border-[#EADFD0] px-2.5 py-1 text-xs text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
+            className="rounded-sm bg-[#FAF9F6] border border-[#EADFD0] px-2.5 py-1 text-xs text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
           >
             Close
           </button>
@@ -107,7 +107,7 @@ function AdminBrandModalContent({
                 }
               }}
               placeholder="e.g. Deji & Kola"
-              className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+              className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
             />
           </div>
 
@@ -120,7 +120,7 @@ function AdminBrandModalContent({
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="deji-and-kola"
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none font-mono"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none font-mono"
               />
             </div>
 
@@ -132,7 +132,7 @@ function AdminBrandModalContent({
                 value={originCountry}
                 onChange={(e) => setOriginCountry(e.target.value)}
                 placeholder="Nigeria"
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@ function AdminBrandModalContent({
                 max="100"
                 value={commissionRatePct}
                 onChange={(e) => setCommissionRatePct(Number(e.target.value))}
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none font-mono"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none font-mono"
               />
             </div>
 
@@ -160,7 +160,7 @@ function AdminBrandModalContent({
                   id="is-proprietary"
                   checked={isProprietary}
                   onChange={(e) => setIsProprietary(e.target.checked)}
-                  className="rounded border-[#EADFD0] text-[#7A491D] focus:ring-[#7A491D]"
+                  className="rounded-xs border-[#EADFD0] text-[#7A491D] focus:ring-[#7A491D]"
                 />
                 <label htmlFor="is-proprietary" className="text-xs text-[#1F1A17] cursor-pointer">
                   In-House Label
@@ -176,7 +176,7 @@ function AdminBrandModalContent({
               value={tagline}
               onChange={(e) => setTagline(e.target.value)}
               placeholder="e.g. Modern African Tailoring"
-              className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+              className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
             />
           </div>
 
@@ -186,7 +186,7 @@ function AdminBrandModalContent({
               type="text"
               value={lookbookBannerUrl}
               onChange={(e) => setLookbookBannerUrl(e.target.value)}
-              className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+              className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
             />
           </div>
 
@@ -197,7 +197,7 @@ function AdminBrandModalContent({
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Atelier heritage, bespoke tailoring..."
-              className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none leading-relaxed"
+              className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none leading-relaxed"
             />
           </div>
 
@@ -205,13 +205,13 @@ function AdminBrandModalContent({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-5 py-2.5 text-xs font-medium text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
+              className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-5 py-2.5 text-xs font-medium text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-[#7A491D] px-6 py-2.5 text-xs font-semibold text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer"
+              className="rounded-sm bg-[#7A491D] px-6 py-2.5 text-xs font-semibold text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer"
             >
               Save Partner House
             </button>

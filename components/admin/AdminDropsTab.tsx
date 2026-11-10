@@ -16,7 +16,7 @@ export function AdminDropsTab({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
             Collections &amp; Capsule Drops
@@ -29,7 +29,7 @@ export function AdminDropsTab({
         <Link
           href="/collections"
           target="_blank"
-          className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-5 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-colors"
+          className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-5 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-colors"
         >
           View Public Collections →
         </Link>
@@ -43,7 +43,7 @@ export function AdminDropsTab({
           return (
             <div
               key={col.id}
-              className="rounded-xl border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
+              className="rounded-sm border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
             >
               <div>
                 {/* Hero Banner */}
@@ -59,7 +59,7 @@ export function AdminDropsTab({
                   />
                   <div className="absolute top-3 left-3">
                     <span
-                      className={`rounded-md px-2.5 py-1 text-xs font-medium uppercase ${
+                      className={`rounded-sm px-2.5 py-1 text-xs font-medium uppercase ${
                         isLive
                           ? "bg-[#2E6B35] text-white"
                           : "bg-[#7A491D] text-white"
@@ -103,7 +103,7 @@ export function AdminDropsTab({
                 <button
                   type="button"
                   onClick={() => onToggleLive(col.id)}
-                  className={`rounded-lg px-4.5 py-2.5 text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer ${
+                  className={`rounded-sm px-4.5 py-2.5 text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer ${
                     isLive
                       ? "bg-[#FAF5EE] text-[#7A491D] border border-[#EADFD0] hover:bg-[#FDF2F2] hover:text-[#9E1015]"
                       : "bg-[#7A491D] text-white hover:bg-[#5C3614] shadow-xs"

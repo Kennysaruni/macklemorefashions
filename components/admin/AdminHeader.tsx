@@ -26,7 +26,7 @@ export function AdminHeader({
   };
 
   return (
-    <header className="rounded-xl border border-[#EADFD0] bg-white p-6 lg:p-7 shadow-xs mb-6 flex flex-wrap items-center justify-between gap-4">
+    <header className="rounded-sm border border-[#EADFD0] bg-white p-6 lg:p-7 shadow-xs mb-6 flex flex-wrap items-center justify-between gap-4">
       {/* Brand & Studio Title */}
       <div className="flex items-center gap-5">
         <Link href="/" className="hover:opacity-90 transition-opacity">
@@ -46,7 +46,7 @@ export function AdminHeader({
       {/* User, Vault & Actions */}
       <div className="flex items-center gap-3 sm:gap-4 ml-auto">
         {/* Storage Indicator */}
-        <div className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#FAF9F6] border border-[#EADFD0] text-xs">
+        <div className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-sm bg-[#FAF9F6] border border-[#EADFD0] text-xs">
           <span className="w-2 h-2 rounded-full bg-[#2E6B35]" />
           <span className="text-[#6E6A63]">Storage:</span>
           <span className="font-semibold text-[#1F1A17]">{storageSource}</span>
@@ -63,7 +63,7 @@ export function AdminHeader({
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-all flex items-center gap-1.5"
+          className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-white hover:border-[#7A491D] transition-all flex items-center gap-1.5"
         >
           <span>View Store</span>
           <span className="text-[#7A491D]">→</span>
@@ -73,7 +73,7 @@ export function AdminHeader({
         <button
           onClick={handleSignOut}
           type="button"
-          className="rounded-lg border border-[#EADFD0] bg-white px-4 py-2.5 text-xs font-medium text-[#9E1015] hover:bg-[#FDF2F2] hover:border-[#E31E24]/30 transition-all cursor-pointer"
+          className="rounded-sm border border-[#EADFD0] bg-white px-4 py-2.5 text-xs font-medium text-[#9E1015] hover:bg-[#FDF2F2] hover:border-[#E31E24]/30 transition-all cursor-pointer"
         >
           Sign Out
         </button>

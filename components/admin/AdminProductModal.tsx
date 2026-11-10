@@ -149,7 +149,7 @@ function AdminProductModalContent({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs overflow-y-auto">
-      <div className="w-full max-w-2xl rounded-xl border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-2xl my-8">
+      <div className="w-full max-w-2xl rounded-sm border border-[#EADFD0] bg-white p-7 sm:p-8 shadow-2xl my-8">
         <div className="flex items-center justify-between border-b border-[#EADFD0]/60 pb-4 mb-6">
           <div>
             <h3 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
@@ -162,7 +162,7 @@ function AdminProductModalContent({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg bg-[#FAF9F6] border border-[#EADFD0] px-2.5 py-1 text-xs text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
+            className="rounded-sm bg-[#FAF9F6] border border-[#EADFD0] px-2.5 py-1 text-xs text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
           >
             Close
           </button>
@@ -179,7 +179,7 @@ function AdminProductModalContent({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Royal Indigo Agbada Two-Piece"
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
               />
             </div>
 
@@ -188,7 +188,7 @@ function AdminProductModalContent({
               <select
                 value={brandId}
                 onChange={(e) => setBrandId(e.target.value)}
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none cursor-pointer"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none cursor-pointer"
               >
                 {brands.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -206,7 +206,7 @@ function AdminProductModalContent({
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as ShopCategory)}
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none cursor-pointer"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none cursor-pointer"
               >
                 <option value="Men Wears">Men Wears</option>
                 <option value="Male Accessories">Male Accessories</option>
@@ -222,7 +222,7 @@ function AdminProductModalContent({
               <select
                 value={genderTarget}
                 onChange={(e) => setGenderTarget(e.target.value as GenderTarget)}
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none cursor-pointer"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none cursor-pointer"
               >
                 <option value="MEN">Men</option>
                 <option value="WOMEN">Women</option>
@@ -238,7 +238,7 @@ function AdminProductModalContent({
                 min="10"
                 value={priceCad}
                 onChange={(e) => setPriceCad(Number(e.target.value))}
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
               />
             </div>
 
@@ -250,7 +250,7 @@ function AdminProductModalContent({
                 max="900"
                 value={fabricWeightGsm}
                 onChange={(e) => setFabricWeightGsm(Number(e.target.value))}
-                className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+                className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
               />
             </div>
           </div>
@@ -263,7 +263,7 @@ function AdminProductModalContent({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Handcrafted organic cotton, artisanal embroidery, tailored in Lagos..."
-              className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none leading-relaxed"
+              className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none leading-relaxed"
             />
           </div>
 
@@ -275,7 +275,7 @@ function AdminProductModalContent({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Editorial Image */}
-              <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-2">
+              <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-2">
                 <span className="text-xs font-medium text-[#4A4742] block">
                   Model / Editorial Photo
                 </span>
@@ -284,10 +284,10 @@ function AdminProductModalContent({
                   value={editorialImageUrl}
                   onChange={(e) => setEditorialImageUrl(e.target.value)}
                   placeholder="https://..."
-                  className="w-full rounded-lg border border-[#EADFD0] bg-white px-3 py-1.5 text-xs text-[#1F1A17]"
+                  className="w-full rounded-sm border border-[#EADFD0] bg-white px-3 py-1.5 text-xs text-[#1F1A17]"
                 />
                 <div className="flex items-center gap-2">
-                  <label className="rounded-lg bg-white border border-[#EADFD0] px-3 py-1.5 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] cursor-pointer">
+                  <label className="rounded-sm bg-white border border-[#EADFD0] px-3 py-1.5 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] cursor-pointer">
                     {isUploadingEditorial ? "Uploading..." : "Upload Photo"}
                     <input
                       type="file"
@@ -303,7 +303,7 @@ function AdminProductModalContent({
               </div>
 
               {/* Flatlay Image */}
-              <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-2">
+              <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-2">
                 <span className="text-xs font-medium text-[#4A4742] block">
                   Garment Flatlay Photo
                 </span>
@@ -312,10 +312,10 @@ function AdminProductModalContent({
                   value={flatlayImageUrl}
                   onChange={(e) => setFlatlayImageUrl(e.target.value)}
                   placeholder="https://..."
-                  className="w-full rounded-lg border border-[#EADFD0] bg-white px-3 py-1.5 text-xs text-[#1F1A17]"
+                  className="w-full rounded-sm border border-[#EADFD0] bg-white px-3 py-1.5 text-xs text-[#1F1A17]"
                 />
                 <div className="flex items-center gap-2">
-                  <label className="rounded-lg bg-white border border-[#EADFD0] px-3 py-1.5 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] cursor-pointer">
+                  <label className="rounded-sm bg-white border border-[#EADFD0] px-3 py-1.5 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] cursor-pointer">
                     {isUploadingFlatlay ? "Uploading..." : "Upload Photo"}
                     <input
                       type="file"
@@ -338,7 +338,7 @@ function AdminProductModalContent({
               Dual-Hub Inventory Allocation
             </span>
 
-            <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-4 divide-y divide-[#EADFD0]/60">
+            <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-4 divide-y divide-[#EADFD0]/60">
               <div className="grid grid-cols-3 pb-2 text-xs font-medium text-[#6E6A63]">
                 <span>Size</span>
                 <span className="text-center">Lagos Hub</span>
@@ -361,7 +361,7 @@ function AdminProductModalContent({
                           )
                         );
                       }}
-                      className="w-16 text-center rounded-md border border-[#EADFD0] bg-white py-1 font-mono text-xs text-[#1F1A17]"
+                      className="w-16 text-center rounded-sm border border-[#EADFD0] bg-white py-1 font-mono text-xs text-[#1F1A17]"
                     />
                   </div>
                   <div className="flex justify-end">
@@ -377,7 +377,7 @@ function AdminProductModalContent({
                           )
                         );
                       }}
-                      className="w-16 text-center rounded-md border border-[#EADFD0] bg-white py-1 font-mono text-xs text-[#1F1A17]"
+                      className="w-16 text-center rounded-sm border border-[#EADFD0] bg-white py-1 font-mono text-xs text-[#1F1A17]"
                     />
                   </div>
                 </div>
@@ -390,13 +390,13 @@ function AdminProductModalContent({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-5 py-2.5 text-xs font-medium text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
+              className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-5 py-2.5 text-xs font-medium text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-[#7A491D] px-6 py-2.5 text-xs font-semibold text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer"
+              className="rounded-sm bg-[#7A491D] px-6 py-2.5 text-xs font-semibold text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer"
             >
               Save Piece to Vault
             </button>

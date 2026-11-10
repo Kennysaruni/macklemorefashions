@@ -59,7 +59,7 @@ export function AdminProductsTab({
   return (
     <div className="space-y-8">
       {/* Top Filter & Action Bar */}
-      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs space-y-5">
+      <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
@@ -73,7 +73,7 @@ export function AdminProductsTab({
           <button
             onClick={onAddNewProduct}
             type="button"
-            className="rounded-lg bg-[#7A491D] px-6 py-3 text-xs font-semibold tracking-wider text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer flex items-center gap-2"
+            className="rounded-sm bg-[#7A491D] px-6 py-3 text-xs font-semibold tracking-wider text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer flex items-center gap-2"
           >
             <span>+</span>
             <span>Add New Piece</span>
@@ -89,7 +89,7 @@ export function AdminProductsTab({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by garment title, brand, or collection..."
-              className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-all"
+              className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-all"
             />
             {searchQuery && (
               <button
@@ -111,7 +111,7 @@ export function AdminProductsTab({
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`rounded-lg px-3.5 py-2 text-xs font-medium transition-all whitespace-nowrap cursor-pointer select-none ${
+                  className={`rounded-sm px-3.5 py-2 text-xs font-medium transition-all whitespace-nowrap cursor-pointer select-none ${
                     isSelected
                       ? "bg-[#7A491D] text-white shadow-xs"
                       : "bg-[#FAF9F6] border border-[#EADFD0] text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white"
@@ -127,7 +127,7 @@ export function AdminProductsTab({
 
       {/* Products Grid */}
       {filteredProducts.length === 0 ? (
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
           No garments match your search criteria. Try choosing another category or clearing the search.
         </div>
       ) : (
@@ -139,7 +139,7 @@ export function AdminProductsTab({
             return (
               <div
                 key={product.id}
-                className="rounded-xl border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
+                className="rounded-sm border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
               >
                 <div>
                   {/* Photo Thumbnail */}
@@ -154,13 +154,13 @@ export function AdminProductsTab({
                       }}
                     />
                     <div className="absolute top-3 left-3">
-                      <span className="rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#7A491D] border border-[#EADFD0]">
+                      <span className="rounded-sm bg-white/95 px-2.5 py-1 text-xs font-medium text-[#7A491D] border border-[#EADFD0]">
                         {product.brandName}
                       </span>
                     </div>
 
                     <div className="absolute top-3 right-3">
-                      <span className="rounded-md bg-white/95 px-2.5 py-1 text-xs font-mono text-[#1F1A17] border border-[#EADFD0]">
+                      <span className="rounded-sm bg-white/95 px-2.5 py-1 text-xs font-mono text-[#1F1A17] border border-[#EADFD0]">
                         {totalStock.total} units
                       </span>
                     </div>
@@ -185,7 +185,7 @@ export function AdminProductsTab({
                     </div>
 
                     {/* Quick Stock Summary Bar */}
-                    <div className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] p-3.5 text-xs flex items-center justify-between">
+                    <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-3.5 text-xs flex items-center justify-between">
                       <div className="flex items-center gap-5">
                         <div>
                           <span className="text-[11px] text-[#6E6A63] block">Lagos Hub</span>
@@ -207,7 +207,7 @@ export function AdminProductsTab({
                         onClick={() =>
                           setExpandedSizesProductId(isSizesOpen ? null : product.id)
                         }
-                        className="rounded-md bg-white border border-[#EADFD0] px-3 py-1.5 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
+                        className="rounded-sm bg-white border border-[#EADFD0] px-3 py-1.5 text-xs font-medium text-[#7A491D] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
                       >
                         {isSizesOpen ? "Hide Sizes" : "Adjust Stock"}
                       </button>
@@ -215,7 +215,7 @@ export function AdminProductsTab({
 
                     {/* Expandable Size Steppers */}
                     {isSizesOpen && (
-                      <div className="rounded-lg border border-[#EADFD0] bg-white p-3.5 space-y-2 mt-2">
+                      <div className="rounded-sm border border-[#EADFD0] bg-white p-3.5 space-y-2 mt-2">
                         <div className="text-xs font-medium text-[#6E6A63] border-b border-[#EADFD0]/60 pb-2 flex justify-between">
                           <span>Size</span>
                           <span>Lagos Hub · Toronto HQ</span>
@@ -232,7 +232,7 @@ export function AdminProductsTab({
 
                             <div className="flex items-center gap-3">
                               {/* Lagos Stepper */}
-                              <div className="flex items-center gap-1 bg-[#FAF9F6] border border-[#EADFD0] rounded-md p-0.5">
+                              <div className="flex items-center gap-1 bg-[#FAF9F6] border border-[#EADFD0] rounded-sm p-0.5">
                                 <button
                                   type="button"
                                   onClick={() =>
@@ -243,7 +243,7 @@ export function AdminProductsTab({
                                       Math.max(0, (variant.hubALagos || 0) - 1)
                                     )
                                   }
-                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded transition-colors cursor-pointer"
+                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded-xs transition-colors cursor-pointer"
                                 >
                                   -
                                 </button>
@@ -260,14 +260,14 @@ export function AdminProductsTab({
                                       (variant.hubALagos || 0) + 1
                                     )
                                   }
-                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded transition-colors cursor-pointer"
+                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded-xs transition-colors cursor-pointer"
                                 >
                                   +
                                 </button>
                               </div>
 
                               {/* Toronto Stepper */}
-                              <div className="flex items-center gap-1 bg-[#FAF9F6] border border-[#EADFD0] rounded-md p-0.5">
+                              <div className="flex items-center gap-1 bg-[#FAF9F6] border border-[#EADFD0] rounded-sm p-0.5">
                                 <button
                                   type="button"
                                   onClick={() =>
@@ -278,7 +278,7 @@ export function AdminProductsTab({
                                       Math.max(0, (variant.hubBToronto || 0) - 1)
                                     )
                                   }
-                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded transition-colors cursor-pointer"
+                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded-xs transition-colors cursor-pointer"
                                 >
                                   -
                                 </button>
@@ -295,7 +295,7 @@ export function AdminProductsTab({
                                       (variant.hubBToronto || 0) + 1
                                     )
                                   }
-                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded transition-colors cursor-pointer"
+                                  className="w-6 h-6 flex items-center justify-center text-xs font-bold text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white rounded-xs transition-colors cursor-pointer"
                                 >
                                   +
                                 </button>

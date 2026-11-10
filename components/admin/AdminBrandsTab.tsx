@@ -18,7 +18,7 @@ export function AdminBrandsTab({
   return (
     <div className="space-y-8">
       {/* Header & Action */}
-      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
             Partner Fashion Houses
@@ -31,7 +31,7 @@ export function AdminBrandsTab({
         <button
           onClick={onAddNewBrand}
           type="button"
-          className="rounded-lg bg-[#7A491D] px-6 py-3 text-xs font-semibold tracking-wider text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer flex items-center gap-2"
+          className="rounded-sm bg-[#7A491D] px-6 py-3 text-xs font-semibold tracking-wider text-white uppercase shadow-xs hover:bg-[#5C3614] transition-all cursor-pointer flex items-center gap-2"
         >
           <span>+</span>
           <span>Add Partner House</span>
@@ -43,7 +43,7 @@ export function AdminBrandsTab({
         {brands.map((brand) => (
           <div
             key={brand.id}
-            className="rounded-xl border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
+            className="rounded-sm border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
           >
             <div>
               {/* Brand Cover / Banner */}
@@ -59,7 +59,7 @@ export function AdminBrandsTab({
                 />
                 <div className="absolute top-3 left-3">
                   <span
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium uppercase ${
+                    className={`rounded-sm px-2.5 py-1 text-xs font-medium uppercase ${
                       brand.isProprietary
                         ? "bg-[#7A491D] text-white"
                         : "bg-white/95 text-[#7A491D] border border-[#EADFD0]"

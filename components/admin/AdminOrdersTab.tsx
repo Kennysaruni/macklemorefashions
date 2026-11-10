@@ -47,7 +47,7 @@ export function AdminOrdersTab({
   return (
     <div className="space-y-8">
       {/* Header & Filter Controls */}
-      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs space-y-5">
+      <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
@@ -71,7 +71,7 @@ export function AdminOrdersTab({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by client name, email, order #, or waybill..."
-              className="w-full rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-all"
+              className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-all"
             />
           </div>
 
@@ -83,7 +83,7 @@ export function AdminOrdersTab({
                   key={st}
                   type="button"
                   onClick={() => setSelectedStatus(st)}
-                  className={`rounded-lg px-3.5 py-2 text-xs font-medium transition-all whitespace-nowrap cursor-pointer select-none ${
+                  className={`rounded-sm px-3.5 py-2 text-xs font-medium transition-all whitespace-nowrap cursor-pointer select-none ${
                     isSelected
                       ? "bg-[#7A491D] text-white shadow-xs"
                       : "bg-[#FAF9F6] border border-[#EADFD0] text-[#6E6A63] hover:text-[#1F1A17] hover:bg-white"
@@ -99,7 +99,7 @@ export function AdminOrdersTab({
 
       {/* Orders List */}
       {filteredOrders.length === 0 ? (
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
           No orders found matching your search.
         </div>
       ) : (
@@ -110,7 +110,7 @@ export function AdminOrdersTab({
             return (
               <div
                 key={order.id}
-                className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs hover:shadow-sm transition-all space-y-5"
+                className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs hover:shadow-sm transition-all space-y-5"
               >
                 {/* Top Bar: Order Number, Date, Status */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#EADFD0]/60 pb-4">
@@ -171,7 +171,7 @@ export function AdminOrdersTab({
                         <button
                           type="button"
                           onClick={() => handleCopyWaybill(order.waybillNumber!)}
-                          className="rounded-md bg-[#FAF9F6] border border-[#EADFD0] px-2.5 py-1 text-[11px] text-[#6E6A63] hover:text-[#1F1A17] cursor-pointer"
+                          className="rounded-sm bg-[#FAF9F6] border border-[#EADFD0] px-2.5 py-1 text-[11px] text-[#6E6A63] hover:text-[#1F1A17] cursor-pointer"
                         >
                           {copiedWaybill === order.waybillNumber ? "Copied" : "Copy"}
                         </button>
@@ -203,7 +203,7 @@ export function AdminOrdersTab({
                     {order.items.map((item, idx) => (
                       <span
                         key={idx}
-                        className="rounded-md bg-[#FAF9F6] border border-[#EADFD0] px-3 py-1.5 text-xs text-[#1F1A17]"
+                        className="rounded-sm bg-[#FAF9F6] border border-[#EADFD0] px-3 py-1.5 text-xs text-[#1F1A17]"
                       >
                         {item.productTitle} (Size: {item.size}, Qty: {item.quantity})
                       </span>
@@ -216,7 +216,7 @@ export function AdminOrdersTab({
                       <button
                         type="button"
                         onClick={() => onUpdateOrderStatus(order.id, "DISPATCHED")}
-                        className="rounded-lg bg-[#7A491D] px-5 py-2.5 text-xs font-semibold text-white uppercase hover:bg-[#5C3614] shadow-xs transition-all cursor-pointer"
+                        className="rounded-sm bg-[#7A491D] px-5 py-2.5 text-xs font-semibold text-white uppercase hover:bg-[#5C3614] shadow-xs transition-all cursor-pointer"
                       >
                         Dispatch Waybill
                       </button>
@@ -224,7 +224,7 @@ export function AdminOrdersTab({
                       <select
                         value={order.status}
                         onChange={(e) => onUpdateOrderStatus(order.id, e.target.value)}
-                        className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2 text-xs text-[#1F1A17] cursor-pointer focus:outline-none focus:border-[#7A491D]"
+                        className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-2 text-xs text-[#1F1A17] cursor-pointer focus:outline-none focus:border-[#7A491D]"
                       >
                         <option value="ALLOCATED_TO_HUB">Allocated to Hub</option>
                         <option value="DISPATCHED">Dispatched</option>

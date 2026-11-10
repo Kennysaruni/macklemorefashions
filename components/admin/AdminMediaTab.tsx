@@ -35,7 +35,7 @@ export function AdminMediaTab({ neonStorage }: AdminMediaTabProps) {
   return (
     <div className="space-y-8">
       {/* Header & Stats */}
-      <div className="rounded-xl border border-[#EADFD0] bg-white p-7 shadow-xs space-y-5">
+      <div className="rounded-sm border border-[#EADFD0] bg-white p-7 shadow-xs space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
@@ -64,14 +64,14 @@ export function AdminMediaTab({ neonStorage }: AdminMediaTabProps) {
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             placeholder="Search media files by name or key..."
-            className="w-full max-w-md rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-all"
+            className="w-full max-w-md rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-4 py-3 text-xs text-[#1F1A17] placeholder:text-[#A8A29E] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-all"
           />
         </div>
       </div>
 
       {/* Media Grid */}
       {filteredObjects.length === 0 ? (
-        <div className="rounded-xl border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
+        <div className="rounded-sm border border-[#EADFD0] bg-white p-16 text-center text-xs text-[#6E6A63]">
           No media objects found.
         </div>
       ) : (
@@ -79,7 +79,7 @@ export function AdminMediaTab({ neonStorage }: AdminMediaTabProps) {
           {filteredObjects.map((obj) => (
             <div
               key={obj.key}
-              className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
+              className="rounded-sm border border-[#EADFD0] bg-white overflow-hidden shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
             >
               {/* Thumbnail */}
               <div className="relative aspect-3/4 w-full bg-[#FAF9F6] overflow-hidden">
@@ -105,7 +105,7 @@ export function AdminMediaTab({ neonStorage }: AdminMediaTabProps) {
                   <button
                     type="button"
                     onClick={() => handleCopy(obj.url, obj.key)}
-                    className="rounded bg-[#FAF5EE] border border-[#EADFD0] px-2.5 py-1 text-[#7A491D] font-medium hover:bg-white transition-colors cursor-pointer"
+                    className="rounded-sm bg-[#FAF5EE] border border-[#EADFD0] px-2.5 py-1 text-[#7A491D] font-medium hover:bg-white transition-colors cursor-pointer"
                   >
                     {copiedKey === obj.key ? "Copied" : "Copy URL"}
                   </button>
