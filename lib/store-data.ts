@@ -183,6 +183,8 @@ export interface ProductRecord {
   priceOverrides?: Partial<Record<CurrencyCode, number>>;
   editorialImageUrl: string;
   flatlayImageUrl: string;
+  s3EditorialKey?: string;
+  s3FlatlayKey?: string;
   colorName: string;
   colorHex: string;
   isFeatured: boolean;

@@ -275,25 +275,17 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-  const postCatalogMutation = async (payload: Record<string, unknown>) => {
-    try {
-      await fetch("/api/catalog", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } catch {
-      // Optimistic UI state already updated
-    }
-  };
-
   const addBrand = (brandInput: Omit<BrandRecord, "id">): BrandRecord => {
     const newBrand: BrandRecord = {
       ...brandInput,
       id: `brand-${Date.now()}`,
     };
     setBrands((prev) => [newBrand, ...prev]);
-    void postCatalogMutation({ action: "CREATE_BRAND", brand: newBrand });
+    void fetch("/api/brands", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newBrand),
+    }).catch(() => {});
     return newBrand;
   };
 
@@ -308,14 +300,15 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       id: `prod-${Date.now()}`,
     };
     setProducts((prev) => [newProd, ...prev]);
-    void postCatalogMutation({
-      action: "CREATE_PRODUCT",
-      product: {
+    void fetch("/api/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         ...newProd,
         s3EditorialKey: productInput.s3EditorialKey,
         s3FlatlayKey: productInput.s3FlatlayKey,
-      },
-    });
+      }),
+    }).catch(() => {});
     return newProd;
   };
 
@@ -329,18 +322,18 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     setProducts((prev) =>
       prev.map((p) => (p.id === id ? { ...p, ...updates } : p))
     );
-    void postCatalogMutation({
-      action: "UPDATE_PRODUCT",
-      product: { id, ...updates },
-    });
+    void fetch(`/api/products/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    }).catch(() => {});
   };
 
   const deleteProduct = (id: string) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
-    void postCatalogMutation({
-      action: "DELETE_PRODUCT",
-      productId: id,
-    });
+    void fetch(`/api/products/${id}`, {
+      method: "DELETE",
+    }).catch(() => {});
   };
 
   const updateVariantStock = (
@@ -361,27 +354,31 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
         };
       })
     );
-    void postCatalogMutation({
-      action: "UPDATE_STOCK",
-      productId,
-      size,
-      hub,
-      newQty: safeQty,
-    });
+    void fetch(`/api/products/${productId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ size, hub, newQty: safeQty }),
+    }).catch(() => {});
   };
 
   const toggleCollectionLive = (collectionId: string) => {
+    let nextDropLive = false;
+    let nextVipLocked = true;
     setCollections((prev) =>
-      prev.map((col) =>
-        col.id === collectionId
-          ? { ...col, isDropLive: !col.isDropLive, isVipLocked: col.isDropLive }
-          : col
-      )
+      prev.map((col) => {
+        if (col.id === collectionId) {
+          nextDropLive = !col.isDropLive;
+          nextVipLocked = col.isDropLive;
+          return { ...col, isDropLive: nextDropLive, isVipLocked: nextVipLocked };
+        }
+        return col;
+      })
     );
-    void postCatalogMutation({
-      action: "TOGGLE_COLLECTION",
-      collectionId,
-    });
+    void fetch(`/api/collections/${collectionId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isDropLive: nextDropLive, isVipLocked: nextVipLocked }),
+    }).catch(() => {});
   };
 
   const createOrder = (
@@ -395,6 +392,11 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       createdAt: new Date().toISOString(),
     };
     setOrders((prev) => [newOrder, ...prev]);
+    void fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newOrder),
+    }).catch(() => {});
     return newOrder;
   };
 
@@ -415,13 +417,15 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
         };
       })
     );
-    void postCatalogMutation({
-      action: "UPDATE_ORDER_STATUS",
-      orderId,
-      status,
-      paymentStatus,
-      waybillNumber: waybill,
-    });
+    void fetch(`/api/orders/${orderId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        status,
+        paymentStatus,
+        waybillNumber: waybill,
+      }),
+    }).catch(() => {});
   };
 
   const submitB2BInquiry = (
@@ -444,10 +448,11 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       createdAt: new Date().toISOString(),
     };
     setB2bInquiries((prev) => [record, ...prev]);
-    void postCatalogMutation({
-      action: "CREATE_B2B_INQUIRY",
-      inquiry: record,
-    });
+    void fetch("/api/b2b-inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(record),
+    }).catch(() => {});
     return record;
   };
 
@@ -467,12 +472,14 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
           : inq
       )
     );
-    void postCatalogMutation({
-      action: "UPDATE_B2B_STATUS",
-      id,
-      status,
-      assignedExecutive: executive,
-    });
+    void fetch(`/api/b2b-inquiries/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        status,
+        assignedExecutive: executive,
+      }),
+    }).catch(() => {});
   };
 
   return (
