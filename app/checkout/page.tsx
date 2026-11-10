@@ -12,6 +12,7 @@ import {
   OrderRecord,
   PaymentProvider,
 } from "@/lib/store-data";
+import { LuxuryLoadingIndicator } from "@/components/motion/LuxuryLoadingIndicator";
 
 const DESTINATION_COUNTRIES: {
   iso: string;
@@ -343,7 +344,17 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#111111]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#111111] relative">
+      {/* Luxury Loading Animation Overlay during Settlement */}
+      {isProcessing && (
+        <LuxuryLoadingIndicator
+          fullScreen
+          size="lg"
+          message={paymentStage || "Securing Order Settlement"}
+          subMessage="Allocating Lagos & Toronto Hub inventory and generating digital waybill..."
+        />
+      )}
+
       {/* Header */}
       <section className="border-b border-[#E5E0D8] bg-white px-4 py-12 md:px-8">
         <div className="mx-auto max-w-[1440px] flex flex-wrap items-end justify-between gap-6">

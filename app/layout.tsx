@@ -21,6 +21,14 @@ export const metadata: Metadata = {
     "MACKLEMORE FASHION | Luxury Multi-Brand Storefront & African Distribution Hub",
   description:
     "Flagship digital headquarters of Macklemore Fashion (macklemorefashions.com). Blending high-fashion multi-brand curation with African streetwear comfort and heritage across Lagos, Nairobi, Accra, and Toronto.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/assets/fashion-Boutique-logo-1.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

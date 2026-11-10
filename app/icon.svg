@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="macklemoreGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F2D07A" />
+      <stop offset="50%" stop-color="#D4860B" />
+      <stop offset="100%" stop-color="#7A491D" />
+    </linearGradient>
+    <linearGradient id="macklemoreCrimsonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E31E24" />
+      <stop offset="100%" stop-color="#9E1015" />
+    </linearGradient>
+    <radialGradient id="macklemoreBgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#261F1A" />
+      <stop offset="100%" stop-color="#14110E" />
+    </radialGradient>
+  </defs>
+
+  <!-- Luxury Rounded Background Tile -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#macklemoreBgGrad)" stroke="#D4860B" stroke-width="1.5" stroke-opacity="0.65" />
+
+  <!-- Inner Subtle Gold Accent Ring -->
+  <rect x="5.5" y="5.5" width="53" height="53" rx="11" fill="none" stroke="#7A491D" stroke-width="0.75" stroke-opacity="0.4" />
+
+  <!-- Macklemore Afro-Luxury Geometric Monogram 'M' -->
+  <!-- Left Pillar -->
+  <path d="M14 46L14 18L21 18L21 46Z" fill="url(#macklemoreGoldGrad)" />
+  
+  <!-- Right Pillar -->
+  <path d="M43 46L43 18L50 18L50 46Z" fill="url(#macklemoreGoldGrad)" />
+
+  <!-- Left Chevron Descent -->
+  <path d="M21 18L32 35L27 38L18 24Z" fill="url(#macklemoreCrimsonGrad)" />
+
+  <!-- Right Chevron Descent -->
+  <path d="M43 18L32 35L37 38L46 24Z" fill="#1A7A6E" />
+
+  <!-- Center Diamond Crest Motif from Logo -->
+  <polygon points="32,20 37,27 32,34 27,27" fill="url(#macklemoreGoldGrad)" />
+  <polygon points="32,23 35,27 32,31 29,27" fill="#FAF5EE" />
+
+  <!-- Bottom Tribal Points -->
+  <polygon points="21,49 24,52 21,55 18,52" fill="#E31E24" />
+  <polygon points="32,47 35,50 32,53 29,50" fill="#D4860B" />
+  <polygon points="43,49 46,52 43,55 40,52" fill="#1A7A6E" />
+</svg>
+
