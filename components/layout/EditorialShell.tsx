@@ -20,7 +20,6 @@ import {
   MacklemoreCurrencyIcon,
 } from "@/components/vectors/TribalVectors";
 import { EditorialDrawer } from "@/components/motion/MotionPrimitives";
-import { LandingSplashLoader } from "@/components/motion/LandingSplashLoader";
 
 const PRIMARY_NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -172,9 +171,6 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen w-full max-w-[100vw] overflow-x-clip flex flex-col bg-[#FFFDF9] text-[#1F1A17]">
-      {/* Macklemore Fashions Landing Splash Screen */}
-      <LandingSplashLoader />
-
       {/* Multi-color Tribal Ribbon Accent (Infinite Left-to-Right Motion) */}
       <TribalPatternRibbon />
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import {
   calculateLogisticsForDestination,
@@ -22,6 +22,7 @@ import {
   GooglePayBadge,
   LinkBadge,
 } from "@/components/commerce/PaymentLogos";
+import { MacklemoreOrderConfirmingLoader } from "@/components/motion/MacklemoreOrderConfirmingLoader";
 
 interface DestinationMeta {
   iso: string;
@@ -378,61 +379,15 @@ export default function CheckoutPage() {
   // 5. Active Checkout Form View
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] relative">
-      {/* Macklemore "Something good is coming" Fullscreen Settlement Loader */}
+      {/* Authentic Macklemore Fashions pulsing thread beads loader during settlement */}
       <AnimatePresence>
         {isProcessing && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FAF5EE]/95 backdrop-blur-md p-6 text-center select-none"
-          >
-            {/* Animated Concentric Orbits from macklemorefashions.com */}
-            <div className="relative w-20 h-20 mb-8 flex items-center justify-center">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 2.8, ease: "linear" }}
-                className="absolute inset-0 rounded-full border-t border-r border-[#7A491D] border-b-transparent border-l-transparent opacity-80"
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ repeat: Infinity, duration: 4.2, ease: "linear" }}
-                className="absolute -inset-1.5 rounded-full border border-dashed border-[#D4860B]/50"
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ repeat: Infinity, duration: 2.0, ease: "linear" }}
-                className="absolute inset-3 rounded-full border-t border-l border-[#D4860B] border-b-transparent border-r-transparent opacity-90"
-              />
-              <motion.div
-                animate={{ scale: [0.92, 1.15, 0.92], opacity: [0.8, 1, 0.8] }}
-                transition={{ repeat: Infinity, duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex items-center justify-center"
-              >
-                <div className="w-3.5 h-3.5 rotate-45 bg-[#E31E24] shadow-sm shadow-[#E31E24]/40" />
-                <div className="absolute w-1.5 h-1.5 rotate-45 bg-[#FAF5EE]" />
-              </motion.div>
-            </div>
-
-            {/* Typography from macklemorefashions.com landing screen */}
-            <div className="space-y-3 max-w-md">
-              <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#7A491D]">
-                Macklemore Fashion · Afro-Luxury
-              </div>
-              <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#1F1A17] uppercase">
-                We&apos;re weaving something beautiful.
-              </h2>
-              <p className="text-sm font-semibold tracking-wide text-[#7A491D]">
-                Something good is coming.
-              </p>
-              <p className="text-xs text-[#6E6A63] leading-relaxed max-w-sm mx-auto">
-                Securing your payment and handcrafting your order with care and artistry.
-              </p>
-              <div className="pt-2 text-[10px] uppercase font-bold tracking-[0.2em] text-[#A69E91]">
-                Wear your culture. Own your story.
-              </div>
-            </div>
-          </motion.div>
+          <MacklemoreOrderConfirmingLoader
+            message="Confirming your order..."
+            subMessage={`Securing payment settlement via ${
+              selectedGateway === "PAYSTACK" ? "Paystack" : "Stripe"
+            }. Please do not close or refresh this page.`}
+          />
         )}
       </AnimatePresence>
 
@@ -486,29 +441,37 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                <div className="grid grid-cols-2 gap-3 pt-1">
                   <button
                     type="button"
                     onClick={fillLagosClient}
-                    className="rounded-xl border border-[#00C3F7]/40 bg-[#F0FBFF] hover:bg-[#E2F7FE] p-3 text-left transition-colors cursor-pointer"
+                    className="rounded-xl border border-[#00C3F7]/40 bg-[#F0FBFF] hover:bg-[#E2F7FE] p-3.5 text-left transition-colors cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
-                      <PaystackLogo className="h-4" />
-                      <span className="text-[10px] font-bold text-[#0089AF] uppercase">1-Click</span>
+                      <PaystackLogo className="h-5" />
+                      <span className="text-[10px] font-bold text-[#0089AF] uppercase bg-[#E0F7FD] px-1.5 py-0.5 rounded">
+                        1-Click
+                      </span>
                     </div>
-                    <span className="text-[11px] text-[#4A5568] block mt-1">Lagos · NGN Paystack</span>
+                    <span className="text-[11px] text-[#4A5568] block mt-1.5">
+                      Lagos · NGN Paystack
+                    </span>
                   </button>
 
                   <button
                     type="button"
                     onClick={fillTorontoClient}
-                    className="rounded-xl border border-[#635BFF]/30 bg-[#F6F5FF] hover:bg-[#ECEBFF] p-3 text-left transition-colors cursor-pointer"
+                    className="rounded-xl border border-[#635BFF]/30 bg-[#F6F5FF] hover:bg-[#ECEBFF] p-3.5 text-left transition-colors cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
-                      <StripeLogo className="h-3.5" />
-                      <span className="text-[10px] font-bold text-[#635BFF] uppercase">1-Click</span>
+                      <StripeLogo className="h-5 w-auto" />
+                      <span className="text-[10px] font-bold text-[#635BFF] uppercase bg-[#EEEBFF] px-1.5 py-0.5 rounded">
+                        1-Click
+                      </span>
                     </div>
-                    <span className="text-[11px] text-[#4A5568] block mt-1">Toronto · CAD Stripe</span>
+                    <span className="text-[11px] text-[#4A5568] block mt-1.5">
+                      Toronto · CAD Stripe
+                    </span>
                   </button>
                 </div>
               </div>
@@ -620,8 +583,11 @@ export default function CheckoutPage() {
                   <h2 className="text-sm font-bold uppercase tracking-wider text-[#1F1A17]">
                     Payment Method
                   </h2>
-                  <span className="text-[11px] text-[#2E6B35] font-semibold flex items-center gap-1">
-                    <span>🔒</span> 256-bit Secure
+                  <span className="text-[11px] text-[#2E6B35] font-semibold flex items-center gap-1.5">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
+                      <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clipRule="evenodd" />
+                    </svg>
+                    256-bit Secure
                   </span>
                 </div>
 
@@ -637,7 +603,7 @@ export default function CheckoutPage() {
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <StripeLogo className="h-5" />
+                      <StripeLogo className="h-6 w-auto" />
                       <div className="w-4 h-4 rounded-full border flex items-center justify-center border-[#635BFF]">
                         {selectedGateway === "STRIPE" && (
                           <div className="w-2 h-2 rounded-full bg-[#635BFF]" />
@@ -664,7 +630,7 @@ export default function CheckoutPage() {
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <PaystackLogo className="h-5" />
+                      <PaystackLogo className="h-6 w-auto" />
                       <div className="w-4 h-4 rounded-full border flex items-center justify-center border-[#00C3F7]">
                         {selectedGateway === "PAYSTACK" && (
                           <div className="w-2 h-2 rounded-full bg-[#00C3F7]" />
