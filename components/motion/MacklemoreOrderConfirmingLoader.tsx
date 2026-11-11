@@ -32,7 +32,7 @@ export function MacklemoreOrderConfirmingLoader({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.96 }}
-        className="rounded-2xl border border-[#EADFD0] bg-white/95 px-8 py-10 shadow-2xl max-w-sm w-full text-center space-y-6"
+        className="rounded-md border border-[#EADFD0] bg-white/95 px-8 py-10 shadow-2xl max-w-sm w-full text-center space-y-6"
       >
         {/* The 7 African Thread Beads from macklemorefashions.com */}
         <div className="flex items-center justify-center gap-2.5 py-4">

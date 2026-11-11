@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
@@ -23,6 +23,8 @@ import {
   LinkBadge,
 } from "@/components/commerce/PaymentLogos";
 import { MacklemoreOrderConfirmingLoader } from "@/components/motion/MacklemoreOrderConfirmingLoader";
+import { TribalAnimatedCheckmark } from "@/components/motion/TribalAnimatedCheckmark";
+import { TribalPatternRibbon } from "@/components/vectors/TribalVectors";
 
 interface DestinationMeta {
   iso: string;
@@ -162,8 +164,18 @@ export default function CheckoutPage() {
     setStripeCardCvc("123");
   };
 
+  // Scroll to top immediately when an order receipt is active
+  useEffect(() => {
+    if (completedOrder && cart.length === 0) {
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      }
+    }
+  }, [completedOrder, cart.length]);
+
   // Add demo piece if cart is empty
   const handleAddDemoGarment = () => {
+    setCompletedOrder(null);
     if (products.length > 0) {
       addToCart(products[0], "M", 1);
     }
@@ -247,6 +259,9 @@ export default function CheckoutPage() {
       setIsProcessing(false);
       setCompletedOrder(newOrd);
       clearCart();
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      }
     } catch {
       const newOrd = createOrder({
         customerName: fullName.trim() || "Macklemore Client",
@@ -277,99 +292,106 @@ export default function CheckoutPage() {
       setIsProcessing(false);
       setCompletedOrder(newOrd);
       clearCart();
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      }
     }
   };
 
-  // 4. Completed Order View (Reduced Details & Softer Elegant Aesthetics)
-  if (completedOrder) {
+  // 4. Completed Order View (Reduced Details & Minimal Storefront Border Radius)
+  if (completedOrder && cart.length === 0) {
     const isLagos = completedOrder.assignedHub === "HUB_A_LAGOS";
     const estimatedTransit = isLagos ? "1-2 Business Days" : "2-4 Business Days";
 
     return (
-      <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] px-4 py-12 sm:py-16 md:px-8">
-        <div className="mx-auto max-w-2xl rounded-2xl border border-[#EADFD0] bg-white shadow-xl p-8 sm:p-12 space-y-8">
-          {/* Serene Confirmation Header */}
-          <div className="text-center space-y-3">
-            <div className="w-14 h-14 mx-auto rounded-full bg-[#EBF5ED] border border-[#2E6B35]/20 flex items-center justify-center text-[#2E6B35]">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-xs uppercase font-semibold tracking-widest text-[#2E6B35]">
-                Payment Confirmed
-              </span>
-              {emailDispatched && (
-                <span className="text-[10px] text-[#2E6B35] font-mono border border-[#2E6B35]/30 rounded px-1.5 py-0.5">
-                  Receipt Dispatched
+      <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] px-4 py-10 sm:py-14 md:px-8">
+        <div className="mx-auto max-w-2xl rounded-md border border-[#EADFD0] bg-white shadow-xl overflow-hidden">
+          {/* Top Multi-Color Tribal Pattern Ribbon Accent */}
+          <div className="h-2 w-full bg-[#FAF5EE] border-b border-[#EADFD0] overflow-hidden">
+            <TribalPatternRibbon className="h-2" />
+          </div>
+
+          <div className="p-6 sm:p-10 space-y-7">
+            {/* Serene Confirmation Header with Animated Tribal Checkmark */}
+            <div className="text-center space-y-3">
+              <TribalAnimatedCheckmark />
+              <div className="flex items-center justify-center gap-2 pt-1">
+                <span className="text-xs uppercase font-semibold tracking-widest text-[#2E6B35]">
+                  Payment Confirmed
                 </span>
-              )}
-            </div>
-            <h1 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#1F1A17]">
-              Thank you for your order, {completedOrder.customerName.split(" ")[0]}
-            </h1>
-            <p className="text-xs sm:text-sm text-[#6E6A63] max-w-md mx-auto">
-              Your order <span className="font-mono font-semibold text-[#1F1A17]">#{completedOrder.orderNumber}</span> has been confirmed. A receipt and delivery timeline have been sent to{" "}
-              <span className="font-semibold text-[#1F1A17]">{completedOrder.customerEmail}</span>.
-            </p>
-          </div>
-
-          {/* Simple Soft Delivery Timeline Card */}
-          <div className="rounded-xl border border-[#EADFD0] bg-[#FAF5EE]/70 p-5 space-y-3 text-xs">
-            <div className="flex items-center justify-between font-semibold text-[#7A491D] border-b border-[#EADFD0] pb-2">
-              <span className="uppercase tracking-wider">Estimated Delivery</span>
-              <span className="text-sm font-bold text-[#1F1A17]">{estimatedTransit}</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-[#6E6A63]">
-              <div>
-                <span className="block text-[10px] uppercase font-mono text-[#A69E91]">Courier &amp; Waybill</span>
-                <span className="font-semibold text-[#1F1A17]">{completedOrder.courierPartner}</span>
-                <span className="block font-mono text-[11px] text-[#7A491D] mt-0.5">{completedOrder.waybillNumber}</span>
+                {emailDispatched && (
+                  <span className="text-[10px] text-[#2E6B35] font-mono border border-[#2E6B35]/30 rounded px-1.5 py-0.5">
+                    Receipt Dispatched
+                  </span>
+                )}
               </div>
-              <div>
-                <span className="block text-[10px] uppercase font-mono text-[#A69E91]">Destination</span>
-                <span className="font-semibold text-[#1F1A17]">{completedOrder.destinationCity}, {completedOrder.destinationCountry}</span>
-                <span className="block text-[11px] text-[#6E6A63] mt-0.5">{completedOrder.customerPhone || "Courier will notify on arrival"}</span>
-              </div>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#1F1A17]">
+                Thank you for your order, {completedOrder.customerName.split(" ")[0]}
+              </h1>
+              <p className="text-xs sm:text-sm text-[#6E6A63] max-w-md mx-auto">
+                Your order <span className="font-mono font-semibold text-[#1F1A17]">#{completedOrder.orderNumber}</span> has been confirmed. A receipt and delivery timeline have been sent to{" "}
+                <span className="font-semibold text-[#1F1A17]">{completedOrder.customerEmail}</span>.
+              </p>
             </div>
-          </div>
 
-          {/* Items Summary */}
-          <div className="space-y-3">
-            <div className="text-xs uppercase font-bold tracking-wider text-[#7A491D]">
-              Curated Garments
-            </div>
-            <div className="rounded-xl border border-[#EADFD0] divide-y divide-[#EADFD0] overflow-hidden">
-              {completedOrder.items.map((item, idx) => (
-                <div key={idx} className="p-4 bg-white flex items-center justify-between text-xs">
-                  <div>
-                    <span className="font-semibold text-[#1F1A17]">{item.productTitle}</span>
-                    <span className="text-[#6E6A63] ml-2 font-mono">
-                      Size {item.size} · Qty {item.quantity}
-                    </span>
-                  </div>
-                  <div className="font-semibold text-[#1F1A17]">
-                    {formatCurrencyValue(item.unitPrice * item.quantity, completedOrder.currency)}
-                  </div>
+            {/* Simple Soft Delivery Timeline Card */}
+            <div className="rounded-md border border-[#EADFD0] bg-[#FAF5EE]/70 p-5 space-y-3 text-xs">
+              <div className="flex items-center justify-between font-semibold text-[#7A491D] border-b border-[#EADFD0] pb-2">
+                <span className="uppercase tracking-wider">Estimated Delivery</span>
+                <span className="text-sm font-bold text-[#1F1A17]">{estimatedTransit}</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-[#6E6A63]">
+                <div>
+                  <span className="block text-[10px] uppercase font-mono text-[#A69E91]">Courier &amp; Waybill</span>
+                  <span className="font-semibold text-[#1F1A17]">{completedOrder.courierPartner}</span>
+                  <span className="block font-mono text-[11px] text-[#7A491D] mt-0.5">{completedOrder.waybillNumber}</span>
                 </div>
-              ))}
-              <div className="p-4 bg-[#FAF9F6] flex items-center justify-between font-bold text-sm">
-                <span>Total Settled ({completedOrder.currency})</span>
-                <span className="text-[#7A491D] font-display text-base">
-                  {formatCurrencyValue(completedOrder.totalAmount, completedOrder.currency)}
-                </span>
+                <div>
+                  <span className="block text-[10px] uppercase font-mono text-[#A69E91]">Destination</span>
+                  <span className="font-semibold text-[#1F1A17]">{completedOrder.destinationCity}, {completedOrder.destinationCountry}</span>
+                  <span className="block text-[11px] text-[#6E6A63] mt-0.5">{completedOrder.customerPhone || "Courier will notify on arrival"}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Clean Single Action */}
-          <div className="pt-2 text-center">
-            <Link
-              href="/shop"
-              className="inline-block w-full sm:w-auto rounded-xl bg-[#7A491D] px-8 py-3.5 font-display text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors shadow-sm"
-            >
-              Continue Shopping →
-            </Link>
+            {/* Items Summary */}
+            <div className="space-y-3">
+              <div className="text-xs uppercase font-bold tracking-wider text-[#7A491D]">
+                Curated Garments
+              </div>
+              <div className="rounded-md border border-[#EADFD0] divide-y divide-[#EADFD0] overflow-hidden">
+                {completedOrder.items.map((item, idx) => (
+                  <div key={idx} className="p-4 bg-white flex items-center justify-between text-xs">
+                    <div>
+                      <span className="font-semibold text-[#1F1A17]">{item.productTitle}</span>
+                      <span className="text-[#6E6A63] ml-2 font-mono">
+                        Size {item.size} · Qty {item.quantity}
+                      </span>
+                    </div>
+                    <div className="font-semibold text-[#1F1A17]">
+                      {formatCurrencyValue(item.unitPrice * item.quantity, completedOrder.currency)}
+                    </div>
+                  </div>
+                ))}
+                <div className="p-4 bg-[#FAF9F6] flex items-center justify-between font-bold text-sm">
+                  <span>Total Settled ({completedOrder.currency})</span>
+                  <span className="text-[#7A491D] font-display text-base">
+                    {formatCurrencyValue(completedOrder.totalAmount, completedOrder.currency)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Clean Single Action */}
+            <div className="pt-2 text-center">
+              <Link
+                href="/shop"
+                onClick={() => setCompletedOrder(null)}
+                className="inline-block w-full sm:w-auto rounded-md bg-[#7A491D] px-8 py-3.5 font-display text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors shadow-sm"
+              >
+                Continue Shopping →
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -394,7 +416,7 @@ export default function CheckoutPage() {
       {/* Main Checkout Container */}
       <main className="mx-auto max-w-5xl px-4 py-8 sm:py-12 md:px-8">
         {cart.length === 0 ? (
-          <div className="mx-auto max-w-md text-center rounded-2xl border border-[#EADFD0] bg-white p-10 space-y-5 my-12 shadow-sm">
+          <div className="mx-auto max-w-md text-center rounded-md border border-[#EADFD0] bg-white p-10 space-y-5 my-12 shadow-sm">
             <div className="w-12 h-12 mx-auto rounded-full bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center text-[#7A491D]">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -411,14 +433,14 @@ export default function CheckoutPage() {
             <div className="flex flex-col gap-2.5 pt-2">
               <Link
                 href="/shop"
-                className="w-full rounded-xl bg-[#7A491D] py-3 text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors"
+                className="w-full rounded-md bg-[#7A491D] py-3 text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors"
               >
                 Discover New Drops →
               </Link>
               <button
                 type="button"
                 onClick={handleAddDemoGarment}
-                className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF5EE] py-2.5 text-xs font-semibold text-[#7A491D] hover:bg-white transition-colors cursor-pointer"
+                className="w-full rounded-md border border-[#EADFD0] bg-[#FAF5EE] py-2.5 text-xs font-semibold text-[#7A491D] hover:bg-white transition-colors cursor-pointer"
               >
                 + Add Curated Piece to Test
               </button>
@@ -429,7 +451,7 @@ export default function CheckoutPage() {
             {/* Left Column (7 cols): Streamlined Inputs & Payment Method */}
             <form onSubmit={handleExecuteCheckout} className="lg:col-span-7 space-y-6">
               {/* Top Express 1-Click Banner */}
-              <div className="rounded-2xl border border-[#EADFD0] bg-white p-5 shadow-xs space-y-3">
+              <div className="rounded-md border border-[#EADFD0] bg-white p-5 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase tracking-wider text-[#6E6A63]">
                     Express Checkout
@@ -445,11 +467,11 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={fillLagosClient}
-                    className="rounded-xl border border-[#00C3F7]/40 bg-[#F0FBFF] hover:bg-[#E2F7FE] p-3.5 text-left transition-colors cursor-pointer"
+                    className="rounded-md border border-[#00C3F7]/40 bg-[#F0FBFF] hover:bg-[#E2F7FE] p-3.5 text-left transition-colors cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <PaystackLogo className="h-5" />
-                      <span className="text-[10px] font-bold text-[#0089AF] uppercase bg-[#E0F7FD] px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] font-bold text-[#0089AF] uppercase bg-[#E0F7FD] px-1.5 py-0.5 rounded-sm">
                         1-Click
                       </span>
                     </div>
@@ -461,11 +483,11 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={fillTorontoClient}
-                    className="rounded-xl border border-[#635BFF]/30 bg-[#F6F5FF] hover:bg-[#ECEBFF] p-3.5 text-left transition-colors cursor-pointer"
+                    className="rounded-md border border-[#635BFF]/30 bg-[#F6F5FF] hover:bg-[#ECEBFF] p-3.5 text-left transition-colors cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <StripeLogo className="h-5 w-auto" />
-                      <span className="text-[10px] font-bold text-[#635BFF] uppercase bg-[#EEEBFF] px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] font-bold text-[#635BFF] uppercase bg-[#EEEBFF] px-1.5 py-0.5 rounded-sm">
                         1-Click
                       </span>
                     </div>
@@ -477,7 +499,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Minimal Delivery Details (Stripe-Like Simple Fields) */}
-              <div className="rounded-2xl border border-[#EADFD0] bg-white p-6 shadow-xs space-y-4">
+              <div className="rounded-md border border-[#EADFD0] bg-white p-6 shadow-xs space-y-4">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-[#1F1A17] border-b border-[#EADFD0] pb-2">
                   Contact &amp; Delivery
                 </h2>
@@ -494,7 +516,7 @@ export default function CheckoutPage() {
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
                       placeholder="client@luxury.com"
-                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                      className="w-full rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -509,7 +531,7 @@ export default function CheckoutPage() {
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="First and last name"
-                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                      className="w-full rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -521,7 +543,7 @@ export default function CheckoutPage() {
                     <select
                       value={destinationIso}
                       onChange={(e) => handleCountryChange(e.target.value)}
-                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                      className="w-full rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                     >
                       {DESTINATION_COUNTRIES.map((c) => (
                         <option key={c.iso} value={c.iso}>
@@ -542,7 +564,7 @@ export default function CheckoutPage() {
                       value={streetAddress}
                       onChange={(e) => setStreetAddress(e.target.value)}
                       placeholder="House number and street name"
-                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                      className="w-full rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -558,7 +580,7 @@ export default function CheckoutPage() {
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         placeholder="City"
-                        className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                        className="w-full rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                       />
                     </div>
                     <div>
@@ -570,7 +592,7 @@ export default function CheckoutPage() {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="+234 800 000 0000"
-                        className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                        className="w-full rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -578,7 +600,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Payment Method with Original Brand Logos */}
-              <div className="rounded-2xl border border-[#EADFD0] bg-white p-6 shadow-xs space-y-4">
+              <div className="rounded-md border border-[#EADFD0] bg-white p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between border-b border-[#EADFD0] pb-2">
                   <h2 className="text-sm font-bold uppercase tracking-wider text-[#1F1A17]">
                     Payment Method
@@ -596,7 +618,7 @@ export default function CheckoutPage() {
                   {/* Stripe Option */}
                   <div
                     onClick={() => setSelectedGateway("STRIPE")}
-                    className={`rounded-xl border p-4 cursor-pointer transition-all ${
+                    className={`rounded-md border p-4 cursor-pointer transition-all ${
                       selectedGateway === "STRIPE"
                         ? "border-[#635BFF] bg-[#F8F7FF] shadow-xs ring-1 ring-[#635BFF]"
                         : "border-[#EADFD0] bg-[#FAF9F6] hover:bg-white"
@@ -623,7 +645,7 @@ export default function CheckoutPage() {
                   {/* Paystack Option */}
                   <div
                     onClick={() => setSelectedGateway("PAYSTACK")}
-                    className={`rounded-xl border p-4 cursor-pointer transition-all ${
+                    className={`rounded-md border p-4 cursor-pointer transition-all ${
                       selectedGateway === "PAYSTACK"
                         ? "border-[#00C3F7] bg-[#F2FBFF] shadow-xs ring-1 ring-[#00C3F7]"
                         : "border-[#EADFD0] bg-[#FAF9F6] hover:bg-white"
@@ -638,13 +660,13 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 pt-1">
-                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded border border-[#E0E0E0]">
+                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded-sm border border-[#E0E0E0]">
                         Cards
                       </span>
-                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded border border-[#E0E0E0]">
+                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded-sm border border-[#E0E0E0]">
                         Bank
                       </span>
-                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded border border-[#E0E0E0]">
+                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded-sm border border-[#E0E0E0]">
                         USSD
                       </span>
                     </div>
@@ -656,7 +678,7 @@ export default function CheckoutPage() {
 
                 {/* Sub-form for Selected Gateway */}
                 {selectedGateway === "STRIPE" ? (
-                  <div className="rounded-xl border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
+                  <div className="rounded-md border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-[#1F1A17]">Card Details</span>
                       <button
@@ -668,7 +690,7 @@ export default function CheckoutPage() {
                       </button>
                     </div>
 
-                    <div className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden text-xs">
+                    <div className="rounded-md border border-[#EADFD0] bg-white overflow-hidden text-xs">
                       <div className="p-2.5 border-b border-[#EADFD0] flex items-center justify-between">
                         <input
                           type="text"
@@ -701,7 +723,7 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-xl border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
+                  <div className="rounded-md border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
                     <span className="text-xs font-semibold text-[#1F1A17] block">
                       Paystack Settlement Channel
                     </span>
@@ -711,7 +733,7 @@ export default function CheckoutPage() {
                           key={ch}
                           type="button"
                           onClick={() => setPaystackChannel(ch)}
-                          className={`rounded-lg border py-2 px-2 text-center font-medium transition-colors cursor-pointer ${
+                          className={`rounded-md border py-2 px-2 text-center font-medium transition-colors cursor-pointer ${
                             paystackChannel === ch
                               ? "border-[#00C3F7] bg-white text-[#0089AF] font-bold shadow-2xs"
                               : "border-[#EADFD0] bg-white text-[#6E6A63] hover:bg-[#FAF5EE]"
@@ -728,7 +750,7 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full rounded-xl bg-[#7A491D] py-3.5 px-6 font-display text-xs font-semibold tracking-widest text-white uppercase shadow-sm hover:bg-[#5C3614] transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full rounded-md bg-[#7A491D] py-3.5 px-6 font-display text-xs font-semibold tracking-widest text-white uppercase shadow-sm hover:bg-[#5C3614] transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <span>Pay {formatCurrencyValue(totalAmount, currency)}</span>
                   <span>→</span>
@@ -737,7 +759,7 @@ export default function CheckoutPage() {
             </form>
 
             {/* Right Column (5 cols): Clean Order Summary (Stripe-Like) */}
-            <aside className="lg:col-span-5 rounded-2xl border border-[#EADFD0] bg-white p-6 shadow-xs space-y-5 sticky top-24">
+            <aside className="lg:col-span-5 rounded-md border border-[#EADFD0] bg-white p-6 shadow-xs space-y-5 sticky top-24">
               <div className="flex items-center justify-between border-b border-[#EADFD0] pb-3">
                 <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#1F1A17]">
                   Order Summary ({cart.reduce((sum, i) => sum + i.quantity, 0)})
@@ -745,7 +767,7 @@ export default function CheckoutPage() {
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-                  className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-2.5 py-1 text-xs font-semibold text-[#7A491D] focus:outline-none"
+                  className="rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-2.5 py-1 text-xs font-semibold text-[#7A491D] focus:outline-none"
                 >
                   {(Object.keys(CURRENCIES) as CurrencyCode[]).map((c) => (
                     <option key={c} value={c}>
@@ -764,10 +786,10 @@ export default function CheckoutPage() {
                         <img
                           src={item.product.editorialImageUrl}
                           alt={item.product.title}
-                          className="w-12 h-14 object-cover rounded-lg border border-[#EADFD0] shrink-0"
+                          className="w-12 h-14 object-cover rounded-md border border-[#EADFD0] shrink-0"
                         />
                       ) : (
-                        <div className="w-12 h-14 rounded-lg bg-[#FAF5EE] border border-[#EADFD0] shrink-0" />
+                        <div className="w-12 h-14 rounded-md bg-[#FAF5EE] border border-[#EADFD0] shrink-0" />
                       )}
                       <div>
                         <div className="font-semibold text-[#1F1A17] line-clamp-1">{item.product.title}</div>
@@ -814,7 +836,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Subtle Trust Badges */}
-              <div className="rounded-xl bg-[#FAF5EE] p-3 text-[11px] text-[#6E6A63] text-center space-y-1">
+              <div className="rounded-md bg-[#FAF5EE] p-3 text-[11px] text-[#6E6A63] text-center space-y-1">
                 <div>Curated between Toronto HQ &amp; Lagos Atelier</div>
                 <div className="font-medium text-[#7A491D]">Inspected · Preserved · Hand-Delivered</div>
               </div>
