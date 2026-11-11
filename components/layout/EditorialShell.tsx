@@ -80,15 +80,12 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
     setIsCartOpen,
     removeFromCart,
     updateCartQuantity,
-    clearCart,
     cartCount,
   } = usePlatform();
 
   const [isCurrencyMenuOpen, setIsCurrencyMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>("shop");
-  const [reservationSent, setReservationSent] = useState(false);
-  const [guestEmail, setGuestEmail] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const currencyMenuRef = useRef<HTMLDivElement>(null);
@@ -163,14 +160,6 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
     currency,
     cartSubtotal
   );
-
-  const handleBagReservation = (e: React.FormEvent) => {
-    e.preventDefault();
-    setReservationSent(true);
-    setTimeout(() => {
-      clearCart();
-    }, 400);
-  };
 
   const circleCircumference = 2 * Math.PI * 25.5; // r = 25.5 inside 60x60 viewBox
   const strokeDashoffset = circleCircumference * (1 - scrollProgress);
@@ -329,7 +318,6 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
               type="button"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                setReservationSent(false);
                 setIsCartOpen(true);
               }}
               aria-label={`Shopping bag with ${cartCount} items`}
@@ -657,47 +645,25 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
         subtitle={`Prices shown in ${currency}`}
         widthClass="max-w-md"
       >
-        {reservationSent ? (
-          <div className="p-6 sm:p-8 text-center space-y-4 my-auto">
-            <div className="w-12 h-12 rounded-full bg-[#2E6B4E]/10 text-[#2E6B4E] flex items-center justify-center mx-auto text-xl font-bold">
-              ✓
-            </div>
-            <h4 className="font-display text-xl font-semibold text-[#1F1A17]">
-              Selection Reserved
-            </h4>
-            <p className="text-sm text-[#5C5147] leading-relaxed">
-              Thank you. Our client concierge team in Lagos and Toronto has received your reservation request{guestEmail ? ` for ${guestEmail}` : ""} and will follow up shortly with delivery details.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setReservationSent(false);
-                setIsCartOpen(false);
-              }}
-              className="px-6 py-3 rounded-md bg-[#1F1A17] text-white text-xs font-medium hover:bg-[#E31E24] transition-colors cursor-pointer"
-            >
-              Continue Browsing
-            </button>
-          </div>
-        ) : cart.length === 0 ? (
-          <div className="p-8 text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-[#FAF5EE] border border-[#EADFD0] text-[#1F1A17] flex items-center justify-center mx-auto">
+        {cart.length === 0 ? (
+          <div className="p-8 text-center space-y-4 my-auto">
+            <div className="w-12 h-12 rounded-sm bg-[#FAF5EE] border border-[#EADFD0] text-[#1F1A17] flex items-center justify-center mx-auto">
               <MacklemoreBagIcon className="w-5 h-5" />
             </div>
-            <p className="text-sm text-[#5C5147]">
+            <p className="text-xs text-[#5C5147]">
               Your shopping bag is currently empty.
             </p>
             <Link
               href="/shop"
               onClick={() => setIsCartOpen(false)}
-              className="inline-block px-6 py-3 rounded-md bg-[#1F1A17] text-white text-xs font-medium hover:bg-[#E31E24] transition-colors"
+              className="inline-block px-6 py-3 rounded-sm bg-[#7A491D] text-white font-display text-xs font-semibold tracking-wider uppercase hover:bg-[#5C3614] transition-colors"
             >
-              Explore the Shop
+              Explore Collection →
             </Link>
           </div>
         ) : (
           <div className="flex flex-col justify-between h-full">
-            <div className="divide-y divide-[#EADFD0]">
+            <div className="divide-y divide-[#EADFD0] overflow-y-auto">
               {cart.map((item) => {
                 const unitPrice = convertPrice(item.product, currency);
                 return (
@@ -708,7 +674,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                     <img
                       src={item.product.editorialImageUrl}
                       alt={item.product.title}
-                      className="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-md border border-[#EADFD0] shrink-0 bg-[#FAF5EE]"
+                      className="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-sm border border-[#EADFD0] shrink-0 bg-[#FAF5EE]"
                     />
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
@@ -735,7 +701,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                       </div>
 
                       <div className="flex items-center justify-between mt-3 pt-2 border-t border-[#F0E6D8]">
-                        <div className="flex items-center rounded-md border border-[#E2D6C5] bg-[#FAF5EE] overflow-hidden">
+                        <div className="flex items-center rounded-sm border border-[#E2D6C5] bg-[#FAF5EE] overflow-hidden">
                           <button
                             type="button"
                             onClick={() =>
@@ -771,27 +737,31 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
               })}
             </div>
 
-            {/* Bag Summary & Direct Concierge Reservation */}
+            {/* Bag Summary & Direct Checkout Action (No Concierge Gate) */}
             <div className="p-4 sm:p-6 bg-[#FAF5EE] border-t border-[#EADFD0] space-y-4">
               <div className="space-y-1.5 text-xs sm:text-sm">
                 <div className="flex justify-between text-[#5C5147]">
-                  <span>Subtotal</span>
-                  <span>{formatCurrencyValue(cartSubtotal, currency)}</span>
+                  <span>Garments Subtotal</span>
+                  <span className="font-medium text-[#1F1A17]">
+                    {formatCurrencyValue(cartSubtotal, currency)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-[#5C5147] gap-2">
                   <span className="truncate">
-                    Est. Shipping ({logisticsEstimate.estimatedTransitDays})
+                    Fulfillment Shipping ({logisticsEstimate.estimatedTransitDays})
                   </span>
-                  <span className="shrink-0">
-                    {formatCurrencyValue(
-                      logisticsEstimate.shippingFee,
-                      currency
-                    )}
+                  <span className="shrink-0 font-medium text-[#1F1A17]">
+                    {logisticsEstimate.shippingFee === 0
+                      ? "Complimentary"
+                      : formatCurrencyValue(
+                          logisticsEstimate.shippingFee,
+                          currency
+                        )}
                   </span>
                 </div>
-                <div className="flex justify-between text-sm sm:text-base font-semibold text-[#1F1A17] pt-2 border-t border-[#EADFD0]">
-                  <span>Estimated Total</span>
-                  <span className="text-[#E31E24]">
+                <div className="flex justify-between text-sm sm:text-base font-bold text-[#1F1A17] pt-2 border-t border-[#EADFD0]">
+                  <span className="font-display uppercase tracking-wider">Estimated Total</span>
+                  <span className="text-[#7A491D] font-display">
                     {formatCurrencyValue(
                       cartSubtotal + logisticsEstimate.shippingFee,
                       currency
@@ -800,22 +770,37 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              <form onSubmit={handleBagReservation} className="space-y-2.5 pt-1">
-                <input
-                  type="email"
-                  required
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                  placeholder="Enter your email to reserve items"
-                  className="w-full px-3.5 py-2.5 rounded-md bg-white border border-[#E2D6C5] text-xs text-[#1F1A17] focus:border-[#7A491D] outline-none"
-                />
-                <button
-                  type="submit"
-                  className="w-full py-3 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-xs font-medium tracking-wide transition-all duration-200 cursor-pointer shadow-xs"
+              {/* Direct Secure Checkout Button */}
+              <div className="space-y-2 pt-1">
+                <Link
+                  href="/checkout"
+                  onClick={() => setIsCartOpen(false)}
+                  className="w-full py-3.5 rounded-sm bg-[#7A491D] hover:bg-[#5C3614] text-white font-display text-xs font-semibold tracking-widest uppercase transition-all duration-200 flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                 >
-                  Reserve Selection with Concierge →
+                  <span>Proceed to Secure Checkout</span>
+                  <span>→</span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCartOpen(false)}
+                  className="w-full py-2.5 rounded-sm border border-[#EADFD0] bg-white text-[#1F1A17] text-xs font-medium hover:bg-[#FAF9F6] transition-colors cursor-pointer"
+                >
+                  Continue Browsing
                 </button>
-              </form>
+              </div>
+
+              {/* Trust Signals */}
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#EADFD0]/60 text-[10px] text-[#6E6A63]">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[#7A491D] shrink-0" />
+                  <span>Direct Hub Delivery</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[#2E6B35] shrink-0" />
+                  <span>Paystack &amp; Stripe Verified</span>
+                </div>
+              </div>
             </div>
           </div>
         )}
