@@ -21,6 +21,8 @@ import {
   ApplePayBadge,
   GooglePayBadge,
   LinkBadge,
+  LinkLogo,
+  VerveBadge,
 } from "@/components/commerce/PaymentLogos";
 import { MacklemoreOrderConfirmingLoader } from "@/components/motion/MacklemoreOrderConfirmingLoader";
 import { TribalAnimatedCheckmark } from "@/components/motion/TribalAnimatedCheckmark";
@@ -102,13 +104,31 @@ export default function CheckoutPage() {
   const [phoneNumber, setPhoneNumber] = useState("+234 809 442 1900");
 
   // 3. Payment Gateway & Channels
-  const [selectedGateway, setSelectedGateway] = useState<PaymentProvider>("PAYSTACK");
+  type ActiveCheckoutGateway = PaymentProvider | "LINK";
+  const [selectedGateway, setSelectedGateway] = useState<ActiveCheckoutGateway>("PAYSTACK");
   const [paystackChannel, setPaystackChannel] = useState<"CARD" | "BANK_TRANSFER" | "USSD">("CARD");
 
   // Stripe Card Details (for test simulation)
   const [stripeCardNumber, setStripeCardNumber] = useState("4242 •••• •••• 4242");
   const [stripeCardExpiry, setStripeCardExpiry] = useState("12/28");
   const [stripeCardCvc, setStripeCardCvc] = useState("123");
+
+  // Link by Stripe Details
+  const [linkSmsCode, setLinkSmsCode] = useState("424242");
+  const [isLinkVerified, setIsLinkVerified] = useState(true);
+
+  // Paystack Card Details (Verve, Mastercard, Visa)
+  const [paystackCardNumber, setPaystackCardNumber] = useState("5061 •••• •••• 0001");
+  const [paystackCardExpiry, setPaystackCardExpiry] = useState("08/28");
+  const [paystackCardCvv, setPaystackCardCvv] = useState("881");
+  const [paystackCardPin, setPaystackCardPin] = useState("1234");
+
+  // Paystack Bank Transfer State
+  const [accountCopied, setAccountCopied] = useState(false);
+
+  // Paystack USSD State
+  const [ussdBank, setUssdBank] = useState<"GTBank" | "Zenith" | "Access" | "UBA" | "FirstBank">("GTBank");
+  const [ussdCopied, setUssdCopied] = useState(false);
 
   // Loading & Order Completion State
   const [isProcessing, setIsProcessing] = useState(false);
@@ -146,6 +166,7 @@ export default function CheckoutPage() {
     setCity("Lagos");
     setPhoneNumber("+234 809 442 1900");
     setSelectedGateway("PAYSTACK");
+    setPaystackChannel("CARD");
   };
 
   const fillTorontoClient = () => {
@@ -158,10 +179,63 @@ export default function CheckoutPage() {
     setSelectedGateway("STRIPE");
   };
 
+  const fillLinkClient = () => {
+    handleCountryChange("CA");
+    setFullName("Julian Vance");
+    setCustomerEmail("julian.vance@luxury.ca");
+    setStreetAddress("100 King St West, Suite 3200");
+    setCity("Toronto");
+    setPhoneNumber("+1 416 555 0199");
+    setSelectedGateway("LINK");
+    setIsLinkVerified(true);
+    setLinkSmsCode("424242");
+  };
+
   const fillStripeTestCard = () => {
     setStripeCardNumber("4242 4242 4242 4242");
     setStripeCardExpiry("12/28");
     setStripeCardCvc("123");
+  };
+
+  const fillPaystackTestCard = () => {
+    setPaystackCardNumber("5061 2234 5678 0001");
+    setPaystackCardExpiry("08/28");
+    setPaystackCardCvv("881");
+    setPaystackCardPin("1234");
+  };
+
+  const copyAccountNumber = (acc: string) => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(acc);
+    }
+    setAccountCopied(true);
+    setTimeout(() => setAccountCopied(false), 2200);
+  };
+
+  const getUssdCode = () => {
+    const rawAmt = Math.max(100, Math.round(totalAmount));
+    switch (ussdBank) {
+      case "GTBank":
+        return `*737*50*${rawAmt}*4152#`;
+      case "Zenith":
+        return `*966*${rawAmt}*0012#`;
+      case "Access":
+        return `*901*${rawAmt}*0381#`;
+      case "UBA":
+        return `*919*${rawAmt}*9901#`;
+      case "FirstBank":
+        return `*894*${rawAmt}*5520#`;
+      default:
+        return `*737*50*${rawAmt}*4152#`;
+    }
+  };
+
+  const copyUssdCode = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(getUssdCode());
+    }
+    setUssdCopied(true);
+    setTimeout(() => setUssdCopied(false), 2200);
   };
 
   // Scroll to top immediately when an order receipt is active
@@ -201,25 +275,32 @@ export default function CheckoutPage() {
       unitPrice: convertPrice(item.product, currency),
     }));
 
+    const backendProvider: PaymentProvider =
+      selectedGateway === "PAYSTACK" ? "PAYSTACK" : "STRIPE";
+
     try {
-      const res = await fetch("/api/checkout/orchestrate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          destinationCountryIso: destinationIso,
-          destinationCountryName: selectedCountry.name,
-          destinationCity: city,
-          shippingAddress: formattedShippingAddress,
-          currency,
-          subtotalAmount: subtotal,
-          paymentProvider: selectedGateway,
-          paystackChannel,
-          customerName: fullName.trim() || "Macklemore Client",
-          customerEmail,
-          customerPhone: phoneNumber,
-          items: orderItems,
+      // Deliberate luxury settlement load window so the customer sees the authentic Macklemore pulse loader
+      const [res] = await Promise.all([
+        fetch("/api/checkout/orchestrate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            destinationCountryIso: destinationIso,
+            destinationCountryName: selectedCountry.name,
+            destinationCity: city,
+            shippingAddress: formattedShippingAddress,
+            currency,
+            subtotalAmount: subtotal,
+            paymentProvider: backendProvider,
+            paystackChannel: selectedGateway === "PAYSTACK" ? paystackChannel : undefined,
+            customerName: fullName.trim() || "Macklemore Client",
+            customerEmail,
+            customerPhone: phoneNumber,
+            items: orderItems,
+          }),
         }),
-      });
+        new Promise((resolve) => setTimeout(resolve, 2600)),
+      ]);
       const data = await res.json();
       if (data?.emailSent) {
         setEmailDispatched(true);
@@ -245,11 +326,13 @@ export default function CheckoutPage() {
             100000 + Math.random() * 899999
           )}`,
         status: "ALLOCATED_TO_HUB",
-        paymentProvider: selectedGateway,
+        paymentProvider: backendProvider,
         paymentReference:
           data?.reference ||
           data?.paymentIntentId ||
-          (selectedGateway === "PAYSTACK"
+          (selectedGateway === "LINK"
+            ? `link_pm_${Math.floor(10000000 + Math.random() * 89999999)}`
+            : selectedGateway === "PAYSTACK"
             ? `PSK_${Math.floor(10000000 + Math.random() * 89999999)}`
             : `pi_3Q8Mkm${Math.floor(100000 + Math.random() * 899999)}`),
         paymentStatus: "SUCCEEDED",
@@ -263,6 +346,7 @@ export default function CheckoutPage() {
         window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       }
     } catch {
+      await new Promise((resolve) => setTimeout(resolve, 2600));
       const newOrd = createOrder({
         customerName: fullName.trim() || "Macklemore Client",
         customerEmail,
@@ -281,9 +365,11 @@ export default function CheckoutPage() {
           logistics.assignedHub === "HUB_A_LAGOS" ? "GIG-NG" : "DHL-YYZ"
         }-${Math.floor(100000 + Math.random() * 899999)}`,
         status: "ALLOCATED_TO_HUB",
-        paymentProvider: selectedGateway,
+        paymentProvider: backendProvider,
         paymentReference:
-          selectedGateway === "PAYSTACK"
+          selectedGateway === "LINK"
+            ? `link_pm_${Math.floor(10000000 + Math.random() * 89999999)}`
+            : selectedGateway === "PAYSTACK"
             ? `PSK_${Math.floor(10000000 + Math.random() * 89999999)}`
             : `pi_3Q8Mkm${Math.floor(100000 + Math.random() * 899999)}`,
         paymentStatus: "SUCCEEDED",
@@ -407,7 +493,11 @@ export default function CheckoutPage() {
           <MacklemoreOrderConfirmingLoader
             message="Confirming your order..."
             subMessage={`Securing payment settlement via ${
-              selectedGateway === "PAYSTACK" ? "Paystack" : "Stripe"
+              selectedGateway === "LINK"
+                ? "Link by Stripe (1-Click)"
+                : selectedGateway === "PAYSTACK"
+                ? `Paystack (${paystackChannel.replace("_", " ")})`
+                : "Stripe"
             }. Please do not close or refresh this page.`}
           />
         )}
@@ -463,11 +553,31 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 pt-1">
+                {/* Link by Stripe 1-Click Instant Express Button */}
+                <button
+                  type="button"
+                  onClick={fillLinkClient}
+                  className="w-full rounded-md bg-[#00D66F] hover:bg-[#00BF63] p-3 text-[#0A2540] transition-colors cursor-pointer shadow-xs flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-[#0A2540] text-[#00D66F] flex items-center justify-center">
+                      <svg viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3">
+                        <path d="M6.354 5.5H4a2.5 2.5 0 000 5h2.354a.5.5 0 010 1H4a3.5 3.5 0 010-7h2.354a.5.5 0 110 1zM9.646 10.5H12a2.5 2.5 0 000-5H9.646a.5.5 0 010-1H12a3.5 3.5 0 010 7H9.646a.5.5 0 010-1z" />
+                        <path d="M5 8a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5A.5.5 0 015 8z" />
+                      </svg>
+                    </div>
+                    <span className="font-bold text-sm tracking-tight text-[#0A2540]">Pay with link</span>
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-black/10 px-2 py-0.5 rounded-sm">
+                    1-Click Checkout
+                  </span>
+                </button>
+
+                <div className="grid grid-cols-2 gap-3 pt-0.5">
                   <button
                     type="button"
                     onClick={fillLagosClient}
-                    className="rounded-md border border-[#00C3F7]/40 bg-[#F0FBFF] hover:bg-[#E2F7FE] p-3.5 text-left transition-colors cursor-pointer"
+                    className="rounded-md border border-[#00C3F7]/40 bg-[#F0FBFF] hover:bg-[#E2F7FE] p-3 text-left transition-colors cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <PaystackLogo className="h-5" />
@@ -483,7 +593,7 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={fillTorontoClient}
-                    className="rounded-md border border-[#635BFF]/30 bg-[#F6F5FF] hover:bg-[#ECEBFF] p-3.5 text-left transition-colors cursor-pointer"
+                    className="rounded-md border border-[#635BFF]/30 bg-[#F6F5FF] hover:bg-[#ECEBFF] p-3 text-left transition-colors cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <StripeLogo className="h-5 w-auto" />
@@ -614,70 +724,99 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Gateway Selection Tabs with Real Brand Colors */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {/* Stripe Option */}
                   <div
                     onClick={() => setSelectedGateway("STRIPE")}
-                    className={`rounded-md border p-4 cursor-pointer transition-all ${
+                    className={`rounded-md border p-3.5 cursor-pointer transition-all ${
                       selectedGateway === "STRIPE"
                         ? "border-[#635BFF] bg-[#F8F7FF] shadow-xs ring-1 ring-[#635BFF]"
                         : "border-[#EADFD0] bg-[#FAF9F6] hover:bg-white"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <StripeLogo className="h-6 w-auto" />
+                      <StripeLogo className="h-5 w-auto" />
                       <div className="w-4 h-4 rounded-full border flex items-center justify-center border-[#635BFF]">
                         {selectedGateway === "STRIPE" && (
                           <div className="w-2 h-2 rounded-full bg-[#635BFF]" />
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 pt-1">
+                    <div className="flex items-center gap-1 pt-1">
                       <VisaBadge />
                       <MastercardBadge />
                       <ApplePayBadge />
                     </div>
                     <span className="text-[10px] text-[#6E6A63] block mt-2">
-                      Global card settlement · CAD, USD, GBP, EUR
+                      Global cards · CAD, USD, EUR
+                    </span>
+                  </div>
+
+                  {/* Link by Stripe Option */}
+                  <div
+                    onClick={() => {
+                      setSelectedGateway("LINK");
+                      setIsLinkVerified(true);
+                    }}
+                    className={`rounded-md border p-3.5 cursor-pointer transition-all ${
+                      selectedGateway === "LINK"
+                        ? "border-[#00D66F] bg-[#F0FDF4] shadow-xs ring-1 ring-[#00D66F]"
+                        : "border-[#EADFD0] bg-[#FAF9F6] hover:bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <LinkLogo className="h-5" />
+                      <div className="w-4 h-4 rounded-full border flex items-center justify-center border-[#00D66F]">
+                        {selectedGateway === "LINK" && (
+                          <div className="w-2 h-2 rounded-full bg-[#00D66F]" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 pt-1">
+                      <LinkBadge />
+                      <span className="text-[9px] font-bold uppercase tracking-wider bg-[#DCFCE7] text-[#166534] px-1 py-0.5 rounded-sm">
+                        1-Click
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-[#6E6A63] block mt-2">
+                      Saved cards &amp; address
                     </span>
                   </div>
 
                   {/* Paystack Option */}
                   <div
                     onClick={() => setSelectedGateway("PAYSTACK")}
-                    className={`rounded-md border p-4 cursor-pointer transition-all ${
+                    className={`rounded-md border p-3.5 cursor-pointer transition-all ${
                       selectedGateway === "PAYSTACK"
                         ? "border-[#00C3F7] bg-[#F2FBFF] shadow-xs ring-1 ring-[#00C3F7]"
                         : "border-[#EADFD0] bg-[#FAF9F6] hover:bg-white"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <PaystackLogo className="h-6 w-auto" />
+                      <PaystackLogo className="h-5 w-auto" />
                       <div className="w-4 h-4 rounded-full border flex items-center justify-center border-[#00C3F7]">
                         {selectedGateway === "PAYSTACK" && (
                           <div className="w-2 h-2 rounded-full bg-[#00C3F7]" />
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 pt-1">
-                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded-sm border border-[#E0E0E0]">
-                        Cards
+                    <div className="flex items-center gap-1 pt-1">
+                      <VerveBadge />
+                      <span className="text-[9px] font-semibold text-[#001C3F] bg-white px-1 py-0.5 rounded-sm border border-[#E0E0E0]">
+                        Transfer
                       </span>
-                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded-sm border border-[#E0E0E0]">
-                        Bank
-                      </span>
-                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded-sm border border-[#E0E0E0]">
+                      <span className="text-[9px] font-semibold text-[#001C3F] bg-white px-1 py-0.5 rounded-sm border border-[#E0E0E0]">
                         USSD
                       </span>
                     </div>
                     <span className="text-[10px] text-[#6E6A63] block mt-2">
-                      African instant settlement · NGN, GHS, KES
+                      African settlement · NGN, GHS
                     </span>
                   </div>
                 </div>
 
-                {/* Sub-form for Selected Gateway */}
-                {selectedGateway === "STRIPE" ? (
+                {/* Sub-form 1: Stripe Global Cards */}
+                {selectedGateway === "STRIPE" && (
                   <div className="rounded-md border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-[#1F1A17]">Card Details</span>
@@ -722,11 +861,77 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="rounded-md border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
-                    <span className="text-xs font-semibold text-[#1F1A17] block">
-                      Paystack Settlement Channel
-                    </span>
+                )}
+
+                {/* Sub-form 2: Link by Stripe (1-Click Instant Checkout) */}
+                {selectedGateway === "LINK" && (
+                  <div className="rounded-md border border-[#00D66F]/40 bg-[#F0FDF4] p-4 space-y-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <LinkLogo className="h-5" />
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#166534] bg-[#DCFCE7] px-1.5 py-0.5 rounded-sm">
+                          {isLinkVerified ? "Verified Link Account" : "Pending SMS Code"}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setLinkSmsCode("424242")}
+                        className="text-[11px] font-semibold text-[#166534] hover:underline cursor-pointer"
+                      >
+                        Fill Code (424 242)
+                      </button>
+                    </div>
+
+                    <div className="rounded-md border border-[#86EFAC]/50 bg-white p-3.5 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <VisaBadge />
+                          <span className="font-semibold text-[#1F1A17]">Visa ending in 4242</span>
+                        </div>
+                        <span className="text-[11px] font-mono text-[#6E6A63]">Exp 12/28</span>
+                      </div>
+                      <div className="text-[11px] text-[#6E6A63] border-t border-[#F0FDF4] pt-2 flex items-center justify-between">
+                        <span>Delivering to: <strong className="text-[#1F1A17]">{streetAddress || "100 King St West"}, {city || "Toronto"}</strong></span>
+                        <span className="text-[#166534] font-semibold">Free Express</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-semibold text-[#166534]">
+                        6-Digit Security Code sent to +1 ••• ••• 0199
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={6}
+                        value={linkSmsCode}
+                        onChange={(e) => {
+                          setLinkSmsCode(e.target.value);
+                          setIsLinkVerified(e.target.value.length === 6);
+                        }}
+                        placeholder="424242"
+                        className="w-full rounded-md border border-[#86EFAC] bg-white px-3 py-2 text-center font-mono tracking-[0.3em] text-sm text-[#1F1A17] focus:border-[#00D66F] focus:outline-none"
+                      />
+                    </div>
+
+                    <p className="text-[10px] text-[#4B7C59] leading-relaxed">
+                      Link securely encrypts your payment details and autofills them across thousands of luxury boutiques.
+                    </p>
+                  </div>
+                )}
+
+                {/* Sub-form 3: Paystack Settlement (Card, Bank Transfer, USSD) */}
+                {selectedGateway === "PAYSTACK" && (
+                  <div className="rounded-md border border-[#00C3F7]/30 bg-[#F0FBFF] p-4 space-y-3.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#0089AF]">
+                        Paystack Channel
+                      </span>
+                      <span className="text-[10px] text-[#0089AF] font-medium">
+                        Central Bank of Nigeria &amp; PCI-DSS Certified
+                      </span>
+                    </div>
+
+                    {/* Paystack Channel Selector */}
                     <div className="grid grid-cols-3 gap-2 text-xs">
                       {(["CARD", "BANK_TRANSFER", "USSD"] as const).map((ch) => (
                         <button
@@ -736,13 +941,164 @@ export default function CheckoutPage() {
                           className={`rounded-md border py-2 px-2 text-center font-medium transition-colors cursor-pointer ${
                             paystackChannel === ch
                               ? "border-[#00C3F7] bg-white text-[#0089AF] font-bold shadow-2xs"
-                              : "border-[#EADFD0] bg-white text-[#6E6A63] hover:bg-[#FAF5EE]"
+                              : "border-[#BEE7F5] bg-white/70 text-[#4A5568] hover:bg-white"
                           }`}
                         >
-                          {ch.replace("_", " ")}
+                          {ch === "CARD"
+                            ? "Debit/Card"
+                            : ch === "BANK_TRANSFER"
+                            ? "Bank Transfer"
+                            : "USSD Code"}
                         </button>
                       ))}
                     </div>
+
+                    {/* Paystack Channel View 1: CARD */}
+                    {paystackChannel === "CARD" && (
+                      <div className="space-y-3 pt-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-semibold text-[#001C3F] flex items-center gap-1.5">
+                            Card Details
+                            <VerveBadge />
+                            <VisaBadge />
+                            <MastercardBadge />
+                          </span>
+                          <button
+                            type="button"
+                            onClick={fillPaystackTestCard}
+                            className="text-[11px] font-semibold text-[#0089AF] hover:underline cursor-pointer"
+                          >
+                            Fill Test Verve Card
+                          </button>
+                        </div>
+
+                        <div className="rounded-md border border-[#BEE7F5] bg-white overflow-hidden text-xs">
+                          <div className="p-2.5 border-b border-[#BEE7F5] flex items-center justify-between">
+                            <input
+                              type="text"
+                              value={paystackCardNumber}
+                              onChange={(e) => setPaystackCardNumber(e.target.value)}
+                              placeholder="5061 •••• •••• 0001"
+                              className="w-full bg-transparent font-mono focus:outline-none text-xs"
+                            />
+                            <span className="text-[10px] text-[#6E6A63] font-mono shrink-0">Verve / Debit</span>
+                          </div>
+                          <div className="grid grid-cols-3 divide-x divide-[#BEE7F5]">
+                            <input
+                              type="text"
+                              value={paystackCardExpiry}
+                              onChange={(e) => setPaystackCardExpiry(e.target.value)}
+                              placeholder="MM / YY"
+                              className="p-2.5 bg-transparent font-mono focus:outline-none text-xs text-center"
+                            />
+                            <input
+                              type="text"
+                              value={paystackCardCvv}
+                              onChange={(e) => setPaystackCardCvv(e.target.value)}
+                              placeholder="CVV"
+                              className="p-2.5 bg-transparent font-mono focus:outline-none text-xs text-center"
+                            />
+                            <input
+                              type="password"
+                              maxLength={4}
+                              value={paystackCardPin}
+                              onChange={(e) => setPaystackCardPin(e.target.value)}
+                              placeholder="4-Digit PIN"
+                              className="p-2.5 bg-transparent font-mono focus:outline-none text-xs text-center"
+                            />
+                          </div>
+                        </div>
+                        <p className="text-[10px] text-[#5A6E7C]">
+                          Standard 4-digit card PIN required by Nigerian banks for domestic debit verification.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Paystack Channel View 2: BANK TRANSFER */}
+                    {paystackChannel === "BANK_TRANSFER" && (
+                      <div className="space-y-3 pt-1 text-xs">
+                        <p className="text-[11px] text-[#004A66] leading-relaxed">
+                          Transfer the exact total amount to the dedicated Paystack virtual account below. Settlement is automatically detected.
+                        </p>
+
+                        <div className="rounded-md border border-[#00C3F7]/40 bg-white p-3.5 space-y-2.5">
+                          <div className="flex items-center justify-between border-b border-[#F0FBFF] pb-2">
+                            <span className="text-[11px] text-[#6E6A63]">Bank Name</span>
+                            <span className="font-bold text-[#001C3F]">Titan Trust Bank / Providus</span>
+                          </div>
+                          <div className="flex items-center justify-between border-b border-[#F0FBFF] pb-2">
+                            <span className="text-[11px] text-[#6E6A63]">Beneficiary Name</span>
+                            <span className="font-semibold text-[#001C3F]">Macklemore Fashions / {fullName.split(" ")[0] || "Client"}</span>
+                          </div>
+                          <div className="flex items-center justify-between border-b border-[#F0FBFF] pb-2">
+                            <span className="text-[11px] text-[#6E6A63]">Account Number</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-sm font-bold text-[#0089AF] tracking-wider">9928341029</span>
+                              <button
+                                type="button"
+                                onClick={() => copyAccountNumber("9928341029")}
+                                className="px-2 py-0.5 rounded-sm bg-[#E0F7FD] text-[10px] font-bold text-[#0089AF] hover:bg-[#D0F2FB] cursor-pointer"
+                              >
+                                {accountCopied ? "Copied!" : "Copy"}
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-[#6E6A63]">Transfer Amount</span>
+                            <span className="font-display font-bold text-sm text-[#001C3F]">
+                              {formatCurrencyValue(totalAmount, currency)}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-[10px] text-[#0089AF] bg-[#E0F7FD] p-2 rounded-md">
+                          <span className="w-2 h-2 rounded-full bg-[#00C3F7] animate-pulse shrink-0" />
+                          <span>Awaiting dynamic transfer confirmation. Funds confirm in approximately 30 seconds.</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Paystack Channel View 3: USSD */}
+                    {paystackChannel === "USSD" && (
+                      <div className="space-y-3 pt-1 text-xs">
+                        <span className="text-[11px] text-[#004A66] block">
+                          Select your bank to generate your USSD authorization string:
+                        </span>
+
+                        <div className="flex flex-wrap gap-1.5">
+                          {(["GTBank", "Zenith", "Access", "UBA", "FirstBank"] as const).map((b) => (
+                            <button
+                              key={b}
+                              type="button"
+                              onClick={() => setUssdBank(b)}
+                              className={`px-2.5 py-1 rounded-sm text-[11px] font-medium transition-colors cursor-pointer border ${
+                                ussdBank === b
+                                  ? "bg-[#00C3F7] border-[#00C3F7] text-white font-bold"
+                                  : "bg-white border-[#BEE7F5] text-[#004A66] hover:bg-[#E0F7FD]"
+                              }`}
+                            >
+                              {b}
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="rounded-md border border-[#00C3F7]/40 bg-white p-3 text-center space-y-2">
+                          <span className="text-[10px] uppercase font-mono tracking-wider text-[#6E6A63] block">
+                            Dial on your registered bank mobile number:
+                          </span>
+                          <div className="font-mono text-base font-bold text-[#0089AF] tracking-wide select-all">
+                            {getUssdCode()}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={copyUssdCode}
+                            className="px-3 py-1 rounded-sm bg-[#E0F7FD] text-[11px] font-bold text-[#0089AF] hover:bg-[#D0F2FB] cursor-pointer"
+                          >
+                            {ussdCopied ? "Copied to Clipboard!" : "Copy USSD Code"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -750,9 +1106,21 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full rounded-md bg-[#7A491D] py-3.5 px-6 font-display text-xs font-semibold tracking-widest text-white uppercase shadow-sm hover:bg-[#5C3614] transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                  className={`w-full rounded-md py-3.5 px-6 font-display text-xs font-semibold tracking-widest uppercase shadow-sm transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 ${
+                    selectedGateway === "LINK"
+                      ? "bg-[#00D66F] hover:bg-[#00BF63] text-[#0A2540]"
+                      : selectedGateway === "PAYSTACK"
+                      ? "bg-[#00C3F7] hover:bg-[#00A8D6] text-[#001C3F]"
+                      : "bg-[#7A491D] hover:bg-[#5C3614] text-white"
+                  }`}
                 >
-                  <span>Pay {formatCurrencyValue(totalAmount, currency)}</span>
+                  <span>
+                    {selectedGateway === "LINK"
+                      ? `Pay with Link ${formatCurrencyValue(totalAmount, currency)}`
+                      : selectedGateway === "PAYSTACK"
+                      ? `Pay via Paystack (${paystackChannel.replace("_", " ")}) ${formatCurrencyValue(totalAmount, currency)}`
+                      : `Pay ${formatCurrencyValue(totalAmount, currency)}`}
+                  </span>
                   <span>→</span>
                 </button>
               </div>

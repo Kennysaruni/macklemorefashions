@@ -187,3 +187,32 @@ export function LinkBadge({ className = "h-5 w-auto" }: { className?: string }) 
     </div>
   );
 }
+
+/**
+ * Official Link by Stripe Logo with Brand Signature
+ */
+export function LinkLogo({ className = "h-6 w-auto" }: { className?: string }) {
+  return (
+    <div className={`inline-flex items-center gap-1.5 font-bold tracking-tight text-[#0A2540] select-none ${className}`}>
+      <div className="w-5 h-5 rounded-full bg-[#00D66F] flex items-center justify-center text-[#0A2540] shadow-2xs shrink-0">
+        <svg viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3">
+          <path d="M6.354 5.5H4a2.5 2.5 0 000 5h2.354a.5.5 0 010 1H4a3.5 3.5 0 010-7h2.354a.5.5 0 110 1zM9.646 10.5H12a2.5 2.5 0 000-5H9.646a.5.5 0 010-1H12a3.5 3.5 0 010 7H9.646a.5.5 0 010-1z" />
+          <path d="M5 8a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5A.5.5 0 015 8z" />
+        </svg>
+      </div>
+      <span className="text-base font-bold text-[#0A2540] tracking-tight">link</span>
+      <span className="text-[11px] font-semibold text-[#6E6A63] ml-0.5">by Stripe</span>
+    </div>
+  );
+}
+
+/**
+ * Official Verve Card Badge (Nigerian Domestic Cards)
+ */
+export function VerveBadge({ className = "h-5 w-auto" }: { className?: string }) {
+  return (
+    <div className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded bg-white border border-[#E0E0E0] shadow-2xs ${className}`}>
+      <span className="font-extrabold text-[10px] tracking-tight text-[#E81B24]">verve</span>
+    </div>
+  );
+}

@@ -114,3 +114,4 @@ export function TribalAnimatedCheckmark({ className = "" }: { className?: string
     </div>
   );
 }
+
