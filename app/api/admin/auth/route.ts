@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     )
       .trim()
       .toLowerCase();
-    const envPassword = process.env.ADMIN_INITIAL_PASSWORD || "ChangeMe2026!";
+    const envPassword = process.env.ADMIN_INITIAL_PASSWORD || "Macklemore2026#";
 
     // Auto-provision initial admin in Neon DB if matching .env credentials
     if (!adminUser && cleanEmail === envEmail && password === envPassword) {
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       adminUser = await prisma.adminUser
         .upsert({
           where: { email: envEmail },
-          update: { lastLoginAt: new Date() },
+          update: { passwordHash, lastLoginAt: new Date() },
           create: {
             email: envEmail,
             name: "Micah Elechi (Executive Admin)",
@@ -71,6 +71,13 @@ export async function POST(request: NextRequest) {
       isValid = await bcrypt.compare(password, adminUser.passwordHash);
       if (!isValid && cleanEmail === envEmail && password === envPassword) {
         isValid = true;
+        const newHash = await bcrypt.hash(envPassword, 10);
+        await prisma.adminUser
+          .update({
+            where: { id: adminUser.id },
+            data: { passwordHash: newHash, lastLoginAt: new Date() },
+          })
+          .catch(() => {});
       }
       if (isValid) {
         await prisma.adminUser

@@ -98,7 +98,7 @@ async function main() {
     .trim()
     .toLowerCase();
   const adminPassword =
-    process.env.ADMIN_INITIAL_PASSWORD || "MacklemoreExec2026!";
+    process.env.ADMIN_INITIAL_PASSWORD || "Macklemore2026#";
   const passwordHash = await bcrypt.hash(adminPassword, 10);
 
   await prisma.adminUser.upsert({
