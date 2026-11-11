@@ -205,7 +205,12 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Dispatch Order Confirmation Receipt Email via Resend
-    let emailResult: { success: boolean; messageId?: string; error?: string } = {
+    let emailResult: {
+      success: boolean;
+      messageId?: string;
+      error?: string;
+      recipient?: string;
+    } = {
       success: false,
     };
     if (customerEmail && items.length > 0) {
@@ -258,6 +263,8 @@ export async function POST(request: NextRequest) {
         order: savedOrder,
         emailSent: emailResult.success,
         emailMessageId: emailResult.messageId,
+        emailRecipient: emailResult.recipient || customerEmail,
+        emailError: emailResult.error,
       });
     }
 
@@ -280,6 +287,8 @@ export async function POST(request: NextRequest) {
       order: savedOrder,
       emailSent: emailResult.success,
       emailMessageId: emailResult.messageId,
+      emailRecipient: emailResult.recipient || customerEmail,
+      emailError: emailResult.error,
     });
   } catch (err) {
     return NextResponse.json(

@@ -339,7 +339,7 @@ export function buildOrderReceiptHtml(payload: OrderEmailPayload): string {
  */
 export async function sendOrderConfirmationEmail(
   payload: OrderEmailPayload
-): Promise<{ success: boolean; messageId?: string; error?: string }> {
+): Promise<{ success: boolean; messageId?: string; error?: string; recipient?: string }> {
   const apiKey = process.env.RESEND_API_KEY?.trim();
 
   if (!apiKey) {
@@ -370,7 +370,58 @@ export async function sendOrderConfirmationEmail(
     const data = await res.json();
 
     if (!res.ok) {
-      // If error is due to unverified custom domain, gracefully retry using onboarding@resend.dev
+      const errorMessage = data?.message || "";
+
+      // 1. Handle Resend unverified test recipient restriction:
+      // In development/test mode without a verified custom domain, Resend only delivers
+      // to the authenticated account owner's email address (e.g. kennylatimore4@gmail.com).
+      const isOwnerRestriction =
+        errorMessage.includes("You can only send testing emails to your own email address") ||
+        errorMessage.includes("testing emails to your own email address");
+
+      if (isOwnerRestriction) {
+        const ownerMatch = errorMessage.match(/\(([^)]+@[^)]+)\)/);
+        const authorizedRecipient =
+          process.env.RESEND_TEST_RECIPIENT?.trim() ||
+          ownerMatch?.[1] ||
+          "kennylatimore4@gmail.com";
+
+        console.warn(
+          `[Resend] Recipient restricted in sandbox mode. Rerouting receipt to verified owner: ${authorizedRecipient}`
+        );
+
+        const reroutedHtml = `
+          <div style="background-color: #FAF5EE; border-bottom: 2px solid #C4975A; padding: 14px 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #5C5147; line-height: 1.5; text-align: center;">
+            <strong style="color: #7A491D;">Test Environment Notice:</strong> Receipt dispatched to verified account owner (<strong>${authorizedRecipient}</strong>) for client <strong>${payload.customerName}</strong> (&lt;${payload.customerEmail}&gt;).
+          </div>
+        ` + html;
+
+        const ownerRetryRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "Macklemore Fashion <onboarding@resend.dev>",
+            to: [authorizedRecipient],
+            subject: `Order Confirmed: ${payload.orderNumber} · Macklemore Fashion Receipt (${payload.customerName})`,
+            html: reroutedHtml,
+          }),
+        });
+
+        const ownerRetryData = await ownerRetryRes.json();
+        if (ownerRetryRes.ok && ownerRetryData?.id) {
+          return {
+            success: true,
+            messageId: ownerRetryData.id,
+            recipient: authorizedRecipient,
+          };
+        }
+      }
+
+      // 2. Handle Resend unverified sender domain:
+      // If error is due to unverified custom from address, retry using onboarding@resend.dev
       if (
         data?.name === "validation_error" &&
         preferredFrom !== "Macklemore Fashion <onboarding@resend.dev>"
@@ -393,7 +444,44 @@ export async function sendOrderConfirmationEmail(
         });
         const retryData = await retryRes.json();
         if (retryRes.ok && retryData?.id) {
-          return { success: true, messageId: retryData.id };
+          return {
+            success: true,
+            messageId: retryData.id,
+            recipient: payload.customerEmail,
+          };
+        }
+
+        // If from-retry also failed due to recipient restriction, re-check recipient
+        if (
+          retryData?.message?.includes("testing emails to your own email address")
+        ) {
+          const ownerMatch = retryData.message.match(/\(([^)]+@[^)]+)\)/);
+          const authorizedRecipient =
+            process.env.RESEND_TEST_RECIPIENT?.trim() ||
+            ownerMatch?.[1] ||
+            "kennylatimore4@gmail.com";
+
+          const ownerRetryRes = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: "Macklemore Fashion <onboarding@resend.dev>",
+              to: [authorizedRecipient],
+              subject: `Order Confirmed: ${payload.orderNumber} · Macklemore Fashion Receipt (${payload.customerName})`,
+              html,
+            }),
+          });
+          const ownerRetryData = await ownerRetryRes.json();
+          if (ownerRetryRes.ok && ownerRetryData?.id) {
+            return {
+              success: true,
+              messageId: ownerRetryData.id,
+              recipient: authorizedRecipient,
+            };
+          }
         }
       }
 
@@ -404,7 +492,11 @@ export async function sendOrderConfirmationEmail(
       };
     }
 
-    return { success: true, messageId: data?.id };
+    return {
+      success: true,
+      messageId: data?.id,
+      recipient: payload.customerEmail,
+    };
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : "Unknown error";
     console.warn("[Resend] Network or API error:", errorMsg);

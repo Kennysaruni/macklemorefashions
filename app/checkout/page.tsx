@@ -97,8 +97,8 @@ export default function CheckoutPage() {
     DESTINATION_COUNTRIES.find((c) => c.iso === destinationIso) || DESTINATION_COUNTRIES[0];
 
   // 2. Minimum Essential Customer Fields (Stripe-Like Experience)
-  const [customerEmail, setCustomerEmail] = useState("t.bakare@couture.luxury");
-  const [fullName, setFullName] = useState("Tunde Bakare");
+  const [customerEmail, setCustomerEmail] = useState("kennylatimore4@gmail.com");
+  const [fullName, setFullName] = useState("Kenny Latimore");
   const [streetAddress, setStreetAddress] = useState("14 Admiralty Way, Lekki Phase 1");
   const [city, setCity] = useState(selectedCountry.defaultCity);
   const [phoneNumber, setPhoneNumber] = useState("+234 809 442 1900");
@@ -134,6 +134,8 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<OrderRecord | null>(null);
   const [emailDispatched, setEmailDispatched] = useState<boolean>(false);
+  const [emailRecipient, setEmailRecipient] = useState<string>("");
+  const [emailMessageId, setEmailMessageId] = useState<string>("");
 
   // Financial Calculations
   const subtotal = cart.reduce(
@@ -172,7 +174,7 @@ export default function CheckoutPage() {
   const fillTorontoClient = () => {
     handleCountryChange("CA");
     setFullName("Julian Vance");
-    setCustomerEmail("julian.vance@luxury.ca");
+    setCustomerEmail("kennylatimore4@gmail.com");
     setStreetAddress("100 King St West, Suite 3200");
     setCity("Toronto");
     setPhoneNumber("+1 416 555 0199");
@@ -182,7 +184,7 @@ export default function CheckoutPage() {
   const fillLinkClient = () => {
     handleCountryChange("CA");
     setFullName("Julian Vance");
-    setCustomerEmail("julian.vance@luxury.ca");
+    setCustomerEmail("kennylatimore4@gmail.com");
     setStreetAddress("100 King St West, Suite 3200");
     setCity("Toronto");
     setPhoneNumber("+1 416 555 0199");
@@ -304,6 +306,12 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (data?.emailSent) {
         setEmailDispatched(true);
+        if (data?.emailRecipient) {
+          setEmailRecipient(data.emailRecipient);
+        }
+        if (data?.emailMessageId) {
+          setEmailMessageId(data.emailMessageId);
+        }
       }
 
       const newOrd = createOrder({
@@ -416,8 +424,13 @@ export default function CheckoutPage() {
               </h1>
               <p className="text-xs sm:text-sm text-[#6E6A63] max-w-md mx-auto">
                 Your order <span className="font-mono font-semibold text-[#1F1A17]">#{completedOrder.orderNumber}</span> has been confirmed. A receipt and delivery timeline have been sent to{" "}
-                <span className="font-semibold text-[#1F1A17]">{completedOrder.customerEmail}</span>.
+                <span className="font-semibold text-[#1F1A17]">{emailRecipient || completedOrder.customerEmail}</span>.
               </p>
+              {emailMessageId && (
+                <div className="text-[10px] font-mono text-[#8C887B]">
+                  Resend Dispatch Reference: <span className="text-[#1F1A17] font-semibold">{emailMessageId}</span>
+                </div>
+              )}
             </div>
 
             {/* Simple Soft Delivery Timeline Card */}
@@ -628,6 +641,9 @@ export default function CheckoutPage() {
                       placeholder="client@luxury.com"
                       className="w-full rounded-md border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                     />
+                    <span className="text-[10px] text-[#8C887B] block mt-1">
+                      Order receipt and courier tracking will be dispatched to this inbox via Resend.
+                    </span>
                   </div>
 
                   {/* Full Name */}

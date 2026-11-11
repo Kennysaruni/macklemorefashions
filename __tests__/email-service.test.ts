@@ -154,6 +154,35 @@ describe("Afro-Luxury Order Receipt Email Service", () => {
       expect(mockFetch).toHaveBeenCalledTimes(2);
     });
 
+    it("retries with verified owner email when Resend restricts testing emails to own account", async () => {
+      process.env.RESEND_API_KEY = "re_test_123456789";
+
+      const mockFetch = vi
+        .fn()
+        // First attempt fails because recipient is not verified owner on Resend free tier
+        .mockResolvedValueOnce({
+          ok: false,
+          json: async () => ({
+            name: "validation_error",
+            statusCode: 403,
+            message:
+              "You can only send testing emails to your own email address (kennylatimore4@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains.",
+          }),
+        })
+        // Second attempt with authorized owner succeeds
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ id: "msg_owner_reroute_789" }),
+        });
+      global.fetch = mockFetch as unknown as typeof fetch;
+
+      const result = await sendOrderConfirmationEmail(samplePayload);
+      expect(result.success).toBe(true);
+      expect(result.messageId).toBe("msg_owner_reroute_789");
+      expect(result.recipient).toBe("kennylatimore4@gmail.com");
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+    });
+
     it("catches fetch exceptions without throwing unhandled rejection", async () => {
       process.env.RESEND_API_KEY = "re_test_123456789";
 
