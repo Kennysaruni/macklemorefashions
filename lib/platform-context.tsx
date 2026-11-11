@@ -115,13 +115,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
   const [detectedRegion, setDetectedRegion] = useState<string>(
     "TORONTO, CANADA // NIGERIA HUB"
   );
-  const [cart, setCart] = useState<CartItem[]>([
-    {
-      product: INITIAL_PRODUCTS[0],
-      size: "L",
-      quantity: 1,
-    },
-  ]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const [storageSource, setStorageSource] = useState<string>(

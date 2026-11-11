@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePlatform } from "@/lib/platform-context";
 import {
   calculateLogisticsForDestination,
@@ -12,82 +13,73 @@ import {
   OrderRecord,
   PaymentProvider,
 } from "@/lib/store-data";
-import { LuxuryLoadingIndicator } from "@/components/motion/LuxuryLoadingIndicator";
-import { TribalPatternRibbon } from "@/components/vectors/TribalVectors";
+import {
+  StripeLogo,
+  PaystackLogo,
+  VisaBadge,
+  MastercardBadge,
+  ApplePayBadge,
+  GooglePayBadge,
+  LinkBadge,
+} from "@/components/commerce/PaymentLogos";
 
 interface DestinationMeta {
   iso: string;
   name: string;
   defaultCity: string;
-  defaultState: string;
-  defaultPostal: string;
-  phonePrefix: string;
   suggestedCurrency: CurrencyCode;
+  phonePrefix: string;
 }
 
 const DESTINATION_COUNTRIES: DestinationMeta[] = [
   {
     iso: "NG",
-    name: "Nigeria (West Africa · Hub A Direct)",
+    name: "Nigeria (Hub A Direct · Lagos)",
     defaultCity: "Lagos",
-    defaultState: "Lagos State",
-    defaultPostal: "105102",
-    phonePrefix: "+234",
     suggestedCurrency: "NGN",
+    phonePrefix: "+234",
   },
   {
     iso: "CA",
-    name: "Canada (North America · Toronto HQ Direct)",
+    name: "Canada (Hub B Direct · Toronto HQ)",
     defaultCity: "Toronto",
-    defaultState: "Ontario",
-    defaultPostal: "M5V 2T6",
-    phonePrefix: "+1",
     suggestedCurrency: "CAD",
+    phonePrefix: "+1",
+  },
+  {
+    iso: "US",
+    name: "United States (Express Delivery)",
+    defaultCity: "New York",
+    suggestedCurrency: "USD",
+    phonePrefix: "+1",
+  },
+  {
+    iso: "GB",
+    name: "United Kingdom (London & UK)",
+    defaultCity: "London",
+    suggestedCurrency: "GBP",
+    phonePrefix: "+44",
   },
   {
     iso: "GH",
-    name: "Ghana (West Africa · ECOWAS Corridor)",
+    name: "Ghana (West Africa Corridor)",
     defaultCity: "Accra",
-    defaultState: "Greater Accra",
-    defaultPostal: "GA-183",
-    phonePrefix: "+233",
     suggestedCurrency: "GHS",
+    phonePrefix: "+233",
   },
   {
     iso: "KE",
     name: "Kenya (East Africa Corridor)",
     defaultCity: "Nairobi",
-    defaultState: "Nairobi County",
-    defaultPostal: "00100",
-    phonePrefix: "+254",
     suggestedCurrency: "KES",
-  },
-  {
-    iso: "US",
-    name: "United States (North America Express)",
-    defaultCity: "New York",
-    defaultState: "New York",
-    defaultPostal: "10001",
-    phonePrefix: "+1",
-    suggestedCurrency: "USD",
-  },
-  {
-    iso: "GB",
-    name: "United Kingdom (London & UK Delivery)",
-    defaultCity: "London",
-    defaultState: "Greater London",
-    defaultPostal: "SW1A 1AA",
-    phonePrefix: "+44",
-    suggestedCurrency: "GBP",
+    phonePrefix: "+254",
   },
   {
     iso: "FR",
     name: "European Union (Continental Express)",
     defaultCity: "Paris",
-    defaultState: "Île-de-France",
-    defaultPostal: "75001",
-    phonePrefix: "+33",
     suggestedCurrency: "EUR",
+    phonePrefix: "+33",
   },
 ];
 
@@ -99,32 +91,24 @@ export default function CheckoutPage() {
   const selectedCountry =
     DESTINATION_COUNTRIES.find((c) => c.iso === destinationIso) || DESTINATION_COUNTRIES[0];
 
-  // 2. Shipping Details
-  const [firstName, setFirstName] = useState("Tunde");
-  const [lastName, setLastName] = useState("Bakare");
+  // 2. Minimum Essential Customer Fields (Stripe-Like Experience)
   const [customerEmail, setCustomerEmail] = useState("t.bakare@couture.luxury");
-  const [phonePrefix, setPhonePrefix] = useState(selectedCountry.phonePrefix);
-  const [phoneNumber, setPhoneNumber] = useState("809 442 1900");
-  const [streetAddress, setStreetAddress] = useState("14 Admiralty Way");
-  const [suite, setSuite] = useState("Suite 4B, Lekki Phase 1");
+  const [fullName, setFullName] = useState("Tunde Bakare");
+  const [streetAddress, setStreetAddress] = useState("14 Admiralty Way, Lekki Phase 1");
   const [city, setCity] = useState(selectedCountry.defaultCity);
-  const [stateProvince, setStateProvince] = useState(selectedCountry.defaultState);
-  const [postalCode, setPostalCode] = useState(selectedCountry.defaultPostal);
-  const [deliveryNotes, setDeliveryNotes] = useState("Please contact recipient upon arrival.");
+  const [phoneNumber, setPhoneNumber] = useState("+234 809 442 1900");
 
   // 3. Payment Gateway & Channels
   const [selectedGateway, setSelectedGateway] = useState<PaymentProvider>("PAYSTACK");
   const [paystackChannel, setPaystackChannel] = useState<"CARD" | "BANK_TRANSFER" | "USSD">("CARD");
 
   // Stripe Card Details (for test simulation)
-  const [stripeCardName, setStripeCardName] = useState("Tunde Bakare");
   const [stripeCardNumber, setStripeCardNumber] = useState("4242 •••• •••• 4242");
   const [stripeCardExpiry, setStripeCardExpiry] = useState("12/28");
   const [stripeCardCvc, setStripeCardCvc] = useState("123");
 
   // Loading & Order Completion State
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentStage, setPaymentStage] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<OrderRecord | null>(null);
   const [emailDispatched, setEmailDispatched] = useState<boolean>(false);
 
@@ -143,54 +127,38 @@ export default function CheckoutPage() {
     const meta = DESTINATION_COUNTRIES.find((c) => c.iso === iso);
     if (meta) {
       setCity(meta.defaultCity);
-      setStateProvince(meta.defaultState);
-      setPostalCode(meta.defaultPostal);
-      setPhonePrefix(meta.phonePrefix);
       setCurrency(meta.suggestedCurrency);
+      setPhoneNumber(`${meta.phonePrefix} `);
       const nextLogistics = calculateLogisticsForDestination(iso, meta.suggestedCurrency, subtotal);
       setSelectedGateway(nextLogistics.recommendedGateway);
     }
   };
 
-  // Helper to fill Stripe Test Card
-  const fillStripeTestCard = () => {
-    setStripeCardName(`${firstName} ${lastName}`.trim() || "Macklemore Client");
-    setStripeCardNumber("4242 4242 4242 4242");
-    setStripeCardExpiry("12/28");
-    setStripeCardCvc("123");
-  };
-
-  // Helper test profile fillers for instant testing
+  // 1-Click Autofill Profiles (Express Testing)
   const fillLagosClient = () => {
     handleCountryChange("NG");
-    setFirstName("Tunde");
-    setLastName("Bakare");
+    setFullName("Tunde Bakare");
     setCustomerEmail("t.bakare@couture.luxury");
-    setPhonePrefix("+234");
-    setPhoneNumber("809 442 1900");
-    setStreetAddress("14 Admiralty Way");
-    setSuite("Suite 4B, Lekki Phase 1");
+    setStreetAddress("14 Admiralty Way, Lekki Phase 1");
     setCity("Lagos");
-    setStateProvince("Lagos State");
-    setPostalCode("105102");
-    setDeliveryNotes("Please notify on arrival.");
+    setPhoneNumber("+234 809 442 1900");
     setSelectedGateway("PAYSTACK");
   };
 
   const fillTorontoClient = () => {
     handleCountryChange("CA");
-    setFirstName("Julian");
-    setLastName("Vance");
+    setFullName("Julian Vance");
     setCustomerEmail("julian.vance@luxury.ca");
-    setPhonePrefix("+1");
-    setPhoneNumber("416 555 0199");
-    setStreetAddress("100 King St West");
-    setSuite("Floor 32");
+    setStreetAddress("100 King St West, Suite 3200");
     setCity("Toronto");
-    setStateProvince("Ontario");
-    setPostalCode("M5V 2T6");
-    setDeliveryNotes("Deliver to building reception.");
+    setPhoneNumber("+1 416 555 0199");
     setSelectedGateway("STRIPE");
+  };
+
+  const fillStripeTestCard = () => {
+    setStripeCardNumber("4242 4242 4242 4242");
+    setStripeCardExpiry("12/28");
+    setStripeCardCvc("123");
   };
 
   // Add demo piece if cart is empty
@@ -206,28 +174,10 @@ export default function CheckoutPage() {
     if (cart.length === 0) return;
 
     setIsProcessing(true);
-    const fullName = `${firstName} ${lastName}`.trim() || "Macklemore Client";
-    const fullPhone = `${phonePrefix} ${phoneNumber}`.trim();
-    const formattedShippingAddress = [
-      streetAddress,
-      suite,
-      city,
-      stateProvince,
-      postalCode,
-      selectedCountry.name,
-    ]
+
+    const formattedShippingAddress = [streetAddress, city, selectedCountry.name]
       .filter(Boolean)
       .join(", ");
-
-    if (selectedGateway === "PAYSTACK") {
-      setPaymentStage(
-        `PAYSTACK: Initializing ${paystackChannel.replace(/_/g, " ")} Settlement in ${currency}...`
-      );
-    } else {
-      setPaymentStage(
-        `STRIPE: Authorizing International Payment in ${currency}...`
-      );
-    }
 
     const orderItems = cart.map((item) => ({
       productId: item.product.id,
@@ -251,9 +201,9 @@ export default function CheckoutPage() {
           subtotalAmount: subtotal,
           paymentProvider: selectedGateway,
           paystackChannel,
-          customerName: fullName,
+          customerName: fullName.trim() || "Macklemore Client",
           customerEmail,
-          customerPhone: fullPhone,
+          customerPhone: phoneNumber,
           items: orderItems,
         }),
       });
@@ -263,9 +213,9 @@ export default function CheckoutPage() {
       }
 
       const newOrd = createOrder({
-        customerName: fullName,
+        customerName: fullName.trim() || "Macklemore Client",
         customerEmail,
-        customerPhone: fullPhone,
+        customerPhone: phoneNumber,
         destinationCountry: selectedCountry.name,
         destinationCity: city,
         shippingAddress: formattedShippingAddress,
@@ -278,9 +228,9 @@ export default function CheckoutPage() {
         courierPartner: logistics.courierPartner,
         waybillNumber:
           data?.waybillNumber ||
-          `${
-            logistics.assignedHub === "HUB_A_LAGOS" ? "GIG-NG" : "DHL-YYZ"
-          }-${Math.floor(100000 + Math.random() * 899999)}`,
+          `${logistics.assignedHub === "HUB_A_LAGOS" ? "GIG-NG" : "DHL-YYZ"}-${Math.floor(
+            100000 + Math.random() * 899999
+          )}`,
         status: "ALLOCATED_TO_HUB",
         paymentProvider: selectedGateway,
         paymentReference:
@@ -294,14 +244,13 @@ export default function CheckoutPage() {
       });
 
       setIsProcessing(false);
-      setPaymentStage(null);
       setCompletedOrder(newOrd);
       clearCart();
     } catch {
       const newOrd = createOrder({
-        customerName: fullName,
+        customerName: fullName.trim() || "Macklemore Client",
         customerEmail,
-        customerPhone: fullPhone,
+        customerPhone: phoneNumber,
         destinationCountry: selectedCountry.name,
         destinationCity: city,
         shippingAddress: formattedShippingAddress,
@@ -325,234 +274,101 @@ export default function CheckoutPage() {
         items: orderItems,
       });
       setIsProcessing(false);
-      setPaymentStage(null);
       setCompletedOrder(newOrd);
       clearCart();
     }
   };
 
-  // 4. Completed Order View (Afro-Luxury Receipt)
+  // 4. Completed Order View (Reduced Details & Softer Elegant Aesthetics)
   if (completedOrder) {
+    const isLagos = completedOrder.assignedHub === "HUB_A_LAGOS";
+    const estimatedTransit = isLagos ? "1-2 Business Days" : "2-4 Business Days";
+
     return (
-      <div className="min-h-screen bg-[#FFFDF9] text-[#1F1A17] px-4 py-12 sm:py-16 md:px-8">
-        <div className="mx-auto max-w-3xl rounded-sm border border-[#EADFD0] bg-white shadow-xl overflow-hidden">
-          {/* Subtle Tribal Ribbon Accent */}
-          <TribalPatternRibbon className="h-2" />
-
-          <div className="p-7 sm:p-10 space-y-8">
-            {/* Header */}
-            <div className="border-b border-[#EADFD0] pb-6 flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#2E6B35]">
-                  <span className="w-1.5 h-1.5 rotate-45 bg-[#2E6B35]" />
-                  <span>Order Confirmed &amp; Hub Waybill Generated</span>
-                </div>
-                <h1 className="font-display text-2xl sm:text-4xl font-bold uppercase tracking-tight text-[#1F1A17] mt-2">
-                  Order {completedOrder.orderNumber}
-                </h1>
-                <p className="text-xs text-[#6E6A63] mt-1">
-                  Thank you for curating with Macklemore Fashion. A confirmation dossier has been dispatched to {completedOrder.customerEmail}.
-                </p>
-              </div>
-
-              <div className="rounded-sm border border-[#EADFD0] bg-[#FAF5EE] px-4 py-2 text-right">
-                <span className="text-[10px] uppercase font-mono text-[#6E6A63] block">
-                  Courier Tracking Waybill
-                </span>
-                <span className="font-mono text-xs font-bold text-[#7A491D]">
-                  {completedOrder.waybillNumber}
-                </span>
-              </div>
+      <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] px-4 py-12 sm:py-16 md:px-8">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-[#EADFD0] bg-white shadow-xl p-8 sm:p-12 space-y-8">
+          {/* Serene Confirmation Header */}
+          <div className="text-center space-y-3">
+            <div className="w-14 h-14 mx-auto rounded-full bg-[#EBF5ED] border border-[#2E6B35]/20 flex items-center justify-center text-[#2E6B35]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
             </div>
-
-            {/* Logistics & Client Dossier */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-6 text-xs leading-relaxed">
-              <div className="space-y-1.5">
-                <span className="font-display text-xs font-bold uppercase tracking-wider text-[#7A491D] block">
-                  Client &amp; Delivery Destination
-                </span>
-                <div className="font-semibold text-[#1F1A17]">{completedOrder.customerName}</div>
-                <div className="text-[#6E6A63]">{completedOrder.customerEmail}</div>
-                <div className="text-[#6E6A63]">{completedOrder.customerPhone}</div>
-                <div className="text-[#1F1A17] pt-1">
-                  {completedOrder.shippingAddress || `${completedOrder.destinationCity}, ${completedOrder.destinationCountry}`}
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <span className="font-display text-xs font-bold uppercase tracking-wider text-[#7A491D] block">
-                  Fulfillment &amp; Settlement
-                </span>
-                <div>
-                  Fulfillment Hub:{" "}
-                  <span className="font-semibold text-[#1F1A17]">
-                    {completedOrder.assignedHub === "HUB_A_LAGOS"
-                      ? "Nigeria Operations Hub (Hub A)"
-                      : "Toronto Corporate HQ (Hub B)"}
-                  </span>
-                </div>
-                <div>
-                  Courier Partner:{" "}
-                  <span className="font-semibold text-[#1F1A17]">
-                    {completedOrder.courierPartner}
-                  </span>
-                </div>
-                <div>
-                  Payment Gateway:{" "}
-                  <span className="font-semibold text-[#2E6B35]">
-                    {completedOrder.paymentProvider}
-                  </span>
-                </div>
-                <div>
-                  Reference:{" "}
-                  <span className="font-mono text-[11px] text-[#6E6A63]">
-                    {completedOrder.paymentReference}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Resend Receipt Email Status Banner */}
-            <div className="rounded-sm border border-[#EADFD0] bg-[#FAF5EE] p-4 text-xs flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2 font-semibold text-[#1F1A17]">
-                <span className="w-1.5 h-1.5 rotate-45 bg-[#2E6B35]" />
-                <span>
-                  {emailDispatched
-                    ? "Official Receipt & Delivery Timeline Dispatched via Resend"
-                    : "Official Receipt & Delivery Dossier Dispatched"}
-                </span>
-              </div>
-              <span className="text-[#6E6A63] font-mono text-[11px]">
-                Recipient: {completedOrder.customerEmail}
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-xs uppercase font-semibold tracking-widest text-[#2E6B35]">
+                Payment Confirmed
               </span>
-            </div>
-
-            {/* Fulfillment Waiting Times & Delivery Schedule */}
-            <div className="rounded-sm border border-[#EADFD0] overflow-hidden bg-white">
-              <div className="bg-[#FAF5EE] px-4 py-2.5 border-b border-[#EADFD0] font-display text-xs font-bold uppercase tracking-wider text-[#1F1A17] flex items-center justify-between">
-                <span>Fulfillment Waiting Times &amp; Delivery Schedule</span>
-                <span className="text-[10px] text-[#7A491D] font-mono font-normal">
-                  Waybill: {completedOrder.waybillNumber}
+              {emailDispatched && (
+                <span className="text-[10px] text-[#2E6B35] font-mono border border-[#2E6B35]/30 rounded px-1.5 py-0.5">
+                  Receipt Dispatched
                 </span>
+              )}
+            </div>
+            <h1 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#1F1A17]">
+              Thank you for your order, {completedOrder.customerName.split(" ")[0]}
+            </h1>
+            <p className="text-xs sm:text-sm text-[#6E6A63] max-w-md mx-auto">
+              Your order <span className="font-mono font-semibold text-[#1F1A17]">#{completedOrder.orderNumber}</span> has been confirmed. A receipt and delivery timeline have been sent to{" "}
+              <span className="font-semibold text-[#1F1A17]">{completedOrder.customerEmail}</span>.
+            </p>
+          </div>
+
+          {/* Simple Soft Delivery Timeline Card */}
+          <div className="rounded-xl border border-[#EADFD0] bg-[#FAF5EE]/70 p-5 space-y-3 text-xs">
+            <div className="flex items-center justify-between font-semibold text-[#7A491D] border-b border-[#EADFD0] pb-2">
+              <span className="uppercase tracking-wider">Estimated Delivery</span>
+              <span className="text-sm font-bold text-[#1F1A17]">{estimatedTransit}</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-[#6E6A63]">
+              <div>
+                <span className="block text-[10px] uppercase font-mono text-[#A69E91]">Courier &amp; Waybill</span>
+                <span className="font-semibold text-[#1F1A17]">{completedOrder.courierPartner}</span>
+                <span className="block font-mono text-[11px] text-[#7A491D] mt-0.5">{completedOrder.waybillNumber}</span>
               </div>
-              <div className="p-5 space-y-4 text-xs">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-sm bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center font-display font-bold text-[#7A491D] shrink-0 text-[11px]">
-                    1
-                  </div>
-                  <div>
-                    <div className="font-bold text-[#1F1A17] uppercase tracking-wide">
-                      Stage 1 · Atelier Quality Inspection &amp; Preservation Packaging
-                    </div>
-                    <div className="text-[#7A491D] font-semibold mt-0.5">
-                      Waiting Time: 12-24 Hours
-                    </div>
-                    <p className="text-[#6E6A63] mt-1 leading-relaxed">
-                      Garment hand-inspection, steam pressing, tissue wrapping, and provenance documentation at{" "}
-                      {completedOrder.assignedHub === "HUB_A_LAGOS"
-                        ? "Hub A (Lagos Operations)"
-                        : "Hub B (Toronto HQ)"}.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="border-t border-dashed border-[#EADFD0] pt-4 flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-sm bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center font-display font-bold text-[#7A491D] shrink-0 text-[11px]">
-                    2
-                  </div>
-                  <div>
-                    <div className="font-bold text-[#1F1A17] uppercase tracking-wide">
-                      Stage 2 · Courier Waybill Activation &amp; Dispatch
-                    </div>
-                    <div className="text-[#7A491D] font-semibold mt-0.5">
-                      Waiting Time: Within 24 Hours
-                    </div>
-                    <p className="text-[#6E6A63] mt-1 leading-relaxed">
-                      Direct handover to {completedOrder.courierPartner} under tracking waybill{" "}
-                      <code className="text-[#1F1A17] font-semibold">{completedOrder.waybillNumber}</code>.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="border-t border-dashed border-[#EADFD0] pt-4 flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-sm bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center font-display font-bold text-[#2E6B35] shrink-0 text-[11px]">
-                    3
-                  </div>
-                  <div>
-                    <div className="font-bold text-[#1F1A17] uppercase tracking-wide">
-                      Stage 3 · Doorstep Delivery to Recipient
-                    </div>
-                    <div className="text-[#2E6B35] font-semibold mt-0.5">
-                      Estimated Transit:{" "}
-                      {completedOrder.assignedHub === "HUB_A_LAGOS"
-                        ? "1-2 Business Days"
-                        : "2-4 Business Days"}
-                    </div>
-                    <p className="text-[#6E6A63] mt-1 leading-relaxed">
-                      Direct courier delivery to {completedOrder.destinationCity}, {completedOrder.destinationCountry}. Courier will contact {completedOrder.customerPhone || "recipient"} prior to delivery.
-                    </p>
-                  </div>
-                </div>
+              <div>
+                <span className="block text-[10px] uppercase font-mono text-[#A69E91]">Destination</span>
+                <span className="font-semibold text-[#1F1A17]">{completedOrder.destinationCity}, {completedOrder.destinationCountry}</span>
+                <span className="block text-[11px] text-[#6E6A63] mt-0.5">{completedOrder.customerPhone || "Courier will notify on arrival"}</span>
               </div>
             </div>
+          </div>
 
-            {/* Garments Itemized Summary */}
-            <div className="rounded-sm border border-[#EADFD0] overflow-hidden">
-              <div className="bg-[#FAF5EE] px-4 py-2.5 border-b border-[#EADFD0] font-display text-xs font-bold uppercase tracking-wider text-[#1F1A17]">
-                Curated Garments
-              </div>
-              <div className="divide-y divide-[#EADFD0]">
-                {completedOrder.items.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 bg-white flex items-center justify-between text-xs"
-                  >
-                    <div>
-                      <span className="font-medium text-[#7A491D] mr-2">
-                        [{item.brandName}]
-                      </span>
-                      <span className="font-semibold text-[#1F1A17]">
-                        {item.productTitle}
-                      </span>
-                      <span className="text-[#6E6A63] ml-2">
-                        Size {item.size} × {item.quantity}
-                      </span>
-                    </div>
-                    <div className="font-semibold text-[#1F1A17]">
-                      {formatCurrencyValue(
-                        item.unitPrice * item.quantity,
-                        completedOrder.currency
-                      )}
-                    </div>
+          {/* Items Summary */}
+          <div className="space-y-3">
+            <div className="text-xs uppercase font-bold tracking-wider text-[#7A491D]">
+              Curated Garments
+            </div>
+            <div className="rounded-xl border border-[#EADFD0] divide-y divide-[#EADFD0] overflow-hidden">
+              {completedOrder.items.map((item, idx) => (
+                <div key={idx} className="p-4 bg-white flex items-center justify-between text-xs">
+                  <div>
+                    <span className="font-semibold text-[#1F1A17]">{item.productTitle}</span>
+                    <span className="text-[#6E6A63] ml-2 font-mono">
+                      Size {item.size} · Qty {item.quantity}
+                    </span>
                   </div>
-                ))}
-              </div>
-
-              <div className="bg-[#FAF9F6] p-4 border-t border-[#EADFD0] flex items-center justify-between text-sm font-bold">
-                <span className="font-display uppercase tracking-wider text-[#1F1A17]">
-                  Total Settled ({completedOrder.currency})
-                </span>
-                <span className="text-[#7A491D] text-base font-display">
+                  <div className="font-semibold text-[#1F1A17]">
+                    {formatCurrencyValue(item.unitPrice * item.quantity, completedOrder.currency)}
+                  </div>
+                </div>
+              ))}
+              <div className="p-4 bg-[#FAF9F6] flex items-center justify-between font-bold text-sm">
+                <span>Total Settled ({completedOrder.currency})</span>
+                <span className="text-[#7A491D] font-display text-base">
                   {formatCurrencyValue(completedOrder.totalAmount, completedOrder.currency)}
                 </span>
               </div>
             </div>
+          </div>
 
-            {/* Action CTAs */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Link
-                href="/admin"
-                className="rounded-sm bg-[#7A491D] px-6 py-3 font-display text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors"
-              >
-                View in /admin Order Ledger →
-              </Link>
-              <Link
-                href="/shop"
-                className="rounded-sm border border-[#EADFD0] bg-white px-6 py-3 font-display text-xs font-semibold tracking-widest text-[#1F1A17] uppercase hover:bg-[#FAF9F6] transition-colors"
-              >
-                Continue Shopping
-              </Link>
-            </div>
+          {/* Clean Single Action */}
+          <div className="pt-2 text-center">
+            <Link
+              href="/shop"
+              className="inline-block w-full sm:w-auto rounded-xl bg-[#7A491D] px-8 py-3.5 font-display text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors shadow-sm"
+            >
+              Continue Shopping →
+            </Link>
           </div>
         </div>
       </div>
@@ -561,592 +377,485 @@ export default function CheckoutPage() {
 
   // 5. Active Checkout Form View
   return (
-    <div className="min-h-screen bg-[#FFFDF9] text-[#1F1A17] relative">
-      {/* Tribal Pattern Ribbon on Top */}
-      <TribalPatternRibbon className="h-2" />
-
-      {/* Luxury Loading Animation Overlay during Settlement */}
-      {isProcessing && (
-        <LuxuryLoadingIndicator
-          fullScreen
-          size="lg"
-          message={paymentStage || "Securing Order Settlement"}
-          subMessage="Allocating Lagos & Toronto Hub inventory and recording waybill..."
-        />
-      )}
-
-      {/* Header Banner */}
-      <section className="border-b border-[#EADFD0] bg-[#FAF5EE]/60 px-4 py-8 sm:py-12 md:px-8">
-        <div className="mx-auto max-w-[1440px] flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-[#7A491D] mb-1">
-              Afro-Luxury Checkout · Dual-Gateway Settlement
+    <div className="min-h-screen bg-[#FAF9F6] text-[#1F1A17] relative">
+      {/* Macklemore "Something good is coming" Fullscreen Settlement Loader */}
+      <AnimatePresence>
+        {isProcessing && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FAF5EE]/95 backdrop-blur-md p-6 text-center select-none"
+          >
+            {/* Animated Concentric Orbits from macklemorefashions.com */}
+            <div className="relative w-20 h-20 mb-8 flex items-center justify-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 2.8, ease: "linear" }}
+                className="absolute inset-0 rounded-full border-t border-r border-[#7A491D] border-b-transparent border-l-transparent opacity-80"
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ repeat: Infinity, duration: 4.2, ease: "linear" }}
+                className="absolute -inset-1.5 rounded-full border border-dashed border-[#D4860B]/50"
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ repeat: Infinity, duration: 2.0, ease: "linear" }}
+                className="absolute inset-3 rounded-full border-t border-l border-[#D4860B] border-b-transparent border-r-transparent opacity-90"
+              />
+              <motion.div
+                animate={{ scale: [0.92, 1.15, 0.92], opacity: [0.8, 1, 0.8] }}
+                transition={{ repeat: Infinity, duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+                className="relative flex items-center justify-center"
+              >
+                <div className="w-3.5 h-3.5 rotate-45 bg-[#E31E24] shadow-sm shadow-[#E31E24]/40" />
+                <div className="absolute w-1.5 h-1.5 rotate-45 bg-[#FAF5EE]" />
+              </motion.div>
             </div>
-            <h1 className="font-display text-3xl sm:text-5xl font-bold uppercase tracking-tight text-[#1F1A17]">
-              Checkout &amp; Delivery
-            </h1>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-[#6E6A63] uppercase">Settlement Currency:</span>
-            <select
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-              className="rounded-sm border border-[#EADFD0] bg-white px-3 py-1.5 text-xs font-semibold text-[#7A491D] focus:border-[#7A491D] focus:outline-none"
-            >
-              {(Object.keys(CURRENCIES) as CurrencyCode[]).map((c) => (
-                <option key={c} value={c}>
-                  {c} · {CURRENCIES[c].label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </section>
+            {/* Typography from macklemorefashions.com landing screen */}
+            <div className="space-y-3 max-w-md">
+              <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#7A491D]">
+                Macklemore Fashion · Afro-Luxury
+              </div>
+              <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#1F1A17] uppercase">
+                We&apos;re weaving something beautiful.
+              </h2>
+              <p className="text-sm font-semibold tracking-wide text-[#7A491D]">
+                Something good is coming.
+              </p>
+              <p className="text-xs text-[#6E6A63] leading-relaxed max-w-sm mx-auto">
+                Securing your payment and handcrafting your order with care and artistry.
+              </p>
+              <div className="pt-2 text-[10px] uppercase font-bold tracking-[0.2em] text-[#A69E91]">
+                Wear your culture. Own your story.
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Main Content */}
-      <section className="mx-auto max-w-[1440px] px-4 py-8 sm:py-12 md:px-8">
+      {/* Main Checkout Container */}
+      <main className="mx-auto max-w-5xl px-4 py-8 sm:py-12 md:px-8">
         {cart.length === 0 ? (
-          <div className="mx-auto max-w-xl text-center rounded-sm border border-[#EADFD0] bg-white p-10 space-y-5 my-12">
-            <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
-              Your Wardrobe Bag is Empty
+          <div className="mx-auto max-w-md text-center rounded-2xl border border-[#EADFD0] bg-white p-10 space-y-5 my-12 shadow-sm">
+            <div className="w-12 h-12 mx-auto rounded-full bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center text-[#7A491D]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 01-8 0" />
+              </svg>
+            </div>
+            <h2 className="font-display text-xl font-bold uppercase tracking-tight text-[#1F1A17]">
+              Your Shopping Bag is Empty
             </h2>
             <p className="text-xs text-[#6E6A63] leading-relaxed">
-              Explore bespoke Aso-Oke Dashikis, royal Agbadas, and fine African luxury silks before proceeding to checkout.
+              Explore bespoke Aso-Oke Dashikis, couture gowns, and luxury African prints.
             </p>
-            <div className="flex flex-wrap justify-center gap-3 pt-2">
+            <div className="flex flex-col gap-2.5 pt-2">
               <Link
                 href="/shop"
-                className="rounded-sm bg-[#7A491D] px-6 py-3 font-display text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors"
+                className="w-full rounded-xl bg-[#7A491D] py-3 text-xs font-semibold tracking-widest text-white uppercase hover:bg-[#5C3614] transition-colors"
               >
-                Explore Wardrobe →
+                Discover New Drops →
               </Link>
               <button
                 type="button"
                 onClick={handleAddDemoGarment}
-                className="rounded-sm border border-[#EADFD0] bg-[#FAF5EE] px-5 py-3 font-display text-xs font-semibold tracking-widest text-[#7A491D] uppercase hover:bg-white transition-colors cursor-pointer"
+                className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF5EE] py-2.5 text-xs font-semibold text-[#7A491D] hover:bg-white transition-colors cursor-pointer"
               >
-                + Add Test Garment to Bag
+                + Add Curated Piece to Test
               </button>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            {/* Left 7 Columns: Shipping Details & Payment Methods */}
-            <form onSubmit={handleExecuteCheckout} className="lg:col-span-7 space-y-8">
-              {/* Step 1: Destination & Shipping Address */}
-              <div className="rounded-sm border border-[#EADFD0] bg-white p-6 sm:p-8 shadow-xs space-y-5">
-                <div className="flex items-center justify-between border-b border-[#EADFD0]/60 pb-3">
-                  <h2 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
-                    1. Shipping &amp; Delivery Destination
-                  </h2>
-                  <span className="text-xs font-mono text-[#7A491D]">Step 1 of 2</span>
-                </div>
-
-                {/* Quick Test Profiles for fast verification */}
-                <div className="flex flex-wrap items-center justify-between gap-2 bg-[#FAF5EE] p-3 rounded-sm border border-[#EADFD0] text-xs">
-                  <span className="text-[#6E6A63] font-medium text-[11px] uppercase tracking-wide">
-                    Fast Test Autofill:
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left Column (7 cols): Streamlined Inputs & Payment Method */}
+            <form onSubmit={handleExecuteCheckout} className="lg:col-span-7 space-y-6">
+              {/* Top Express 1-Click Banner */}
+              <div className="rounded-2xl border border-[#EADFD0] bg-white p-5 shadow-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#6E6A63]">
+                    Express Checkout
                   </span>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={fillLagosClient}
-                      className="px-2.5 py-1 rounded-sm border border-[#EADFD0] bg-white text-[#7A491D] hover:bg-[#FAF9F6] text-[11px] font-semibold transition-colors cursor-pointer"
-                    >
-                      Lagos Profile (NGN · Paystack)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={fillTorontoClient}
-                      className="px-2.5 py-1 rounded-sm border border-[#EADFD0] bg-white text-[#7A491D] hover:bg-[#FAF9F6] text-[11px] font-semibold transition-colors cursor-pointer"
-                    >
-                      Toronto Profile (CAD · Stripe)
-                    </button>
+                  <div className="flex items-center gap-1.5">
+                    <ApplePayBadge />
+                    <GooglePayBadge />
+                    <LinkBadge />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Destination Country / Hub */}
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Delivery Corridor (Auto-routes to nearest fulfillment hub) *
-                    </label>
-                    <select
-                      value={destinationIso}
-                      onChange={(e) => handleCountryChange(e.target.value)}
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    >
-                      {DESTINATION_COUNTRIES.map((c) => (
-                        <option key={c.iso} value={c.iso}>
-                          {c.name} · Default: {c.suggestedCurrency}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  <button
+                    type="button"
+                    onClick={fillLagosClient}
+                    className="rounded-xl border border-[#00C3F7]/40 bg-[#F0FBFF] hover:bg-[#E2F7FE] p-3 text-left transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <PaystackLogo className="h-4" />
+                      <span className="text-[10px] font-bold text-[#0089AF] uppercase">1-Click</span>
+                    </div>
+                    <span className="text-[11px] text-[#4A5568] block mt-1">Lagos · NGN Paystack</span>
+                  </button>
 
-                  {/* Recipient First & Last Name */}
-                  <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="e.g. Tunde"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    />
-                  </div>
+                  <button
+                    type="button"
+                    onClick={fillTorontoClient}
+                    className="rounded-xl border border-[#635BFF]/30 bg-[#F6F5FF] hover:bg-[#ECEBFF] p-3 text-left transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <StripeLogo className="h-3.5" />
+                      <span className="text-[10px] font-bold text-[#635BFF] uppercase">1-Click</span>
+                    </div>
+                    <span className="text-[11px] text-[#4A5568] block mt-1">Toronto · CAD Stripe</span>
+                  </button>
+                </div>
+              </div>
 
-                  <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      placeholder="e.g. Bakare"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    />
-                  </div>
+              {/* Minimal Delivery Details (Stripe-Like Simple Fields) */}
+              <div className="rounded-2xl border border-[#EADFD0] bg-white p-6 shadow-xs space-y-4">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-[#1F1A17] border-b border-[#EADFD0] pb-2">
+                  Contact &amp; Delivery
+                </h2>
 
-                  {/* Email & Phone */}
+                <div className="space-y-3 text-xs">
+                  {/* Email */}
                   <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Email Address *
+                    <label className="block text-[11px] font-semibold text-[#6E6A63] mb-1">
+                      Email address
                     </label>
                     <input
                       type="email"
                       required
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
-                      placeholder="client@couture.luxury"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+                      placeholder="client@luxury.com"
+                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                     />
                   </div>
 
+                  {/* Full Name */}
                   <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Phone Number *
+                    <label className="block text-[11px] font-semibold text-[#6E6A63] mb-1">
+                      Full name
                     </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={phonePrefix}
-                        onChange={(e) => setPhonePrefix(e.target.value)}
-                        className="w-16 rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-2 py-2 text-xs text-center font-mono text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                      />
-                      <input
-                        type="tel"
-                        required
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder="809 442 1900"
-                        className="flex-1 rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                      />
-                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="First and last name"
+                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                    />
                   </div>
 
-                  {/* Street Address & Suite */}
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Street Address *
+                  {/* Country */}
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#6E6A63] mb-1">
+                      Country or region
+                    </label>
+                    <select
+                      value={destinationIso}
+                      onChange={(e) => handleCountryChange(e.target.value)}
+                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                    >
+                      {DESTINATION_COUNTRIES.map((c) => (
+                        <option key={c.iso} value={c.iso}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Street Address */}
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#6E6A63] mb-1">
+                      Street address
                     </label>
                     <input
                       type="text"
                       required
                       value={streetAddress}
                       onChange={(e) => setStreetAddress(e.target.value)}
-                      placeholder="e.g. 14 Admiralty Way"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
+                      placeholder="House number and street name"
+                      className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Apartment / Suite / Floor (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={suite}
-                      onChange={(e) => setSuite(e.target.value)}
-                      placeholder="e.g. Suite 4B, Lekki Phase 1"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    />
+                  {/* City & Phone inline */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[#6E6A63] mb-1">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder="City"
+                        className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[#6E6A63] mb-1">
+                        Phone number
+                      </label>
+                      <input
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        placeholder="+234 800 000 0000"
+                        className="w-full rounded-xl border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none transition-colors"
+                      />
+                    </div>
                   </div>
-
-                  <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      City *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      placeholder="e.g. Lagos"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      State / Province / County *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={stateProvince}
-                      onChange={(e) => setStateProvince(e.target.value)}
-                      placeholder="e.g. Lagos State"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Postal / ZIP Code
-                    </label>
-                    <input
-                      type="text"
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
-                      placeholder="e.g. 105102"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-medium uppercase tracking-wider text-[#4A4742] mb-1">
-                      Courier Delivery Notes (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={deliveryNotes}
-                      onChange={(e) => setDeliveryNotes(e.target.value)}
-                      placeholder="e.g. Gate access code, building security, or apartment access notes"
-                      className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:bg-white focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Hub Routing Notification */}
-                <div className="rounded-sm border border-[#EADFD0] bg-[#FAF5EE] p-4 text-xs flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <span className="font-semibold text-[#1F1A17]">
-                      Fulfillment Hub: {logistics.hubName}
-                    </span>
-                    <span className="text-[#6E6A63] block mt-0.5">
-                      Courier: {logistics.courierPartner} · Transit: {logistics.estimatedTransitDays}
-                    </span>
-                  </div>
-                  <span className="rounded-sm bg-white border border-[#EADFD0] px-2.5 py-1 text-[11px] font-mono text-[#7A491D]">
-                    {logistics.assignedHub === "HUB_A_LAGOS" ? "Hub A (Lagos)" : "Hub B (Toronto HQ)"}
-                  </span>
                 </div>
               </div>
 
-              {/* Step 2: Payment Gateway Testing Selector */}
-              <div className="rounded-sm border border-[#EADFD0] bg-white p-6 sm:p-8 shadow-xs space-y-6">
-                <div className="flex items-center justify-between border-b border-[#EADFD0]/60 pb-3">
-                  <h2 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
-                    2. Payment Method &amp; Gateway Sandbox
+              {/* Payment Method with Original Brand Logos */}
+              <div className="rounded-2xl border border-[#EADFD0] bg-white p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-[#EADFD0] pb-2">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#1F1A17]">
+                    Payment Method
                   </h2>
-                  <span className="text-xs font-mono text-[#7A491D]">Step 2 of 2</span>
+                  <span className="text-[11px] text-[#2E6B35] font-semibold flex items-center gap-1">
+                    <span>🔒</span> 256-bit Secure
+                  </span>
                 </div>
 
-                {/* Gateway Switcher Tabs */}
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedGateway("PAYSTACK")}
-                    className={`rounded-sm border p-4 text-left transition-all cursor-pointer ${
-                      selectedGateway === "PAYSTACK"
-                        ? "border-[#7A491D] bg-[#FAF5EE] shadow-xs"
-                        : "border-[#EADFD0] bg-white hover:bg-[#FAF9F6]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-display text-sm font-bold uppercase tracking-tight text-[#1F1A17]">
-                        Paystack
-                      </span>
-                      {selectedGateway === "PAYSTACK" && (
-                        <span className="w-1.5 h-1.5 rotate-45 bg-[#7A491D]" />
-                      )}
-                    </div>
-                    <span className="text-[11px] text-[#6E6A63] block">
-                      African Gateway · NGN, GHS, KES, USD
-                    </span>
-                    <span className="text-[10px] text-[#7A491D] font-mono mt-1 block">
-                      Cards, Bank Transfer &amp; USSD
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
+                {/* Gateway Selection Tabs with Real Brand Colors */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Stripe Option */}
+                  <div
                     onClick={() => setSelectedGateway("STRIPE")}
-                    className={`rounded-sm border p-4 text-left transition-all cursor-pointer ${
+                    className={`rounded-xl border p-4 cursor-pointer transition-all ${
                       selectedGateway === "STRIPE"
-                        ? "border-[#7A491D] bg-[#FAF5EE] shadow-xs"
-                        : "border-[#EADFD0] bg-white hover:bg-[#FAF9F6]"
+                        ? "border-[#635BFF] bg-[#F8F7FF] shadow-xs ring-1 ring-[#635BFF]"
+                        : "border-[#EADFD0] bg-[#FAF9F6] hover:bg-white"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-display text-sm font-bold uppercase tracking-tight text-[#1F1A17]">
-                        Stripe
-                      </span>
-                      {selectedGateway === "STRIPE" && (
-                        <span className="w-1.5 h-1.5 rotate-45 bg-[#7A491D]" />
-                      )}
+                    <div className="flex items-center justify-between mb-2">
+                      <StripeLogo className="h-5" />
+                      <div className="w-4 h-4 rounded-full border flex items-center justify-center border-[#635BFF]">
+                        {selectedGateway === "STRIPE" && (
+                          <div className="w-2 h-2 rounded-full bg-[#635BFF]" />
+                        )}
+                      </div>
                     </div>
-                    <span className="text-[11px] text-[#6E6A63] block">
-                      Global Gateway · CAD, USD, GBP, EUR
+                    <div className="flex items-center gap-1.5 pt-1">
+                      <VisaBadge />
+                      <MastercardBadge />
+                      <ApplePayBadge />
+                    </div>
+                    <span className="text-[10px] text-[#6E6A63] block mt-2">
+                      Global card settlement · CAD, USD, GBP, EUR
                     </span>
-                    <span className="text-[10px] text-[#7A491D] font-mono mt-1 block">
-                      Credit &amp; Debit Cards
+                  </div>
+
+                  {/* Paystack Option */}
+                  <div
+                    onClick={() => setSelectedGateway("PAYSTACK")}
+                    className={`rounded-xl border p-4 cursor-pointer transition-all ${
+                      selectedGateway === "PAYSTACK"
+                        ? "border-[#00C3F7] bg-[#F2FBFF] shadow-xs ring-1 ring-[#00C3F7]"
+                        : "border-[#EADFD0] bg-[#FAF9F6] hover:bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <PaystackLogo className="h-5" />
+                      <div className="w-4 h-4 rounded-full border flex items-center justify-center border-[#00C3F7]">
+                        {selectedGateway === "PAYSTACK" && (
+                          <div className="w-2 h-2 rounded-full bg-[#00C3F7]" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 pt-1">
+                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded border border-[#E0E0E0]">
+                        Cards
+                      </span>
+                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded border border-[#E0E0E0]">
+                        Bank
+                      </span>
+                      <span className="text-[10px] font-semibold text-[#001C3F] bg-white px-1.5 py-0.5 rounded border border-[#E0E0E0]">
+                        USSD
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-[#6E6A63] block mt-2">
+                      African instant settlement · NGN, GHS, KES
                     </span>
-                  </button>
+                  </div>
                 </div>
 
-                {/* Gateway Detail Sub-Panels */}
-                {selectedGateway === "PAYSTACK" ? (
-                  <div className="space-y-4 rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-[#1F1A17]">
-                        Paystack Settlement Channel
-                      </span>
-                      <span className="rounded-sm bg-white border border-[#EADFD0] px-2.5 py-0.5 text-[11px] font-medium text-[#2E6B35]">
-                        Sandbox Active
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2">
-                      {(["CARD", "BANK_TRANSFER", "USSD"] as const).map((channel) => (
-                        <button
-                          key={channel}
-                          type="button"
-                          onClick={() => setPaystackChannel(channel)}
-                          className={`rounded-sm border py-2.5 px-3 text-xs font-medium text-center transition-all cursor-pointer ${
-                            paystackChannel === channel
-                              ? "border-[#7A491D] bg-white text-[#7A491D] font-semibold"
-                              : "border-[#EADFD0] bg-transparent text-[#6E6A63] hover:text-[#1F1A17]"
-                          }`}
-                        >
-                          {channel === "CARD" && "Credit / Debit Card"}
-                          {channel === "BANK_TRANSFER" && "Bank Transfer"}
-                          {channel === "USSD" && "USSD Banking"}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="text-xs text-[#6E6A63] leading-relaxed pt-1 space-y-1">
-                      <p>
-                        Selected channel: <span className="font-semibold text-[#1F1A17]">{paystackChannel.replace(/_/g, " ")}</span>.
-                      </p>
-                      <p className="text-[11px] text-[#7A491D]">
-                        Testing Mode: Paystack transaction will be generated, signed with live/sandbox test parameters, and recorded directly to the Neon PostgreSQL database.
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-4 rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-[#1F1A17]">
-                        Stripe International Card Entry
-                      </span>
+                {/* Sub-form for Selected Gateway */}
+                {selectedGateway === "STRIPE" ? (
+                  <div className="rounded-xl border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-semibold text-[#1F1A17]">Card Details</span>
                       <button
                         type="button"
                         onClick={fillStripeTestCard}
-                        className="rounded-sm border border-[#7A491D] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#7A491D] hover:bg-[#FAF5EE] transition-colors cursor-pointer"
+                        className="text-[11px] font-semibold text-[#635BFF] hover:underline cursor-pointer"
                       >
-                        Auto-Fill Test Card
+                        Fill Test Card (4242)
                       </button>
                     </div>
 
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[11px] font-medium uppercase tracking-wider text-[#6E6A63] mb-1">
-                          Cardholder Name
-                        </label>
-                        <input
-                          type="text"
-                          value={stripeCardName}
-                          onChange={(e) => setStripeCardName(e.target.value)}
-                          placeholder="e.g. Tunde Bakare"
-                          className="w-full rounded-sm border border-[#EADFD0] bg-white px-3 py-2 text-xs text-[#1F1A17] focus:border-[#7A491D] focus:outline-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-[11px] font-medium uppercase tracking-wider text-[#6E6A63] mb-1">
-                          Card Number
-                        </label>
+                    <div className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden text-xs">
+                      <div className="p-2.5 border-b border-[#EADFD0] flex items-center justify-between">
                         <input
                           type="text"
                           value={stripeCardNumber}
                           onChange={(e) => setStripeCardNumber(e.target.value)}
-                          placeholder="4242 4242 4242 4242"
-                          className="w-full rounded-sm border border-[#EADFD0] bg-white px-3 py-2 text-xs font-mono text-[#1F1A17] focus:border-[#7A491D] focus:outline-none"
+                          placeholder="Card number"
+                          className="w-full bg-transparent font-mono focus:outline-none text-xs"
+                        />
+                        <div className="flex gap-1 shrink-0">
+                          <VisaBadge />
+                          <MastercardBadge />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 divide-x divide-[#EADFD0]">
+                        <input
+                          type="text"
+                          value={stripeCardExpiry}
+                          onChange={(e) => setStripeCardExpiry(e.target.value)}
+                          placeholder="MM / YY"
+                          className="p-2.5 bg-transparent font-mono focus:outline-none text-xs"
+                        />
+                        <input
+                          type="text"
+                          value={stripeCardCvc}
+                          onChange={(e) => setStripeCardCvc(e.target.value)}
+                          placeholder="CVC"
+                          className="p-2.5 bg-transparent font-mono focus:outline-none text-xs"
                         />
                       </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[11px] font-medium uppercase tracking-wider text-[#6E6A63] mb-1">
-                            Expires (MM/YY)
-                          </label>
-                          <input
-                            type="text"
-                            value={stripeCardExpiry}
-                            onChange={(e) => setStripeCardExpiry(e.target.value)}
-                            placeholder="12/28"
-                            className="w-full rounded-sm border border-[#EADFD0] bg-white px-3 py-2 text-xs font-mono text-[#1F1A17] focus:border-[#7A491D] focus:outline-none"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] font-medium uppercase tracking-wider text-[#6E6A63] mb-1">
-                            CVC / Security Code
-                          </label>
-                          <input
-                            type="text"
-                            value={stripeCardCvc}
-                            onChange={(e) => setStripeCardCvc(e.target.value)}
-                            placeholder="123"
-                            className="w-full rounded-sm border border-[#EADFD0] bg-white px-3 py-2 text-xs font-mono text-[#1F1A17] focus:border-[#7A491D] focus:outline-none"
-                          />
-                        </div>
-                      </div>
                     </div>
-
-                    <p className="text-[11px] text-[#7A491D] pt-1">
-                      Testing Mode: Authorized via Stripe PaymentIntent simulation. The order, customer address, and waybill will be committed to the Neon PostgreSQL database.
-                    </p>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-[#EADFD0] bg-[#FAF9F6] p-4 space-y-3">
+                    <span className="text-xs font-semibold text-[#1F1A17] block">
+                      Paystack Settlement Channel
+                    </span>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      {(["CARD", "BANK_TRANSFER", "USSD"] as const).map((ch) => (
+                        <button
+                          key={ch}
+                          type="button"
+                          onClick={() => setPaystackChannel(ch)}
+                          className={`rounded-lg border py-2 px-2 text-center font-medium transition-colors cursor-pointer ${
+                            paystackChannel === ch
+                              ? "border-[#00C3F7] bg-white text-[#0089AF] font-bold shadow-2xs"
+                              : "border-[#EADFD0] bg-white text-[#6E6A63] hover:bg-[#FAF5EE]"
+                          }`}
+                        >
+                          {ch.replace("_", " ")}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                {/* Submit Action */}
+                {/* Big Submit Button */}
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full rounded-sm bg-[#7A491D] py-4 px-6 font-display text-xs font-semibold tracking-widest text-white uppercase shadow-md hover:bg-[#5C3614] transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full rounded-xl bg-[#7A491D] py-3.5 px-6 font-display text-xs font-semibold tracking-widest text-white uppercase shadow-sm hover:bg-[#5C3614] transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  <span>
-                    Pay &amp; Place Order Now via {selectedGateway} ({formatCurrencyValue(totalAmount, currency)})
-                  </span>
+                  <span>Pay {formatCurrencyValue(totalAmount, currency)}</span>
                   <span>→</span>
                 </button>
               </div>
             </form>
 
-            {/* Right 5 Columns: Order Summary Lookbook */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="rounded-sm border border-[#EADFD0] bg-white p-6 sm:p-7 shadow-xs space-y-6">
-                <div className="flex items-center justify-between border-b border-[#EADFD0]/60 pb-3">
-                  <h2 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
-                    Order Summary
-                  </h2>
-                  <span className="text-xs text-[#6E6A63]">
-                    {cart.reduce((sum, item) => sum + item.quantity, 0)} pieces
-                  </span>
-                </div>
+            {/* Right Column (5 cols): Clean Order Summary (Stripe-Like) */}
+            <aside className="lg:col-span-5 rounded-2xl border border-[#EADFD0] bg-white p-6 shadow-xs space-y-5 sticky top-24">
+              <div className="flex items-center justify-between border-b border-[#EADFD0] pb-3">
+                <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#1F1A17]">
+                  Order Summary ({cart.reduce((sum, i) => sum + i.quantity, 0)})
+                </h3>
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+                  className="rounded-lg border border-[#EADFD0] bg-[#FAF9F6] px-2.5 py-1 text-xs font-semibold text-[#7A491D] focus:outline-none"
+                >
+                  {(Object.keys(CURRENCIES) as CurrencyCode[]).map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                {/* Items List */}
-                <div className="space-y-4 divide-y divide-[#EADFD0]/60 max-h-[360px] overflow-y-auto pr-1">
-                  {cart.map((item, idx) => (
-                    <div key={idx} className="pt-4 first:pt-0 flex gap-3.5">
-                      <div className="relative w-16 h-20 bg-[#FAF9F6] rounded-sm border border-[#EADFD0] overflow-hidden shrink-0">
+              {/* Items List */}
+              <div className="divide-y divide-[#EADFD0] max-h-72 overflow-y-auto pr-1">
+                {cart.map((item, idx) => (
+                  <div key={idx} className="py-3 flex items-center justify-between text-xs gap-3">
+                    <div className="flex items-center gap-3">
+                      {item.product.editorialImageUrl ? (
                         <img
                           src={item.product.editorialImageUrl}
                           alt={item.product.title}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src =
-                              "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=400&q=80";
-                          }}
+                          className="w-12 h-14 object-cover rounded-lg border border-[#EADFD0] shrink-0"
                         />
-                      </div>
-
-                      <div className="flex-1 flex flex-col justify-between text-xs">
-                        <div>
-                          <div className="text-[11px] font-semibold text-[#7A491D] uppercase">
-                            {item.product.brandName}
-                          </div>
-                          <div className="font-semibold text-[#1F1A17] line-clamp-1">
-                            {item.product.title}
-                          </div>
-                          <div className="text-[#6E6A63] text-[11px] mt-0.5">
-                            Size: {item.size} · Qty: {item.quantity}
-                          </div>
-                        </div>
-
-                        <div className="font-semibold text-[#1F1A17]">
-                          {formatCurrencyValue(
-                            convertPrice(item.product, currency) * item.quantity,
-                            currency
-                          )}
+                      ) : (
+                        <div className="w-12 h-14 rounded-lg bg-[#FAF5EE] border border-[#EADFD0] shrink-0" />
+                      )}
+                      <div>
+                        <div className="font-semibold text-[#1F1A17] line-clamp-1">{item.product.title}</div>
+                        <div className="text-[11px] text-[#6E6A63]">
+                          Size: {item.size} · Qty: {item.quantity}
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                {/* Price Breakdown */}
-                <div className="border-t border-[#EADFD0] pt-4 space-y-2.5 text-xs">
-                  <div className="flex justify-between text-[#6E6A63]">
-                    <span>Garments Subtotal</span>
-                    <span className="text-[#1F1A17] font-medium">
-                      {formatCurrencyValue(subtotal, currency)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-[#6E6A63]">
-                    <span>Fulfillment &amp; Courier Shipping</span>
-                    <span className="text-[#1F1A17] font-medium">
-                      {logistics.shippingFee === 0
-                        ? "Complimentary"
-                        : formatCurrencyValue(logistics.shippingFee, currency)}
-                    </span>
-                  </div>
-
-                  {logistics.dutiesFee > 0 && (
-                    <div className="flex justify-between text-[#6E6A63]">
-                      <span>Estimated Regional Duties</span>
-                      <span className="text-[#1F1A17] font-medium">
-                        {formatCurrencyValue(logistics.dutiesFee, currency)}
-                      </span>
+                    <div className="font-semibold text-[#1F1A17] shrink-0">
+                      {formatCurrencyValue(convertPrice(item.product, currency) * item.quantity, currency)}
                     </div>
-                  )}
-
-                  <div className="border-t border-[#EADFD0] pt-3 flex justify-between text-sm font-bold">
-                    <span className="font-display uppercase tracking-wider text-[#1F1A17]">
-                      Grand Total
-                    </span>
-                    <span className="text-base text-[#7A491D] font-display">
-                      {formatCurrencyValue(totalAmount, currency)}
-                    </span>
                   </div>
+                ))}
+              </div>
+
+              {/* Totals Breakdown */}
+              <div className="border-t border-[#EADFD0] pt-4 space-y-2 text-xs">
+                <div className="flex justify-between text-[#6E6A63]">
+                  <span>Subtotal</span>
+                  <span className="font-medium text-[#1F1A17]">
+                    {formatCurrencyValue(subtotal, currency)}
+                  </span>
                 </div>
-
-                {/* Trust Guarantees */}
-                <div className="rounded-sm border border-[#EADFD0] bg-[#FAF9F6] p-4 text-[11px] text-[#6E6A63] space-y-2 leading-relaxed">
-                  <div className="flex items-center gap-2 text-[#1F1A17] font-semibold uppercase">
-                    <span className="w-1.5 h-1.5 rotate-45 bg-[#7A491D]" />
-                    <span>Macklemore Luxury Authenticity</span>
+                <div className="flex justify-between text-[#6E6A63]">
+                  <span>Fulfillment &amp; Courier</span>
+                  <span className="font-medium text-[#1F1A17]">
+                    {logistics.shippingFee === 0 ? "Complimentary" : formatCurrencyValue(logistics.shippingFee, currency)}
+                  </span>
+                </div>
+                {logistics.dutiesFee > 0 && (
+                  <div className="flex justify-between text-[#6E6A63]">
+                    <span>Regional Customs &amp; Duties</span>
+                    <span className="font-medium text-[#1F1A17]">
+                      {formatCurrencyValue(logistics.dutiesFee, currency)}
+                    </span>
                   </div>
-                  <p>
-                    Every bespoke piece is hand-inspected in Toronto or Lagos before allocation to courier. Includes digital certificate of origin.
-                  </p>
+                )}
+                <div className="border-t border-[#EADFD0] pt-3 flex justify-between text-sm font-bold text-[#1F1A17]">
+                  <span>Total Due</span>
+                  <span className="text-base text-[#7A491D] font-display">
+                    {formatCurrencyValue(totalAmount, currency)}
+                  </span>
                 </div>
               </div>
-            </div>
+
+              {/* Subtle Trust Badges */}
+              <div className="rounded-xl bg-[#FAF5EE] p-3 text-[11px] text-[#6E6A63] text-center space-y-1">
+                <div>Curated between Toronto HQ &amp; Lagos Atelier</div>
+                <div className="font-medium text-[#7A491D]">Inspected · Preserved · Hand-Delivered</div>
+              </div>
+            </aside>
           </div>
         )}
-      </section>
+      </main>
     </div>
   );
 }
