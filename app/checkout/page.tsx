@@ -126,6 +126,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentStage, setPaymentStage] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<OrderRecord | null>(null);
+  const [emailDispatched, setEmailDispatched] = useState<boolean>(false);
 
   // Financial Calculations
   const subtotal = cart.reduce(
@@ -257,6 +258,9 @@ export default function CheckoutPage() {
         }),
       });
       const data = await res.json();
+      if (data?.emailSent) {
+        setEmailDispatched(true);
+      }
 
       const newOrd = createOrder({
         customerName: fullName,
@@ -404,6 +408,90 @@ export default function CheckoutPage() {
                   <span className="font-mono text-[11px] text-[#6E6A63]">
                     {completedOrder.paymentReference}
                   </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Resend Receipt Email Status Banner */}
+            <div className="rounded-sm border border-[#EADFD0] bg-[#FAF5EE] p-4 text-xs flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2 font-semibold text-[#1F1A17]">
+                <span className="w-1.5 h-1.5 rotate-45 bg-[#2E6B35]" />
+                <span>
+                  {emailDispatched
+                    ? "Official Receipt & Delivery Timeline Dispatched via Resend"
+                    : "Official Receipt & Delivery Dossier Dispatched"}
+                </span>
+              </div>
+              <span className="text-[#6E6A63] font-mono text-[11px]">
+                Recipient: {completedOrder.customerEmail}
+              </span>
+            </div>
+
+            {/* Fulfillment Waiting Times & Delivery Schedule */}
+            <div className="rounded-sm border border-[#EADFD0] overflow-hidden bg-white">
+              <div className="bg-[#FAF5EE] px-4 py-2.5 border-b border-[#EADFD0] font-display text-xs font-bold uppercase tracking-wider text-[#1F1A17] flex items-center justify-between">
+                <span>Fulfillment Waiting Times &amp; Delivery Schedule</span>
+                <span className="text-[10px] text-[#7A491D] font-mono font-normal">
+                  Waybill: {completedOrder.waybillNumber}
+                </span>
+              </div>
+              <div className="p-5 space-y-4 text-xs">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-sm bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center font-display font-bold text-[#7A491D] shrink-0 text-[11px]">
+                    1
+                  </div>
+                  <div>
+                    <div className="font-bold text-[#1F1A17] uppercase tracking-wide">
+                      Stage 1 · Atelier Quality Inspection &amp; Preservation Packaging
+                    </div>
+                    <div className="text-[#7A491D] font-semibold mt-0.5">
+                      Waiting Time: 12-24 Hours
+                    </div>
+                    <p className="text-[#6E6A63] mt-1 leading-relaxed">
+                      Garment hand-inspection, steam pressing, tissue wrapping, and provenance documentation at{" "}
+                      {completedOrder.assignedHub === "HUB_A_LAGOS"
+                        ? "Hub A (Lagos Operations)"
+                        : "Hub B (Toronto HQ)"}.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-t border-dashed border-[#EADFD0] pt-4 flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-sm bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center font-display font-bold text-[#7A491D] shrink-0 text-[11px]">
+                    2
+                  </div>
+                  <div>
+                    <div className="font-bold text-[#1F1A17] uppercase tracking-wide">
+                      Stage 2 · Courier Waybill Activation &amp; Dispatch
+                    </div>
+                    <div className="text-[#7A491D] font-semibold mt-0.5">
+                      Waiting Time: Within 24 Hours
+                    </div>
+                    <p className="text-[#6E6A63] mt-1 leading-relaxed">
+                      Direct handover to {completedOrder.courierPartner} under tracking waybill{" "}
+                      <code className="text-[#1F1A17] font-semibold">{completedOrder.waybillNumber}</code>.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-t border-dashed border-[#EADFD0] pt-4 flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-sm bg-[#FAF5EE] border border-[#EADFD0] flex items-center justify-center font-display font-bold text-[#2E6B35] shrink-0 text-[11px]">
+                    3
+                  </div>
+                  <div>
+                    <div className="font-bold text-[#1F1A17] uppercase tracking-wide">
+                      Stage 3 · Doorstep Delivery to Recipient
+                    </div>
+                    <div className="text-[#2E6B35] font-semibold mt-0.5">
+                      Estimated Transit:{" "}
+                      {completedOrder.assignedHub === "HUB_A_LAGOS"
+                        ? "1-2 Business Days"
+                        : "2-4 Business Days"}
+                    </div>
+                    <p className="text-[#6E6A63] mt-1 leading-relaxed">
+                      Direct courier delivery to {completedOrder.destinationCity}, {completedOrder.destinationCountry}. Courier will contact {completedOrder.customerPhone || "recipient"} prior to delivery.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
+import { sendOrderConfirmationEmail } from "@/lib/email-service";
 import {
   calculateLogisticsForDestination,
   CURRENCIES,
@@ -152,6 +153,8 @@ export async function POST(request: NextRequest) {
       createdAt: string;
     } | null = null;
 
+    const fallbackOrderNumber = `MKM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
     if (items.length > 0) {
       try {
         const count = await prisma.order.count();
@@ -201,6 +204,38 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // 3. Dispatch Order Confirmation Receipt Email via Resend
+    let emailResult: { success: boolean; messageId?: string; error?: string } = {
+      success: false,
+    };
+    if (customerEmail && items.length > 0) {
+      try {
+        emailResult = await sendOrderConfirmationEmail({
+          orderNumber: savedOrder?.orderNumber || fallbackOrderNumber,
+          customerName,
+          customerEmail,
+          customerPhone,
+          shippingAddress: shippingAddress || destinationCity,
+          destinationCity,
+          destinationCountry: destinationCountryName,
+          currency,
+          subtotalAmount,
+          shippingAmount: logistics.shippingFee,
+          dutiesAmount: logistics.dutiesFee,
+          totalAmount,
+          assignedHub: logistics.assignedHub,
+          courierPartner: logistics.courierPartner,
+          waybillNumber,
+          paymentProvider: activeGateway,
+          paymentReference,
+          estimatedTransitDays: logistics.estimatedTransitDays,
+          items,
+        });
+      } catch (emailErr) {
+        console.warn("[Checkout] Order confirmation email dispatch warning:", emailErr);
+      }
+    }
+
     if (activeGateway === "PAYSTACK") {
       return NextResponse.json({
         ok: true,
@@ -221,6 +256,8 @@ export async function POST(request: NextRequest) {
         totalAmountCad,
         currency,
         order: savedOrder,
+        emailSent: emailResult.success,
+        emailMessageId: emailResult.messageId,
       });
     }
 
@@ -241,6 +278,8 @@ export async function POST(request: NextRequest) {
       totalAmountCad,
       currency,
       order: savedOrder,
+      emailSent: emailResult.success,
+      emailMessageId: emailResult.messageId,
     });
   } catch (err) {
     return NextResponse.json(

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
+import { sendOrderConfirmationEmail } from "@/lib/email-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,6 +47,47 @@ export async function POST(request: NextRequest) {
           status: "ALLOCATED_TO_HUB",
         },
       });
+
+      try {
+        const order = await prisma.order.findUnique({
+          where: { paymentReference },
+          include: { items: true },
+        });
+
+        if (order && order.customerEmail && order.items.length > 0) {
+          void sendOrderConfirmationEmail({
+            orderNumber: order.orderNumber,
+            customerName: order.customerName,
+            customerEmail: order.customerEmail,
+            customerPhone: order.customerPhone,
+            shippingAddress:
+              order.shippingAddress ||
+              `${order.destinationCity}, ${order.destinationCountry}`,
+            destinationCity: order.destinationCity,
+            destinationCountry: order.destinationCountry,
+            currency: order.currency,
+            subtotalAmount: order.subtotalAmount,
+            shippingAmount: order.shippingAmount,
+            dutiesAmount: order.dutiesAmount,
+            totalAmount: order.totalAmount,
+            assignedHub: order.assignedHub,
+            courierPartner: order.courierPartner,
+            waybillNumber: order.waybillNumber || "MKM-WAYBILL",
+            paymentProvider: order.paymentProvider,
+            paymentReference: order.paymentReference,
+            items: order.items.map((i) => ({
+              productId: i.productId,
+              productTitle: i.productTitle,
+              brandName: i.brandName,
+              size: i.size,
+              quantity: i.quantity,
+              unitPrice: i.unitPrice,
+            })),
+          });
+        }
+      } catch (emailErr) {
+        console.warn("[Stripe Webhook] Receipt email dispatch warning:", emailErr);
+      }
     }
 
     return NextResponse.json({ received: true, eventType, paymentReference });

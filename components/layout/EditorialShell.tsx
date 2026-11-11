@@ -219,11 +219,10 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative text-sm font-medium transition-colors py-1.5 ${
-                    isActive
-                      ? "text-[#E31E24] font-semibold"
-                      : "text-[#1F1A17] hover:text-[#7A491D]"
-                  }`}
+                  className={`relative text-sm font-medium transition-colors py-1.5 ${isActive
+                    ? "text-[#E31E24] font-semibold"
+                    : "text-[#1F1A17] hover:text-[#7A491D]"
+                    }`}
                 >
                   <span>{item.label}</span>
                   {isActive && (
@@ -256,9 +255,8 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 <MacklemoreCurrencyIcon className="w-3.5 h-3.5 shrink-0" />
                 <span className="tracking-tight">{currency}</span>
                 <span
-                  className={`text-[9px] text-[#7A491D] transition-transform duration-200 ${
-                    isCurrencyMenuOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-[9px] text-[#7A491D] transition-transform duration-200 ${isCurrencyMenuOpen ? "rotate-180" : ""
+                    }`}
                 >
                   ▾
                 </span>
@@ -284,24 +282,21 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                             setCurrency(code);
                             setIsCurrencyMenuOpen(false);
                           }}
-                          className={`w-full px-3 py-2 rounded-md text-xs flex items-center justify-between transition-colors cursor-pointer ${
-                            isSelected
-                              ? "bg-[#1F1A17] text-white font-semibold"
-                              : "text-[#1F1A17] hover:bg-[#FAF5EE]"
-                          }`}
+                          className={`w-full px-3 py-2 rounded-md text-xs flex items-center justify-between transition-colors cursor-pointer ${isSelected
+                            ? "bg-[#1F1A17] text-white font-semibold"
+                            : "text-[#1F1A17] hover:bg-[#FAF5EE]"
+                            }`}
                         >
                           <span className="flex items-center gap-2">
                             <span
-                              className={`w-1.5 h-1.5 rotate-45 ${
-                                isSelected ? "bg-[#D4860B]" : "bg-[#D4B895]"
-                              }`}
+                              className={`w-1.5 h-1.5 rotate-45 ${isSelected ? "bg-[#D4860B]" : "bg-[#D4B895]"
+                                }`}
                             />
                             <span>{cfg.code}</span>
                           </span>
                           <span
-                            className={`text-[11px] ${
-                              isSelected ? "text-[#D4860B]" : "text-[#7A491D]"
-                            }`}
+                            className={`text-[11px] ${isSelected ? "text-[#D4860B]" : "text-[#7A491D]"
+                              }`}
                           >
                             {cfg.symbol.replace(cfg.code, "").trim() || "$"}
                           </span>
@@ -429,11 +424,10 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                     <Link
                       href="/"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center justify-between py-2.5 px-2 text-sm font-semibold transition-colors ${
-                        pathname === "/"
-                          ? "text-[#E31E24]"
-                          : "text-[#1F1A17] hover:text-[#7A491D]"
-                      }`}
+                      className={`flex items-center justify-between py-2.5 px-2 text-sm font-semibold transition-colors ${pathname === "/"
+                        ? "text-[#E31E24]"
+                        : "text-[#1F1A17] hover:text-[#7A491D]"
+                        }`}
                     >
                       <span>Home</span>
                       <span className="text-xs text-[#7A491D]">→</span>
@@ -754,9 +748,9 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                     {logisticsEstimate.shippingFee === 0
                       ? "Complimentary"
                       : formatCurrencyValue(
-                          logisticsEstimate.shippingFee,
-                          currency
-                        )}
+                        logisticsEstimate.shippingFee,
+                        currency
+                      )}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm sm:text-base font-bold text-[#1F1A17] pt-2 border-t border-[#EADFD0]">

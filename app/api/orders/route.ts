@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiError, apiSuccess } from "@/lib/api-response";
+import { sendOrderConfirmationEmail } from "@/lib/email-service";
 import {
   CURRENCIES,
   CurrencyCode,
@@ -231,6 +232,34 @@ export async function POST(request: NextRequest) {
         createdAt: new Date().toISOString(),
         items,
       };
+    }
+
+    // Dispatch Order Confirmation Receipt Email via Resend
+    if (createdOrder.customerEmail && createdOrder.items && createdOrder.items.length > 0) {
+      void sendOrderConfirmationEmail({
+        orderNumber: createdOrder.orderNumber,
+        customerName: createdOrder.customerName,
+        customerEmail: createdOrder.customerEmail,
+        customerPhone: createdOrder.customerPhone,
+        shippingAddress:
+          createdOrder.shippingAddress ||
+          `${createdOrder.destinationCity}, ${createdOrder.destinationCountry}`,
+        destinationCity: createdOrder.destinationCity,
+        destinationCountry: createdOrder.destinationCountry,
+        currency: createdOrder.currency,
+        subtotalAmount: createdOrder.subtotalAmount,
+        shippingAmount: createdOrder.shippingAmount,
+        dutiesAmount: createdOrder.dutiesAmount,
+        totalAmount: createdOrder.totalAmount,
+        assignedHub: createdOrder.assignedHub,
+        courierPartner: createdOrder.courierPartner,
+        waybillNumber: createdOrder.waybillNumber || computedWaybill,
+        paymentProvider: createdOrder.paymentProvider,
+        paymentReference: createdOrder.paymentReference,
+        items: createdOrder.items,
+      }).catch((emailErr) => {
+        console.warn("[Orders API] Receipt email warning:", emailErr);
+      });
     }
 
     return apiSuccess(createdOrder, undefined, 201);
