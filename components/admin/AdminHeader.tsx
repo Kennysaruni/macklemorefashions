@@ -47,7 +47,7 @@ export function AdminHeader({
       <div className="flex items-center gap-3 sm:gap-4 ml-auto">
         {/* Storage Indicator */}
         <div className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-sm bg-[#FAF9F6] border border-[#EADFD0] text-xs">
-          <span className="w-2 h-2 rounded-full bg-[#2E6B35]" />
+          <span className="w-1.5 h-1.5 rotate-45 bg-[#2E6B35]" />
           <span className="text-[#6E6A63]">Storage:</span>
           <span className="font-semibold text-[#1F1A17]">{storageSource}</span>
         </div>

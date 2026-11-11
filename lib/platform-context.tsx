@@ -52,6 +52,7 @@ interface PlatformContextValue {
   refreshCatalog: () => Promise<void>;
   brands: BrandRecord[];
   addBrand: (brand: Omit<BrandRecord, "id">) => BrandRecord;
+  deleteBrand: (id: string) => Promise<boolean>;
   products: ProductRecord[];
   addProduct: (
     product: Omit<ProductRecord, "id"> & {
@@ -74,6 +75,8 @@ interface PlatformContextValue {
     newQty: number
   ) => void;
   collections: CollectionRecord[];
+  addCollection: (data: Omit<CollectionRecord, "id">) => Promise<CollectionRecord>;
+  deleteCollection: (id: string) => Promise<boolean>;
   toggleCollectionLive: (collectionId: string) => void;
   orders: OrderRecord[];
   createOrder: (
@@ -289,6 +292,16 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     return newBrand;
   };
 
+  const deleteBrand = async (brandId: string): Promise<boolean> => {
+    setBrands((prev) => prev.filter((b) => b.id !== brandId));
+    try {
+      const res = await fetch(`/api/brands/${brandId}`, { method: "DELETE" });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  };
+
   const addProduct = (
     productInput: Omit<ProductRecord, "id"> & {
       s3EditorialKey?: string;
@@ -379,6 +392,50 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isDropLive: nextDropLive, isVipLocked: nextVipLocked }),
     }).catch(() => {});
+  };
+
+  const addCollection = async (
+    data: Omit<CollectionRecord, "id">
+  ): Promise<CollectionRecord> => {
+    const cleanSlug =
+      data.slug?.trim() ||
+      data.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+    const id = `col-${Date.now()}`;
+    const newCol: CollectionRecord = {
+      ...data,
+      id,
+      slug: cleanSlug,
+    };
+    setCollections((prev) => [newCol, ...prev]);
+    try {
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCol),
+      });
+      const json = await res.json();
+      if (json?.data) {
+        return json.data as CollectionRecord;
+      }
+    } catch {
+      // Local optimistic record
+    }
+    return newCol;
+  };
+
+  const deleteCollection = async (collectionId: string): Promise<boolean> => {
+    setCollections((prev) => prev.filter((c) => c.id !== collectionId));
+    try {
+      const res = await fetch(`/api/collections/${collectionId}`, {
+        method: "DELETE",
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
   };
 
   const createOrder = (
@@ -500,12 +557,15 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
         refreshCatalog,
         brands,
         addBrand,
+        deleteBrand,
         products,
         addProduct,
         updateProduct,
         deleteProduct,
         updateVariantStock,
         collections,
+        addCollection,
+        deleteCollection,
         toggleCollectionLive,
         orders,
         createOrder,

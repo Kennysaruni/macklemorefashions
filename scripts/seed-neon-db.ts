@@ -92,13 +92,13 @@ async function main() {
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
   // 2. Seed SuperAdmin User
-  const adminEmail = (
-    process.env.ADMIN_INITIAL_EMAIL || "admin@macklemorefashions.com"
-  )
-    .trim()
-    .toLowerCase();
-  const adminPassword =
-    process.env.ADMIN_INITIAL_PASSWORD || "Macklemore2026#";
+  const adminEmail = process.env.ADMIN_INITIAL_EMAIL?.trim().toLowerCase();
+  const adminPassword = process.env.ADMIN_INITIAL_PASSWORD;
+  if (!adminEmail || !adminPassword) {
+    throw new Error(
+      "ADMIN_INITIAL_EMAIL and ADMIN_INITIAL_PASSWORD must be configured in environment."
+    );
+  }
   const passwordHash = await bcrypt.hash(adminPassword, 10);
 
   await prisma.adminUser.upsert({

@@ -3,13 +3,16 @@ import { NextRequest } from "next/server";
 import { POST as authPost, DELETE as authDelete } from "@/app/api/admin/auth/route";
 
 describe("Admin Authentication Endpoint", () => {
+  const validEmail = process.env.ADMIN_INITIAL_EMAIL || "";
+  const validPassword = process.env.ADMIN_INITIAL_PASSWORD || "";
+
   it("authenticates successfully with valid admin credentials", async () => {
     const req = new NextRequest("http://localhost:3000/api/admin/auth", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: "admin@macklemorefashions.com",
-        password: "Macklemore2026#",
+        email: validEmail,
+        password: validPassword,
       }),
     });
 
@@ -18,7 +21,7 @@ describe("Admin Authentication Endpoint", () => {
 
     const json = await res.json();
     expect(json.ok).toBe(true);
-    expect(json.user?.email).toBe("admin@macklemorefashions.com");
+    expect(json.user?.email).toBe(validEmail);
   });
 
   it("rejects invalid password", async () => {
@@ -26,8 +29,8 @@ describe("Admin Authentication Endpoint", () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: "admin@macklemorefashions.com",
-        password: "WrongPassword!",
+        email: validEmail,
+        password: "IncorrectPasswordXYZ123!",
       }),
     });
 

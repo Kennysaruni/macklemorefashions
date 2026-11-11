@@ -21,6 +21,8 @@ import { AdminB2BTab } from "@/components/admin/AdminB2BTab";
 import { AdminMediaTab } from "@/components/admin/AdminMediaTab";
 import { AdminProductModal } from "@/components/admin/AdminProductModal";
 import { AdminBrandModal } from "@/components/admin/AdminBrandModal";
+import { AdminDropModal } from "@/components/admin/AdminDropModal";
+import { CollectionRecord } from "@/lib/store-data";
 
 export type AdminTab =
   | "OVERVIEW"
@@ -114,12 +116,15 @@ export default function AdminConsolePage() {
     storageSource,
     brands,
     addBrand,
+    deleteBrand,
     products,
     addProduct,
     updateProduct,
     deleteProduct,
     updateVariantStock,
     collections,
+    addCollection,
+    deleteCollection,
     toggleCollectionLive,
     orders,
     updateOrderStatus,
@@ -172,6 +177,8 @@ export default function AdminConsolePage() {
   const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState<BrandRecord | null>(null);
 
+  const [isDropModalOpen, setIsDropModalOpen] = useState(false);
+
   // Toast Notification
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const showToast = (msg: string) => {
@@ -221,6 +228,24 @@ export default function AdminConsolePage() {
   const handleSaveBrand = async (brandData: Partial<BrandRecord>) => {
     await addBrand(brandData as Omit<BrandRecord, "id">);
     showToast("Partner house saved.");
+    fetchAnalytics();
+  };
+
+  const handleDeleteBrand = async (brandId: string, brandName: string) => {
+    await deleteBrand(brandId);
+    showToast(`Partner house "${brandName}" deleted.`);
+    fetchAnalytics();
+  };
+
+  const handleSaveDrop = async (dropData: Omit<CollectionRecord, "id">) => {
+    await addCollection(dropData);
+    showToast(`Drop "${dropData.title}" published.`);
+    fetchAnalytics();
+  };
+
+  const handleDeleteDrop = async (dropId: string, dropTitle: string) => {
+    await deleteCollection(dropId);
+    showToast(`Drop "${dropTitle}" removed.`);
     fetchAnalytics();
   };
 
@@ -426,6 +451,7 @@ export default function AdminConsolePage() {
               setEditingBrand(b);
               setIsBrandModalOpen(true);
             }}
+            onDeleteBrand={handleDeleteBrand}
           />
         )}
 
@@ -436,6 +462,8 @@ export default function AdminConsolePage() {
               toggleCollectionLive(id);
               showToast("Storefront collection visibility toggled.");
             }}
+            onAddNewDrop={() => setIsDropModalOpen(true)}
+            onDeleteDrop={handleDeleteDrop}
           />
         )}
 
@@ -473,10 +501,17 @@ export default function AdminConsolePage() {
         onSave={handleSaveBrand}
       />
 
+      <AdminDropModal
+        isOpen={isDropModalOpen}
+        onClose={() => setIsDropModalOpen(false)}
+        brands={brands}
+        onSave={handleSaveDrop}
+      />
+
       {/* Instant Toast Notification with sharp tailored corners */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 rounded-sm border border-[#EADFD0] bg-white px-5 py-3 text-xs font-semibold text-[#1F1A17] shadow-xl shadow-stone-300/40 animate-fade-in flex items-center gap-2.5">
-          <span className="w-2 h-2 rounded-full bg-[#2E6B35]" />
+          <span className="w-1.5 h-1.5 rotate-45 bg-[#2E6B35]" />
           <span>{toastMessage}</span>
         </div>
       )}

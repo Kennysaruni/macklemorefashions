@@ -34,12 +34,19 @@ export async function POST(request: NextRequest) {
       })
       .catch(() => null);
 
-    const envEmail = (
-      process.env.ADMIN_INITIAL_EMAIL || "admin@macklemorefashions.com"
-    )
-      .trim()
-      .toLowerCase();
-    const envPassword = process.env.ADMIN_INITIAL_PASSWORD || "Macklemore2026#";
+    const envEmail = process.env.ADMIN_INITIAL_EMAIL?.trim().toLowerCase();
+    const envPassword = process.env.ADMIN_INITIAL_PASSWORD;
+
+    if (!envEmail || !envPassword) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "Server authentication misconfiguration: Administrator credentials are not set in environment",
+        },
+        { status: 500 }
+      );
+    }
 
     // Auto-provision initial admin in Neon DB if matching .env credentials
     if (!adminUser && cleanEmail === envEmail && password === envPassword) {

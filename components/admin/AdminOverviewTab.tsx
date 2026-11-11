@@ -109,7 +109,7 @@ export function AdminOverviewTab({
               {formatCurrencyValue(revenueAmount, currency)}
             </div>
             <div className="flex items-center gap-2 mt-2 text-xs text-[#6E6A63]">
-              <span className="inline-block w-2 h-2 rounded-full bg-[#2E6B35]" />
+              <span className="inline-block w-1.5 h-1.5 rotate-45 bg-[#2E6B35]" />
               <span>
                 {analytics?.revenue?.paidOrdersCount || orders.length} orders settled
               </span>
@@ -172,7 +172,7 @@ export function AdminOverviewTab({
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm font-medium text-[#6E6A63]">Media Storage</span>
             <span className="flex items-center gap-1.5 text-xs text-[#2E6B35]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2E6B35]" />
+              <span className="w-1.5 h-1.5 rotate-45 bg-[#2E6B35]" />
               Online
             </span>
           </div>

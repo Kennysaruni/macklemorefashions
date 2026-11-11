@@ -203,6 +203,7 @@ export interface OrderRecord {
   customerPhone: string;
   destinationCountry: string;
   destinationCity: string;
+  shippingAddress?: string;
   currency: CurrencyCode;
   subtotalAmount: number;
   shippingAmount: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { BrandRecord } from "@/lib/store-data";
 
@@ -8,13 +8,29 @@ interface AdminBrandsTabProps {
   brands: BrandRecord[];
   onAddNewBrand: () => void;
   onEditBrand?: (brand: BrandRecord) => void;
+  onDeleteBrand?: (brandId: string, brandName: string) => Promise<void> | void;
 }
 
 export function AdminBrandsTab({
   brands,
   onAddNewBrand,
   onEditBrand,
+  onDeleteBrand,
 }: AdminBrandsTabProps) {
+  const [confirmDeleteBrand, setConfirmDeleteBrand] = useState<BrandRecord | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleConfirmDelete = async () => {
+    if (!confirmDeleteBrand || !onDeleteBrand) return;
+    setIsDeleting(true);
+    try {
+      await onDeleteBrand(confirmDeleteBrand.id, confirmDeleteBrand.name);
+      setConfirmDeleteBrand(null);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Header & Action */}
@@ -107,19 +123,79 @@ export function AdminBrandsTab({
                 <span>→</span>
               </Link>
 
-              {onEditBrand && (
-                <button
-                  type="button"
-                  onClick={() => onEditBrand(brand)}
-                  className="text-[#6E6A63] hover:text-[#1F1A17] transition-colors cursor-pointer"
-                >
-                  Edit Commission
-                </button>
-              )}
+              <div className="flex items-center gap-3">
+                {onEditBrand && (
+                  <button
+                    type="button"
+                    onClick={() => onEditBrand(brand)}
+                    className="text-[#6E6A63] hover:text-[#1F1A17] transition-colors cursor-pointer"
+                  >
+                    Edit
+                  </button>
+                )}
+
+                {onDeleteBrand && !brand.isProprietary && (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDeleteBrand(brand)}
+                    className="text-[#E31E24] hover:text-[#9E1015] transition-colors cursor-pointer font-medium"
+                  >
+                    Delete House
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {confirmDeleteBrand && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-sm border border-[#EADFD0] bg-white p-7 shadow-2xl space-y-5">
+            <div className="border-b border-[#EADFD0]/60 pb-3">
+              <h3 className="font-display text-lg font-bold uppercase tracking-tight text-[#1F1A17]">
+                Delete Partner House
+              </h3>
+              <p className="text-xs text-[#6E6A63] mt-1">
+                Permanent catalog deletion
+              </p>
+            </div>
+
+            <div className="text-xs text-[#4A4742] space-y-2 leading-relaxed">
+              <p>
+                Are you sure you want to delete{" "}
+                <span className="font-semibold text-[#1F1A17]">
+                  {confirmDeleteBrand.name}
+                </span>
+                ?
+              </p>
+              <p className="text-[#9E1015] bg-[#FDF2F2] border border-[#E31E24]/20 p-2.5 rounded-sm">
+                Warning: Removing this house will remove all associated collections, products, and commission settlement mappings from the active store.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setConfirmDeleteBrand(null)}
+                className="rounded-sm border border-[#EADFD0] bg-white px-4 py-2.5 text-xs font-medium text-[#1F1A17] hover:bg-[#FAF9F6] transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={handleConfirmDelete}
+                className="rounded-sm bg-[#E31E24] px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-[#B9151A] transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {isDeleting ? "Deleting..." : "Confirm Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

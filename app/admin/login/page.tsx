@@ -108,7 +108,7 @@ export default function AdminLoginPage() {
                 className="mb-5 overflow-hidden"
               >
                 <div className="rounded-sm border border-[#E31E24]/20 bg-[#FDF2F2] p-3 text-xs text-[#9E1015] flex items-start gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-[#E31E24] shrink-0 mt-1" />
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[#E31E24] shrink-0 mt-1.5" />
                   <span>{errorMessage}</span>
                 </div>
               </motion.div>
@@ -131,7 +131,7 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@macklemorefashions.com"
+                placeholder="executive@house.luxury"
                 className="w-full rounded-sm border border-[#EADFD0] bg-[#FAF9F6] px-3.5 py-2.5 text-sm text-[#1F1A17] placeholder:text-[#A8A29E] transition-all focus:border-[#7A491D] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#7A491D]"
               />
             </div>

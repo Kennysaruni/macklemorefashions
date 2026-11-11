@@ -336,7 +336,7 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
               className="relative p-2 bg-transparent border-none text-[#1F1A17] hover:text-[#E31E24] transition-colors duration-200 cursor-pointer flex items-center justify-center"
             >
               <MacklemoreBagIcon className="w-5.5 h-5.5 sm:w-6 sm:h-6" />
-              <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#E31E24] text-white text-[10px] font-bold flex items-center justify-center shadow-2xs">
+              <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-1 rounded-sm bg-[#E31E24] text-white text-[10px] font-bold flex items-center justify-center shadow-2xs">
                 {cartCount}
               </span>
             </button>
