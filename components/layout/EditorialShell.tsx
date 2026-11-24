@@ -28,6 +28,7 @@ const PRIMARY_NAV_LINKS = [
   { href: "/brands", label: "Brands" },
   { href: "/our-story", label: "Our Story" },
   { href: "/partnerships", label: "Partnerships" },
+  { href: "/vendors", label: "Vendors" },
   { href: "/markets", label: "Our Markets" },
   { href: "/journal", label: "Journal" },
   { href: "/contact", label: "Contact" },
@@ -57,6 +58,7 @@ const MOBILE_ACCORDION_GROUPS = [
       { href: "/brands/deji-and-kola", label: "Partner Brand: Deji & Kola" },
       { href: "/our-story", label: "Our Story" },
       { href: "/partnerships", label: "Brand Partnerships" },
+      { href: "/vendors", label: "Become a Vendor" },
       { href: "/markets", label: "Our Markets" },
     ],
   },
@@ -606,8 +608,14 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
                 Explore Shop
               </Link>
               <Link
+                href="/vendors"
+                className="px-4 py-2.5 rounded-md border border-[#D4B895] bg-[#FFFDF9] hover:bg-[#7A491D] hover:text-white text-xs font-medium text-[#1F1A17] transition-colors"
+              >
+                Become a Vendor
+              </Link>
+              <Link
                 href="/partnerships"
-                className="px-4 py-2.5 rounded-md border border-[#D4B895] bg-[#FFFDF9] hover:bg-[#1F1A17] hover:text-white text-xs font-medium text-[#1F1A17] transition-colors"
+                className="px-4 py-2.5 rounded-md border border-[#EADFD0] bg-[#FFFDF9] hover:border-[#7A491D] text-xs font-medium text-[#5C5147] hover:text-[#1F1A17] transition-colors"
               >
                 Brand Partnerships
               </Link>

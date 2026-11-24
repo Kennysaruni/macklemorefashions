@@ -86,7 +86,7 @@ export function CurtainImage({
   src,
   secondarySrc,
   alt,
-  aspectClass = "aspect-[3/4]",
+  aspectClass = "aspect-3/4",
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   priority = false,
   delay = 0,
@@ -215,7 +215,7 @@ export function CurtainImage({
       {!isLoaded && !hasError && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-10 flex flex-col items-center justify-center animate-pulse bg-gradient-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]"
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center animate-pulse bg-linear-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]"
         >
           <span className="w-2.5 h-2.5 rotate-45 bg-[#D4860B]/40" />
         </div>
@@ -509,7 +509,7 @@ export function CatalogGridSuspenseFallback({
           key={idx}
           className="rounded-lg border border-[#EADFD0] bg-white overflow-hidden"
         >
-          <div className="aspect-[3/4] w-full animate-pulse bg-gradient-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]" />
+          <div className="aspect-3/4 w-full animate-pulse bg-linear-to-br from-[#FAF5EE] via-[#F3EAE0] to-[#EADFD0]" />
           <div className="p-5 space-y-3">
             <div className="h-3 w-24 rounded-sm bg-[#F3EAE0] animate-pulse" />
             <div className="h-4 w-3/4 rounded-sm bg-[#EADFD0] animate-pulse" />
@@ -528,7 +528,7 @@ export function CatalogGridSuspenseFallback({
  * - Transition: duration: 1.2s, easing curve [0.16, 1, 0.3, 1]
  */
 export function DrawDivider({
-  className = "h-[1px] w-full bg-[#EADFD0]",
+  className = "h-px w-full bg-[#EADFD0]",
   delay = 0,
   originX = 0,
 }: {

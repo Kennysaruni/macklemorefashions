@@ -34,7 +34,8 @@ export type InquiryChannel =
   | "CONCIERGE"
   | "WHOLESALE"
   | "BRAND_REPRESENTATION"
-  | "PRESS";
+  | "PRESS"
+  | "VENDOR_PARTNERSHIP";
 
 export interface CurrencyConfig {
   code: CurrencyCode;

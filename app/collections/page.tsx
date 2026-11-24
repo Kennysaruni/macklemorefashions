@@ -71,7 +71,7 @@ export default function CollectionsPage() {
                   <CurtainImage
                     src={col.heroImageUrl}
                     alt={col.title}
-                    aspectClass="aspect-[16/9]"
+                    aspectClass="aspect-video"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     delay={idx * 0.06}
                     duration={1.1}
@@ -95,7 +95,7 @@ export default function CollectionsPage() {
                 </div>
 
                 <div className="px-6 pb-6 space-y-4">
-                  <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+                  <DrawDivider className="h-px w-full bg-[#F2EAE0]" />
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <button
                       type="button"

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import { GET as getOrders } from "@/app/api/orders/route";
-import { GET as getB2BInquiries } from "@/app/api/b2b-inquiries/route";
+import { GET as getB2BInquiries, POST as submitB2BInquiry } from "@/app/api/b2b-inquiries/route";
 import { POST as orchestrateCheckout } from "@/app/api/checkout/orchestrate/route";
 import { POST as createCollection } from "@/app/api/collections/route";
 import { DELETE as deleteBrand } from "@/app/api/brands/[id]/route";
@@ -40,6 +40,31 @@ describe("RESTful Commerce & B2B Handlers", () => {
     expect(json.ok).toBe(true);
     expect(Array.isArray(json.data)).toBe(true);
     expect(json.data.length).toBeGreaterThan(0);
+  });
+
+  it("POST /api/b2b-inquiries accepts VENDOR_PARTNERSHIP dossier", async () => {
+    const req = new NextRequest("http://localhost:3000/api/b2b-inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        channel: "VENDOR_PARTNERSHIP",
+        brandOrCompanyName: "Kensington Atelier Boutique",
+        contactName: "Claire Beauchamp",
+        email: "claire@kensingtonatelier.co.uk",
+        phone: "+44 7700 900123",
+        headquartersCountry: "United Kingdom",
+        city: "London",
+        websiteUrl: "https://kensingtonatelier.co.uk",
+        message: "Interested in stocking Macklemore Fashions Aso-Oke dashiki sets and boubous.",
+      }),
+    });
+    const res = await submitB2BInquiry(req);
+    expect(res.status).toBe(201);
+    const json = await res.json();
+    expect(json.ok).toBe(true);
+    expect(json.data.referenceCode).toBeDefined();
+    expect(json.data.channel).toBe("VENDOR_PARTNERSHIP");
+    expect(json.data.brandOrCompanyName).toBe("Kensington Atelier Boutique");
   });
 
   it("POST /api/checkout/orchestrate handles Paystack checkout payload", async () => {

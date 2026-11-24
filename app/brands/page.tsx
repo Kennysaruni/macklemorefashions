@@ -105,7 +105,7 @@ export default function BrandsDirectoryPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+                  <DrawDivider className="h-px w-full bg-[#F2EAE0]" />
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="text-xs text-[#6E6359] space-y-1">
                       <div>

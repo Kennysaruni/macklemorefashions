@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme inline {
+:root {
   --color-background: #FFFDF9;
   --color-foreground: #1F1A17;
 
@@ -18,7 +18,9 @@
   --color-macklemore-bronze: #7A491D;
   --color-macklemore-teal: #1A7A6E;
   --color-macklemore-green: #2E6B35;
+}
 
+@theme inline {
   --font-display: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
   --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;

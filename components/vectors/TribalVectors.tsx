@@ -112,7 +112,7 @@ export function TribalSectionSeparator({
       <div className="flex-1">
         <DrawDivider
           originX={0}
-          className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#E5DEC9] to-[#D4860B]/60"
+          className="h-px w-full bg-linear-to-r from-transparent via-[#E5DEC9] to-[#D4860B]/60"
         />
       </div>
 
@@ -132,7 +132,7 @@ export function TribalSectionSeparator({
         <DrawDivider
           originX={0}
           delay={0.08}
-          className="h-[1px] w-full bg-gradient-to-l from-transparent via-[#E5DEC9] to-[#D4860B]/60"
+          className="h-px w-full bg-linear-to-l from-transparent via-[#E5DEC9] to-[#D4860B]/60"
         />
       </div>
     </div>
@@ -154,9 +154,9 @@ export function TribalRailDivider({
       aria-hidden="true"
     >
       <span className="w-2 h-2 rotate-45 bg-[#D4860B]" />
-      <div className="w-[1px] flex-1 bg-[#EAE0D2]" />
+      <div className="w-px flex-1 bg-[#EAE0D2]" />
       <span className="w-2.5 h-2.5 rotate-45 bg-[#E31E24]" />
-      <div className="w-[1px] flex-1 bg-[#EAE0D2]" />
+      <div className="w-px flex-1 bg-[#EAE0D2]" />
       <span className="w-2 h-2 rotate-45 bg-[#1A7A6E]" />
     </div>
   );

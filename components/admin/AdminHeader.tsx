@@ -32,7 +32,7 @@ export function AdminHeader({
         <Link href="/" className="hover:opacity-90 transition-opacity">
           <MacklemoreLogo className="h-11 sm:h-12" />
         </Link>
-        <div className="h-9 w-[1px] bg-[#EADFD0] hidden sm:block" />
+        <div className="h-9 w-px bg-[#EADFD0] hidden sm:block" />
         <div>
           <h1 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[#1F1A17]">
             Admin Studio

@@ -209,7 +209,7 @@ export default function ShopCatalogPage() {
               showMobileSecondaryFilters ? "block" : "hidden md:block"
             } space-y-2.5`}
           >
-            <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+            <DrawDivider className="h-px w-full bg-[#F2EAE0]" />
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
               <div className="flex flex-wrap items-center gap-1.5">

@@ -69,14 +69,14 @@ export default function OurStoryPage() {
               <CurtainImage
                 src="https://macklemorefashions.com/wp-content/uploads/2025/05/Torontofw1.jpg"
                 alt="Macklemore Fashion at Toronto Fashion Week"
-                aspectClass="aspect-[4/5]"
+                aspectClass="aspect-4/5"
                 sizes="(max-width: 768px) 100vw, 25vw"
                 className="rounded-lg border border-[#EADFD0] shadow-xs"
               />
               <CurtainImage
                 src="https://macklemorefashions.com/wp-content/uploads/2025/05/Micah-sewing-.jpg"
                 alt="Micah Elechi in the Macklemore Fashion Atelier"
-                aspectClass="aspect-[4/5]"
+                aspectClass="aspect-4/5"
                 delay={0.1}
                 sizes="(max-width: 768px) 100vw, 25vw"
                 className="rounded-lg border border-[#EADFD0] shadow-xs"
@@ -184,8 +184,14 @@ export default function OurStoryPage() {
               Explore the Shop →
             </Link>
             <Link
+              href="/vendors"
+              className="px-6 py-3 rounded-md border border-[#D4B895] bg-white text-[#1F1A17] text-xs sm:text-sm font-medium hover:bg-[#7A491D] hover:text-white transition-colors"
+            >
+              Become a Vendor
+            </Link>
+            <Link
               href="/partnerships"
-              className="px-6 py-3 rounded-md border border-[#D4B895] bg-white text-[#1F1A17] text-xs sm:text-sm font-medium hover:bg-[#1F1A17] hover:text-white transition-colors"
+              className="px-6 py-3 rounded-md border border-[#EADFD0] bg-white text-[#5C5147] text-xs sm:text-sm font-medium hover:border-[#7A491D] hover:text-[#1F1A17] transition-colors"
             >
               Brand Partnerships
             </Link>

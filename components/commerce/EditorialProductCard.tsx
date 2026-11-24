@@ -55,10 +55,10 @@ export function EditorialProductCard({
 
   const aspectClass =
     priorityAspect === "tall"
-      ? "aspect-[3/4] sm:aspect-[4/5]"
+      ? "aspect-3/4 sm:aspect-4/5"
       : priorityAspect === "square"
       ? "aspect-square"
-      : "aspect-[3/4]";
+      : "aspect-3/4";
 
   const formatOptionLabel = (size: string) => {
     if (isFabric) {
@@ -143,7 +143,7 @@ export function EditorialProductCard({
 
         {/* Clean Size / Yard Buttons with layoutId Spring Indicator & Add to Bag */}
         <div className="space-y-2.5">
-          <DrawDivider className="h-[1px] w-full bg-[#F2EAE0]" />
+          <DrawDivider className="h-px w-full bg-[#F2EAE0]" />
 
           <div
             className={`grid gap-1.5 pt-1 ${

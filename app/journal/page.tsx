@@ -122,7 +122,7 @@ export default function JournalPage() {
               key={selectedArticle.id}
               src={selectedArticle.heroImageUrl}
               alt={selectedArticle.title}
-              aspectClass="aspect-[16/9]"
+              aspectClass="aspect-video"
               sizes="(max-width: 1024px) 100vw, 66vw"
               className="rounded-lg border border-[#EADFD0] mb-8"
             />

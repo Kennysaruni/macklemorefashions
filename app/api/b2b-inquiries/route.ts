@@ -7,6 +7,7 @@ import {
   INITIAL_B2B_INQUIRIES,
   InquiryChannel,
 } from "@/lib/store-data";
+import { sendVendorInquiryEmail } from "@/lib/email-service";
 
 export async function GET(request: NextRequest) {
   try {
@@ -150,6 +151,24 @@ export async function POST(request: NextRequest) {
         assignedExecutive,
         createdAt: new Date().toISOString(),
       };
+    }
+
+    if (channel === "VENDOR_PARTNERSHIP") {
+      try {
+        await sendVendorInquiryEmail({
+          referenceCode: created.referenceCode,
+          storeName: created.brandOrCompanyName,
+          contactName: created.contactName,
+          country: created.headquartersCountry,
+          city: (body.city as string) || "Local Market",
+          websiteOrInstagram: created.websiteUrl,
+          email: created.email,
+          phone: created.phone,
+          message: created.message,
+        });
+      } catch (emailErr) {
+        console.warn("[B2B] Vendor inquiry notification email warning:", emailErr);
+      }
     }
 
     return apiSuccess(created, undefined, 201);

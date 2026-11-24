@@ -3,6 +3,9 @@ import {
   buildOrderReceiptHtml,
   sendOrderConfirmationEmail,
   OrderEmailPayload,
+  buildVendorInquiryEmailHtml,
+  sendVendorInquiryEmail,
+  VendorInquiryEmailPayload,
 } from "@/lib/email-service";
 
 const samplePayload: OrderEmailPayload = {
@@ -192,6 +195,54 @@ describe("Afro-Luxury Order Receipt Email Service", () => {
       const result = await sendOrderConfirmationEmail(samplePayload);
       expect(result.success).toBe(false);
       expect(result.error).toBe("Network timeout");
+    });
+  });
+
+  describe("Vendor Inquiry Email Service (buildVendorInquiryEmailHtml & sendVendorInquiryEmail)", () => {
+    const sampleVendor: VendorInquiryEmailPayload = {
+      referenceCode: "VND-MKM-0421",
+      storeName: "Mayfair Couture Boutique",
+      contactName: "Lady Victoria Spencer",
+      country: "United Kingdom",
+      city: "London",
+      websiteOrInstagram: "www.mayfaircouture.co.uk",
+      email: "buyer@mayfaircouture.co.uk",
+      phone: "+44 20 7946 0912",
+      message: "Looking to stock 25 Aso-Oke dashikis and coral bead sets for our summer showcase.",
+    };
+
+    it("generates vendor email containing boutique name, reference code, and arrangement steps", () => {
+      const html = buildVendorInquiryEmailHtml(sampleVendor);
+      expect(html).toContain("Mayfair Couture Boutique");
+      expect(html).toContain("VND-MKM-0421");
+      expect(html).toContain("Lady Victoria Spencer");
+      expect(html).toContain("London, United Kingdom");
+      expect(html).toContain("Small Deposit Payment");
+      expect(html).toContain("Direct Product Shipment");
+      expect(html).toContain("Sell in Local Market");
+    });
+
+    it("dispatches vendor notification via Resend REST API", async () => {
+      process.env.RESEND_API_KEY = "re_test_vendor_123";
+
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: "msg_vendor_resend_101" }),
+      });
+      global.fetch = mockFetch as unknown as typeof fetch;
+
+      const result = await sendVendorInquiryEmail(sampleVendor);
+      expect(result.success).toBe(true);
+      expect(result.messageId).toBe("msg_vendor_resend_101");
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://api.resend.com/emails",
+        expect.objectContaining({
+          method: "POST",
+          headers: expect.objectContaining({
+            Authorization: "Bearer re_test_vendor_123",
+          }),
+        })
+      );
     });
   });
 });

@@ -578,7 +578,7 @@ export function ContinentalMapBanner({}: {
               </div>
 
               {/* Real Geographic SVG Map (world-atlas@2/countries-50m.json) */}
-              <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl bg-[#FAF5EE]/70 border border-[#EFE7DC] flex items-center justify-center overflow-hidden p-2 sm:p-3">
+              <div className="relative w-full aspect-16/10 sm:aspect-video rounded-2xl bg-[#FAF5EE]/70 border border-[#EFE7DC] flex items-center justify-center overflow-hidden p-2 sm:p-3">
                 {!projectedData ? (
                   <div className="w-full h-full flex items-center justify-center text-xs font-medium text-[#7A491D] animate-pulse">
                     Loading continental geography...
@@ -813,7 +813,7 @@ export function ContinentalMapBanner({}: {
               <AnimatePresence>
                 {hoveredRegion && (
                   <motion.div
-                    className="fixed pointer-events-none z-[1000] bg-[#1F1A17]/95 border border-[#D4860B]/40 rounded-2xl p-3.5 flex items-start gap-3 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.35)] min-w-[215px] max-w-[280px] hidden sm:flex"
+                    className="fixed pointer-events-none z-1000 bg-[#1F1A17]/95 border border-[#D4860B]/40 rounded-2xl p-3.5 items-start gap-3 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.35)] min-w-[215px] max-w-[280px] hidden sm:flex"
                     style={{ left: cursorPos.x, top: cursorPos.y }}
                     initial={{ opacity: 0, y: 12, scale: 0.92 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}

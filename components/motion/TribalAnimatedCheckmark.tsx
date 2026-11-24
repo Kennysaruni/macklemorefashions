@@ -107,7 +107,7 @@ export function TribalAnimatedCheckmark({ className = "" }: { className?: string
       <div className="flex items-center justify-center gap-2 mt-3.5">
         <span className="w-1.5 h-1.5 rotate-45 bg-[#E31E24]" />
         <span className="w-1.5 h-1.5 rotate-45 bg-[#D4860B]" />
-        <div className="w-10 h-[1px] bg-gradient-to-r from-transparent via-[#D4860B]/60 to-transparent" />
+        <div className="w-10 h-px bg-linear-to-r from-transparent via-[#D4860B]/60 to-transparent" />
         <span className="w-1.5 h-1.5 rotate-45 bg-[#1A7A6E]" />
         <span className="w-1.5 h-1.5 rotate-45 bg-[#7A491D]" />
       </div>

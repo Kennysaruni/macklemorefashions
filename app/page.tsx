@@ -463,7 +463,7 @@ export default function HomePage() {
                 <CurtainImage
                   src={brand.lookbookBannerUrl}
                   alt={brand.name}
-                  aspectClass="aspect-[4/3]"
+                  aspectClass="aspect-4/3"
                   delay={(idx % 4) * 0.05}
                   duration={1.1}
                 >
@@ -599,36 +599,91 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Warm B2B Brand Partnerships & Distribution Banner */}
-          <div className="rounded-lg border border-[#EADFD0] bg-[#FAF5EE] overflow-hidden shadow-xs">
-            <TribalPatternRibbon />
-            <div className="p-8 sm:p-12 relative">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-8 space-y-3">
+          {/* Dual B2B Banners: 1) International Vendor Stockists & 2) Brand Representation */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* 1. International Vendor Partnerships Card */}
+            <div className="rounded-lg border border-[#EADFD0] bg-[#FAF5EE] overflow-hidden shadow-xs flex flex-col justify-between">
+              <div>
+                <TribalPatternRibbon />
+                <div className="p-7 sm:p-9 space-y-3">
+                  <span className="text-xs font-semibold tracking-wider uppercase text-[#7A491D] block">
+                    Become a Vendor Partner
+                  </span>
+                  <h2 className="font-display text-xl sm:text-2xl font-semibold text-[#1F1A17] leading-snug">
+                    Stock &amp; Sell Macklemore Fashions in Your Local Market
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#5C5147] leading-relaxed">
+                    Own a fashion store or boutique outside Nigeria? Partner with us through our small deposit model to stock authentic African luxury pieces with low upfront risk and direct shipment to your store.
+                  </p>
+                  <ul className="space-y-1.5 pt-2 text-xs text-[#1F1A17]">
+                    <li className="flex items-center gap-2">
+                      <span className="text-[#D4860B]">●</span>
+                      <span>Small initial deposit payment rather than full upfront costs</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-[#D4860B]">●</span>
+                      <span>Direct courier dispatch from Toronto HQ or Lagos atelier</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-[#D4860B]">●</span>
+                      <span>Exclusive regional styles with continuous restocking support</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="p-7 sm:p-9 pt-0">
+                <Link
+                  href="/vendors"
+                  className="inline-block w-full py-3 px-5 rounded-md bg-[#1F1A17] hover:bg-[#7A491D] text-white text-center text-xs font-semibold tracking-wider uppercase transition-colors shadow-xs"
+                >
+                  Become a Vendor Partner →
+                </Link>
+              </div>
+            </div>
+
+            {/* 2. Brand Partnerships & African Distribution Card */}
+            <div className="rounded-lg border border-[#EADFD0] bg-[#FAF5EE] overflow-hidden shadow-xs flex flex-col justify-between">
+              <div>
+                <TribalPatternRibbon />
+                <div className="p-7 sm:p-9 space-y-3">
                   <span className="text-xs font-semibold tracking-wider uppercase text-[#E31E24] block">
                     Brand Partnerships &amp; African Distribution
                   </span>
-                  <h2 className="font-display text-2xl sm:text-3xl font-semibold text-[#1F1A17] leading-snug">
-                    Partner With Macklemore Fashion to Reach West &amp; East African Markets
+                  <h2 className="font-display text-xl sm:text-2xl font-semibold text-[#1F1A17] leading-snug">
+                    Partner With Macklemore Fashion Across West &amp; East Africa
                   </h2>
-                  <p className="text-sm sm:text-base text-[#5C5147] max-w-2xl leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#5C5147] leading-relaxed">
                     We support international and African fashion brands with regional representation, showroom curation in Lagos, retail distribution, and market expansion across Nigeria, Ghana, Kenya, and beyond.
                   </p>
+                  <ul className="space-y-1.5 pt-2 text-xs text-[#1F1A17]">
+                    <li className="flex items-center gap-2">
+                      <span className="text-[#E31E24]">●</span>
+                      <span>Showroom presentation &amp; retail curation in Lagos</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-[#E31E24]">●</span>
+                      <span>Consolidated intake in Toronto, London &amp; Lagos</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-[#E31E24]">●</span>
+                      <span>Dedicated brand pages &amp; VIP buyer introductions</span>
+                    </li>
+                  </ul>
                 </div>
-                <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3">
-                  <Link
-                    href="/partnerships"
-                    className="py-3.5 px-6 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-center text-xs sm:text-sm font-medium transition-colors shadow-xs"
-                  >
-                    Explore Brand Partnerships →
-                  </Link>
-                  <Link
-                    href="/our-story"
-                    className="py-3.5 px-6 rounded-md border border-[#D4B895] bg-white hover:bg-[#1F1A17] hover:text-white text-center text-xs sm:text-sm font-medium text-[#1F1A17] transition-colors"
-                  >
-                    Read Our Story
-                  </Link>
-                </div>
+              </div>
+              <div className="p-7 sm:p-9 pt-0 flex gap-3">
+                <Link
+                  href="/partnerships"
+                  className="flex-1 py-3 px-5 rounded-md bg-[#1F1A17] hover:bg-[#E31E24] text-white text-center text-xs font-semibold tracking-wider uppercase transition-colors shadow-xs"
+                >
+                  Brand Partnerships →
+                </Link>
+                <Link
+                  href="/our-story"
+                  className="py-3 px-4 rounded-md border border-[#D4B895] bg-white hover:bg-[#FAF5EE] text-center text-xs font-medium text-[#1F1A17] transition-colors"
+                >
+                  Our Story
+                </Link>
               </div>
             </div>
           </div>

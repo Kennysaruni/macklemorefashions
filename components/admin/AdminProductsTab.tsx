@@ -193,7 +193,7 @@ export function AdminProductsTab({
                             {product.variants.reduce((acc, v) => acc + (v.hubALagos || 0), 0)}
                           </span>
                         </div>
-                        <div className="h-7 w-[1px] bg-[#EADFD0]" />
+                        <div className="h-7 w-px bg-[#EADFD0]" />
                         <div>
                           <span className="text-[11px] text-[#6E6A63] block">Toronto HQ</span>
                           <span className="font-semibold text-sm text-[#1F1A17]">

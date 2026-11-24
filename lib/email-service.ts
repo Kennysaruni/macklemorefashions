@@ -503,3 +503,226 @@ export async function sendOrderConfirmationEmail(
     return { success: false, error: errorMsg };
   }
 }
+
+export interface VendorInquiryEmailPayload {
+  referenceCode: string;
+  storeName: string;
+  contactName: string;
+  country: string;
+  city: string;
+  websiteOrInstagram?: string;
+  email: string;
+  phone: string;
+  message?: string;
+}
+
+/**
+ * Build HTML template for Vendor Partnership Application
+ */
+export function buildVendorInquiryEmailHtml(payload: VendorInquiryEmailPayload): string {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Vendor Partnership Application: ${payload.referenceCode} · Macklemore Fashion</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F7F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1F1A17;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #F7F4EE; padding: 40px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; background-color: #FFFFFF; border: 1px solid #EADFD0; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+          
+          <!-- Brand Header -->
+          <tr>
+            <td style="background-color: #1F1A17; padding: 28px 32px; text-align: center; border-bottom: 3px solid #7A491D;">
+              <h1 style="margin: 0; font-size: 20px; letter-spacing: 0.18em; text-transform: uppercase; color: #FFFFFF; font-weight: 700;">
+                Macklemore Fashion
+              </h1>
+              <p style="margin: 4px 0 0; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #D4860B;">
+                International Vendor Partnership Desk · Toronto &amp; Lagos
+              </p>
+            </td>
+          </tr>
+
+          <!-- Application Hero -->
+          <tr>
+            <td style="padding: 32px 32px 24px; text-align: center;">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; color: #7A491D; margin-bottom: 6px;">
+                New Partnership Dossier
+              </div>
+              <h2 style="margin: 0 0 10px; font-size: 22px; font-weight: 700; color: #1F1A17; letter-spacing: -0.01em;">
+                ${payload.storeName}
+              </h2>
+              <div style="display: inline-block; padding: 6px 14px; background-color: #FAF5EE; border: 1px solid #EADFD0; border-radius: 4px; font-size: 12px; font-family: monospace; color: #7A491D; font-weight: 600;">
+                Ref: ${payload.referenceCode}
+              </div>
+            </td>
+          </tr>
+
+          <!-- Store & Contact Details Grid -->
+          <tr>
+            <td style="padding: 0 32px 24px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #FAF5EE; border: 1px solid #EADFD0; border-radius: 4px; padding: 18px 20px;">
+                <tr>
+                  <td style="font-size: 12px; color: #6E6A63; padding-bottom: 8px; width: 40%;">Store / Boutique:</td>
+                  <td style="font-size: 13px; color: #1F1A17; font-weight: 600; padding-bottom: 8px;">${payload.storeName}</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 12px; color: #6E6A63; padding-bottom: 8px;">Contact Person:</td>
+                  <td style="font-size: 13px; color: #1F1A17; font-weight: 600; padding-bottom: 8px;">${payload.contactName}</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 12px; color: #6E6A63; padding-bottom: 8px;">Location:</td>
+                  <td style="font-size: 13px; color: #1F1A17; font-weight: 600; padding-bottom: 8px;">${payload.city}, ${payload.country}</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 12px; color: #6E6A63; padding-bottom: 8px;">Email Address:</td>
+                  <td style="font-size: 13px; color: #7A491D; font-weight: 600; padding-bottom: 8px;"><a href="mailto:${payload.email}" style="color: #7A491D; text-decoration: none;">${payload.email}</a></td>
+                </tr>
+                <tr>
+                  <td style="font-size: 12px; color: #6E6A63; padding-bottom: 8px;">Phone / WhatsApp:</td>
+                  <td style="font-size: 13px; color: #1F1A17; font-weight: 600; padding-bottom: 8px;">${payload.phone}</td>
+                </tr>
+                ${
+                  payload.websiteOrInstagram
+                    ? `
+                <tr>
+                  <td style="font-size: 12px; color: #6E6A63; padding-bottom: 8px;">Web / Instagram:</td>
+                  <td style="font-size: 13px; color: #1F1A17; font-weight: 600; padding-bottom: 8px;">${payload.websiteOrInstagram}</td>
+                </tr>
+                `
+                    : ""
+                }
+              </table>
+            </td>
+          </tr>
+
+          ${
+            payload.message
+              ? `
+          <!-- Applicant Note / Message -->
+          <tr>
+            <td style="padding: 0 32px 28px;">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: #7A491D; margin-bottom: 6px;">
+                Store Message &amp; Market Details
+              </div>
+              <div style="background-color: #FFFFFF; border: 1px solid #EADFD0; border-radius: 4px; padding: 14px 18px; font-size: 13px; color: #5C5147; line-height: 1.6;">
+                ${payload.message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+              </div>
+            </td>
+          </tr>
+          `
+              : ""
+          }
+
+          <!-- Arrangement Process Overview -->
+          <tr>
+            <td style="padding: 0 32px 32px;">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: #1F1A17; margin-bottom: 12px; border-top: 1px solid #EADFD0; padding-top: 20px;">
+                Vendor Partnership Arrangement Structure
+              </div>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding-bottom: 10px; font-size: 12px; color: #5C5147; line-height: 1.5;">
+                    <strong style="color: #7A491D;">1. Apply &amp; Connect:</strong> We review store profile, curated categories, and local market reach.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-bottom: 10px; font-size: 12px; color: #5C5147; line-height: 1.5;">
+                    <strong style="color: #7A491D;">2. Small Deposit Payment:</strong> Partner secures inventory with a small deposit rather than full upfront costs.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-bottom: 10px; font-size: 12px; color: #5C5147; line-height: 1.5;">
+                    <strong style="color: #7A491D;">3. Direct Product Shipment:</strong> Garments are inspected and dispatched directly to the vendor from our Toronto or Lagos hubs.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-size: 12px; color: #5C5147; line-height: 1.5;">
+                    <strong style="color: #7A491D;">4. Sell in Local Market:</strong> Vendor sells directly to local shoppers with ongoing restocking support.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 24px 32px; background-color: #FAF5EE; border-top: 1px solid #EADFD0; text-align: center;">
+              <p style="margin: 0 0 6px; font-size: 11px; color: #6E6A63;">
+                Macklemore Fashion Inc. · International Trade &amp; Boutique Distribution
+              </p>
+              <p style="margin: 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: #8C887B;">
+                Toronto Corporate HQ · Lagos Atelier &amp; Operations Hub
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+}
+
+/**
+ * Dispatch Vendor Inquiry Notification Email via Resend
+ */
+export async function sendVendorInquiryEmail(
+  payload: VendorInquiryEmailPayload
+): Promise<{ success: boolean; messageId?: string; error?: string; recipient?: string }> {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+
+  if (!apiKey) {
+    console.warn("[Resend] RESEND_API_KEY is not configured in environment.");
+    return { success: false, error: "RESEND_API_KEY not configured" };
+  }
+
+  const html = buildVendorInquiryEmailHtml(payload);
+  const preferredFrom =
+    process.env.RESEND_FROM_EMAIL?.trim() ||
+    "Macklemore Fashion <onboarding@resend.dev>";
+
+  // Target recipient: in test mode Resend requires the account owner
+  const deskRecipient =
+    process.env.RESEND_TEST_RECIPIENT?.trim() || "kennylatimore4@gmail.com";
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: preferredFrom,
+        to: [deskRecipient],
+        subject: `New Vendor Inquiry: ${payload.storeName} (${payload.city}, ${payload.country}) · Ref ${payload.referenceCode}`,
+        html,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.warn("[Resend] Vendor email dispatch warning:", data);
+      return {
+        success: false,
+        error: data?.message || "Failed to dispatch vendor email",
+      };
+    }
+
+    return {
+      success: true,
+      messageId: data?.id,
+      recipient: deskRecipient,
+    };
+  } catch (err) {
+    const errorMsg = err instanceof Error ? err.message : "Unknown error";
+    console.warn("[Resend] Vendor email error:", errorMsg);
+    return { success: false, error: errorMsg };
+  }
+}
