@@ -221,6 +221,12 @@ export default function HomePage() {
                   >
                     Browse All Categories
                   </Link>
+                  <Link
+                    href="/vendors"
+                    className="px-5 py-3.5 rounded-md border border-[#7A491D] bg-[#FFFDF9] hover:bg-[#7A491D] hover:text-white text-xs sm:text-sm font-medium text-[#7A491D] transition-all duration-200"
+                  >
+                    Become a Vendor
+                  </Link>
                 </div>
               </div>
 
